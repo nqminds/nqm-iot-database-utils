@@ -18,7 +18,7 @@ const sqliteUtils = require("nqm-iot-database-utils");
 
 # Usage
 The below example will do the following steps:
-1. Create a sqlite database in memory with ```openDatabase```
+1. Create a sqlite database in memory with [```openDatabase```](./docs/index.html)
 2. Create a dataset with two fields with ```createDataset```
 3. Add 100 documents to the dataset with ```addData```
 4. Retrieve a list documents for a given filter with ```getDatasetData```
