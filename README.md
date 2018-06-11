@@ -73,3 +73,5 @@ sqliteUtils.openDatabase("", "memory", "w+")
       console.log(result);
     });
 ```
+
+# [API](https://nqminds.github.io/nqm-iot-database-utils/module-sqlite-manager.html)
