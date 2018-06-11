@@ -23,7 +23,7 @@ The below example will do the following steps:
 3. Will 100 documents to the dataset
 4. Will retrieve a list documents for a given filter
 
-'''js
+```js
 "use strict";
 
 const sqliteUtils = require("nqm-iot-database-utils");
@@ -72,4 +72,4 @@ sqliteUtils.openDatabase("", "memory", "w+")
     .then((result) => {
       console.log(result);
     });
-'''
+```
