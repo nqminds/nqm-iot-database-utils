@@ -536,71 +536,287 @@ describe("sqlite-manager", function() {
           return Promise.resolve(truth);
         })
         .should.eventually.equal(true);
+    });    
+  });
+
+  describe("truncateResource", function() {
+    it("should truncate the dataset and return the number of rows truncated", function() {
+      let dbIter;
+      let truth;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          for (let idx = 0; idx < dataSize; idx++) {
+            testData.push({
+              prop1: Math.floor(Math.random() * 2) + 0,
+              prop2: Math.floor(Math.random() * 2) + 0,
+            });
+          }
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.truncateResource(dbIter);
+        })
+        .then((result) => {
+          truth = (result.count === dataSize);
+          return sqLiteManager.getDatasetData(dbIter, null, null, null);
+        })
+        .then((result) => {
+          truth = truth && !result.data.length;
+          return Promise.resolve(truth);
+        })
+        .should.eventually.equal(true);
+    });
+  });
+
+  describe("getDatasetDataCount", function() {
+    it("should should return the total count of rows satisfying a filter", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          for (let idx = 0; idx < dataSize; idx++) {
+            testData.push({
+              prop1: idx,
+              prop2: dataSize - idx - 1,
+            });
+          }
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {$and: [{$or: [{prop1: {$gte: 2, $lte: 5}}, {prop1: {$gte: 92}}]}, {prop2: {$lte: 10}}]}, null, null);
+        })
+        .should.eventually.deep.equal({count: 8});
+    });
+  });
+
+  describe.only("updateDataByQuery", function() {
+    it("should return zero count for an empty update object", function() {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {}, {});
+        })
+        .should.eventually.deep.equal({count: 0});
     });
 
-    describe("truncateResource", function() {
-      it("should truncate the dataset and return the number of rows truncated", function() {
-        let dbIter;
-        let truth;
-        const testData = [];
-        const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
-        const dataSize = 100;
-  
-        return sqLiteManager.openDatabase("", "memory", "w+")
-          .then((db) => {
-            dbIter = db;
-            return sqLiteManager.createDataset(dbIter, entry);
-          })
-          .then(() => {
-            for (let idx = 0; idx < dataSize; idx++) {
-              testData.push({
-                prop1: Math.floor(Math.random() * 2) + 0,
-                prop2: Math.floor(Math.random() * 2) + 0,
-              });
-            }
-            return sqLiteManager.addData(dbIter, testData);
-          })
-          .then(() => {
-            return sqLiteManager.truncateResource(dbIter);
-          })
-          .then((result) => {
-            truth = (result.count === dataSize);
-            return sqLiteManager.getDatasetData(dbIter, null, null, null);
-          })
-          .then((result) => {
-            truth = truth && !result.data.length;
-            return Promise.resolve(truth);
-          })
-          .should.eventually.equal(true);
-      });
+    it("should update all entries for an empty query", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          for (let idx = 0; idx < dataSize; idx++) {
+            testData.push({
+              prop1: idx,
+              prop2: dataSize - idx - 1,
+            });
+          }
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {}, {prop1: 0});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: 0}, null, null);
+        })
+        .should.eventually.deep.equal({count: 100});
     });
 
-    describe("getDatasetDataCount", function() {
-      it("should should return the total count of rows satisfying a filter", function() {
-        let dbIter;
-        const testData = [];
-        const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
-        const dataSize = 100;
-  
-        return sqLiteManager.openDatabase("", "memory", "w+")
-          .then((db) => {
-            dbIter = db;
-            return sqLiteManager.createDataset(dbIter, entry);
-          })
-          .then(() => {
-            for (let idx = 0; idx < dataSize; idx++) {
-              testData.push({
-                prop1: idx,
-                prop2: dataSize - idx - 1,
-              });
-            }
-            return sqLiteManager.addData(dbIter, testData);
-          })
-          .then(() => {
-            return sqLiteManager.getDatasetDataCount(dbIter, {$and: [{$or: [{prop1: {$gte: 2, $lte: 5}}, {prop1: {$gte: 92}}]}, {prop2: {$lte: 10}}]}, null, null);
-          })
-          .should.eventually.deep.equal({count: 8});
-      });
+    it("should not update any entry for a non valid query", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          for (let idx = 0; idx < dataSize; idx++) {
+            testData.push({
+              prop1: idx,
+              prop2: dataSize - idx - 1,
+            });
+          }
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {prop2: 101}, {prop1: 999});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: 999}, null, null);
+        })
+        .should.eventually.deep.equal({count: 0});
+    });
+
+    it("should update some entries for a non empty query", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          for (let idx = 0; idx < dataSize; idx++) {
+            testData.push({
+              prop1: idx,
+              prop2: dataSize - idx - 1,
+            });
+          }
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {prop2: {$gte: 0, $lt: 50}}, {prop1: 999});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: 999}, null, null);
+        })
+        .should.eventually.deep.equal({count: 50});
+    });
+
+    it("should update some string entries for a non empty query", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[12];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "abc", prop2: 34});
+          testData.push({prop1: "abc", prop2: 34354});
+          testData.push({prop1: "abc", prop2: 67834});
+          testData.push({prop1: "abc", prop2: 3345344});
+          testData.push({prop1: "abc", prop2: 323534});
+          testData.push({prop1: "bc", prop2: 340});
+          testData.push({prop1: "bc", prop2: 343540});
+          testData.push({prop1: "bc", prop2: 678340});
+          testData.push({prop1: "bc", prop2: 33453440});
+          testData.push({prop1: "bc", prop2: 3235340});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {$or: [{prop2: 34}, {prop2: 340}]}, {prop1: "baba"});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "baba"}, null, null);
+        })
+        .should.eventually.deep.equal({count: 2});
+    });    
+
+    it("should update some string entries for a non empty query", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[12];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "abc", prop2: 34});
+          testData.push({prop1: "abc", prop2: 34354});
+          testData.push({prop1: "abc", prop2: 67834});
+          testData.push({prop1: "abc", prop2: 3345344});
+          testData.push({prop1: "abc", prop2: 323534});
+          testData.push({prop1: "bc", prop2: 340});
+          testData.push({prop1: "bc", prop2: 343540});
+          testData.push({prop1: "bc", prop2: 678340});
+          testData.push({prop1: "bc", prop2: 33453440});
+          testData.push({prop1: "bc", prop2: 3235340});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {prop1: "abc", prop2: 34}, {prop1: "baba"});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "baba", prop2: 34}, null, null);
+        })
+        .should.eventually.deep.equal({count: 1});
+    });    
+
+    it("should fail when updating a unique index with a duplicate value", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "a"});
+          testData.push({prop1: "b"});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {prop1: "a"}, {prop1: "b"});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "b"}, null, null);
+        })
+        .should.be.rejected;
+    });
+
+    it("should succed when updating a unique index with a non duplicate value", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "a"});
+          testData.push({prop1: "b"});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.updateDataByQuery(dbIter, {prop1: "a"}, {prop1: "c"});
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "c"}, null, null);
+        })
+        .should.eventually.deep.equal({count: 1});
     });
   });
 
