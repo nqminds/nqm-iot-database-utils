@@ -139,23 +139,16 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
-    it("should succeed if there's an empty info table", function() {
+    it("should fail if there's an empty info table", function() {
       let datasetId;
       return sqliteInfoTable.createInfoTable(dbMem)
         .then(() => {
           return sqLiteManager.createDataset(dbMem, {});
         })
-        .then((id) => {
-          datasetId = id;
-          return sqliteInfoTable.getInfoKeys(dbMem, ["id"]);
-        })
-        .then((keys) => {
-          return Promise.resolve(keys[0].id === datasetId);
-        })
-        .should.eventually.equal(true);
+        .should.be.rejected;
     });
 
-    it("should replace the existing data id with the generated one", function() {
+    it("should fail when replacing the existing data id with the generated one", function() {
       let datasetId;
       return sqliteInfoTable.createInfoTable(dbMem)
         .then(() => {
@@ -164,14 +157,7 @@ describe("sqlite-manager", function() {
         .then(() => {
           return sqLiteManager.createDataset(dbMem, {});
         })
-        .then((id) => {
-          datasetId = id;
-          return sqliteInfoTable.getInfoKeys(dbMem, ["id"]);
-        })
-        .then((keys) => {
-          return Promise.resolve(keys[0].id === datasetId);
-        })
-        .should.eventually.equal(true);
+        .should.be.rejected;
     });
 
     it("should create the data table based on a given schema", function() {
@@ -604,7 +590,7 @@ describe("sqlite-manager", function() {
     });
   });
 
-  describe.only("updateDataByQuery", function() {
+  describe("updateDataByQuery", function() {
     it("should return zero count for an empty update object", function() {
       let dbIter;
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];

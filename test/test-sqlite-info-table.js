@@ -34,17 +34,17 @@ describe("sqlite-info-table", function() {
       });
   });
 
-  it("should create info table succeed", function() {
+  it("should createInfoTable succeed", function() {
     return sqliteInfoTable.createInfoTable(db)
       .should.be.fulfilled;
   });
 
-  it("should create info table succeed if info table already exists", function() {
+  it("should createInfoTable fails if info table already exists", function() {
     return sqliteInfoTable.createInfoTable(db)
       .then(() => {
         return sqliteInfoTable.createInfoTable(db);
       })
-      .should.be.fulfilled;
+      .should.be.rejected;
   });
 
   it("should return the number of keys in INFO_KEYS_LIST after setInfoKeys execution", function() {
