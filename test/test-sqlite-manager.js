@@ -6,9 +6,9 @@ const Promise = require("bluebird");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const shortid = require("shortid");
-const builder = require("mongo-sql");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
+// @ts-ignore
 const packageJson = require("../package.json");
 const helper = require("./helper.js");
 const sqliteConstants = require("../lib/sqlite-constants.js");
@@ -91,8 +91,8 @@ describe("sqlite-manager", function() {
         .then(() => {
           return sqLiteManager.openDatabase(databasePath, "file", "r");
         })
-        .then(() => {
-          return Promise.resolve(sqLiteManager.getGeneralSchema());
+        .then((db) => {
+          return Promise.resolve(sqLiteManager.getGeneralSchema(db));
         })
         .should.eventually.deep.equal(tdxSchemaList.TDX_SCHEMA_LIST[0].generalSchema);
     });
@@ -140,7 +140,6 @@ describe("sqlite-manager", function() {
     });
 
     it("should fail if there's an empty info table", function() {
-      let datasetId;
       return sqliteInfoTable.createInfoTable(dbMem)
         .then(() => {
           return sqLiteManager.createDataset(dbMem, {});
@@ -149,7 +148,6 @@ describe("sqlite-manager", function() {
     });
 
     it("should fail when replacing the existing data id with the generated one", function() {
-      let datasetId;
       return sqliteInfoTable.createInfoTable(dbMem)
         .then(() => {
           return sqliteInfoTable.setInfoKeys(dbMem, [{"id": "12345"}]);
@@ -172,14 +170,75 @@ describe("sqlite-manager", function() {
             return dbIter.allAsync(`SELECT sql FROM sqlite_master WHERE name="${sqliteConstants.DATABASE_TABLE_INDEX_NAME}";`, []);
           })
           .then((fields) => {
-            if (fields.length === 1 && entry["sqliteIndex"] !== "")
-              return Promise.resolve((fields[0].sql === entry["sqliteIndex"]));
-            else if (!fields.length && entry["sqliteIndex"] === "")
+            if (fields.length === 1 && entry.sqliteIndex !== "")
+              return Promise.resolve((fields[0].sql === entry.sqliteIndex));
+            else if (!fields.length && entry.sqliteIndex === "")
               return Promise.resolve(true);
             else return Promise.resolve(false);
           })
           .should.eventually.equal(true);
       });
+    });
+
+    it("should succeed if executing createDataset in a sequence with the same schemas", function() {
+      return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0])
+        .then(() => {
+          return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0]);
+        })
+        .should.be.fulfilled;
+    });
+
+    it("should fail if executing createDataset in a sequence with the different schemas", function() {
+      return sqLiteManager.createDataset(dbMem, {})
+        .then(() => {
+          return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0]);
+        })
+        .should.be.rejected;
+    });
+
+    it("should not change the dataset id if executing createDataset in a sequence with the same schemas", function() {
+      let firstId;
+      return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0])
+        .then((id) => {
+          firstId = id;
+          return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0]);
+        })
+        .then((id) => {
+          return Promise.resolve((firstId === id));
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should fail if index doesn't match schema", function() {
+      const options = _.cloneDeep(tdxSchemaList.TDX_SCHEMA_LIST[0]);
+
+      options.schema.dataSchema = {};
+
+      return sqLiteManager.createDataset(dbMem, options)
+        .should.be.fulfilled;
+    });
+
+    it("should not rewrite the general schema when opening two datasets", function() {
+      const entryFirst = tdxSchemaList.TDX_SCHEMA_LIST[0];
+      const entrySecond = tdxSchemaList.TDX_SCHEMA_LIST[1];
+      let dbFirst;
+      let generalSchemaFirst;
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbFirst = db;
+          return sqLiteManager.createDataset(dbFirst, entryFirst);
+        })
+        .then(() => {
+          generalSchemaFirst = _.cloneDeep(sqLiteManager.getGeneralSchema(dbFirst));
+          return sqLiteManager.openDatabase("", "memory", "w+");
+        })
+        .then((db) => {
+          return sqLiteManager.createDataset(db, entrySecond);
+        })
+        .then(() => {
+          return Promise.resolve(_.isEqual(generalSchemaFirst, sqLiteManager.getGeneralSchema(dbFirst)));
+        })
+        .should.eventually.equal(true);
     });
 
     it("should be rejected in invalid schema column names", function() {
@@ -211,7 +270,7 @@ describe("sqlite-manager", function() {
             return sqLiteManager.createDataset(dbIter, entry);
           })
           .then(() => {
-            return Promise.resolve(sqLiteManager.getGeneralSchema());
+            return Promise.resolve(sqLiteManager.getGeneralSchema(dbIter));
           })
           .should.eventually.deep.equal(entry.generalSchema);
       });
@@ -230,7 +289,7 @@ describe("sqlite-manager", function() {
             return sqLiteManager.createDataset(dbIter, entry);
           })
           .then(() => {
-            const generalSchema = sqLiteManager.getGeneralSchema();
+            const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
             const data = generateRandomData(generalSchema, 1000);
             dataSize = data.length;
             return sqLiteManager.addData(dbIter, data);
@@ -285,7 +344,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.createDataset(dbIter, entry);
         })
         .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema();
+          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, 1);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -322,7 +381,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.createDataset(dbIter, entry);
         })
         .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema();
+          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -349,7 +408,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.createDataset(dbIter, entry);
         })
         .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema();
+          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -377,7 +436,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.createDataset(dbIter, entry);
         })
         .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema();
+          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -420,7 +479,7 @@ describe("sqlite-manager", function() {
           let initialValue = result.data[0];
 
           _.forEach(result.data, (value) => {
-            truth = truth && (initialValue["prop1"] >= value["prop1"]);
+            truth = truth && (initialValue.prop1 >= value.prop1);
             initialValue = value;
           });
 
@@ -431,7 +490,7 @@ describe("sqlite-manager", function() {
           let initialValue = result.data[0];
 
           _.forEach(result.data, (value) => {
-            truth = truth && (initialValue["prop2"] <= value["prop2"]);
+            truth = truth && (initialValue.prop2 <= value.prop2);
             initialValue = value;
           });
 
@@ -440,7 +499,7 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
-    it("should return data with projection inclussion", function() {
+    it("should return data with projection inclusion", function() {
       return Promise.each(tdxSchemaList.TDX_SCHEMA_LIST, (entry) => {
         let dbIter;
         let testData = [];
@@ -454,7 +513,7 @@ describe("sqlite-manager", function() {
             return sqLiteManager.createDataset(dbIter, entry);
           })
           .then(() => {
-            generalSchema = sqLiteManager.getGeneralSchema();
+            generalSchema = sqLiteManager.getGeneralSchema(dbIter);
             testData = generateRandomData(generalSchema, 100);
 
             return sqLiteManager.addData(dbIter, testData);
@@ -516,13 +575,13 @@ describe("sqlite-manager", function() {
           truth = (result.data.length === 8);
 
           _.forEach(result.data, (row) => {
-            truth = truth && (row["prop1"] >= 92 && row["prop1"] <= 99) && (row["prop2"] >= 0 && row["prop2"] <= 7);
+            truth = truth && (row.prop1 >= 92 && row.prop1 <= 99) && (row.prop2 >= 0 && row.prop2 <= 7);
           });
 
           return Promise.resolve(truth);
         })
         .should.eventually.equal(true);
-    });    
+    });
   });
 
   describe("truncateResource", function() {
@@ -584,7 +643,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.addData(dbIter, testData);
         })
         .then(() => {
-          return sqLiteManager.getDatasetDataCount(dbIter, {$and: [{$or: [{prop1: {$gte: 2, $lte: 5}}, {prop1: {$gte: 92}}]}, {prop2: {$lte: 10}}]}, null, null);
+          return sqLiteManager.getDatasetDataCount(dbIter, {$and: [{$or: [{prop1: {$gte: 2, $lte: 5}}, {prop1: {$gte: 92}}]}, {prop2: {$lte: 10}}]});
         })
         .should.eventually.deep.equal({count: 8});
     });
@@ -723,7 +782,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "baba"}, null, null);
         })
         .should.eventually.deep.equal({count: 2});
-    });    
+    });
 
     it("should update some string entries for a non empty query", function() {
       let dbIter;
@@ -755,7 +814,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDatasetDataCount(dbIter, {prop1: "baba", prop2: 34}, null, null);
         })
         .should.eventually.deep.equal({count: 1});
-    });    
+    });
 
     it("should fail when updating a unique index with a duplicate value", function() {
       let dbIter;

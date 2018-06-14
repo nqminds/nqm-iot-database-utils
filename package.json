@@ -12,6 +12,7 @@
   "author": "mereacre@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "babel-eslint": "^8.2.3",
     "bluebird": "^3.5.0",
     "debug": "^3.0.1",
     "eslint": "^3.10.2",

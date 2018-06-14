@@ -24,6 +24,9 @@ sqliteUtils.openDatabase("", "memory", "w+")
       return sqliteUtils.createDataset(db, TDX_SCHEMA);
     })
     .then(() => {
+      return sqliteUtils.createDataset(dbIter, TDX_SCHEMA);
+    })
+    .then(() => {
       for (let idx = 0; idx < 100; idx++) {
         testData.push({
           prop1: idx,
