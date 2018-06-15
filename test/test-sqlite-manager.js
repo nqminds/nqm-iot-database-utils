@@ -241,6 +241,32 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
+    it("should close only one database when opening two and closing one", function() {
+      const entryFirst = tdxSchemaList.TDX_SCHEMA_LIST[0];
+      const entrySecond = tdxSchemaList.TDX_SCHEMA_LIST[1];
+      let dbFirst;
+      let dbSecond;
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbFirst = db;
+          return sqLiteManager.createDataset(dbFirst, entryFirst);
+        })
+        .then(() => {
+          return sqLiteManager.openDatabase("", "memory", "w+");
+        })
+        .then((db) => {
+          dbSecond = db;
+          return sqLiteManager.createDataset(db, entrySecond);
+        })
+        .then(() => {
+          return sqLiteManager.closeDatabase(dbSecond);
+        })
+        .then(() => {
+          return Promise.resolve(_.isEmpty(sqLiteManager.getGeneralSchema(dbSecond)) && !_.isEmpty(sqLiteManager.getGeneralSchema(dbFirst)));
+        })
+        .should.eventually.equal(true);
+    });
+
     it("should be rejected in invalid schema column names", function() {
       return Promise.each(tdxSchemaList.TDX_SCHEMA_LIST_ERROR, (entry) => {
         let dbIter;
