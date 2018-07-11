@@ -357,6 +357,46 @@ describe("sqlite-manager", function() {
         })
         .should.eventually.equal(true);
     });
+    it("should fail when adding duplicate unique index", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "a"});
+          testData.push({prop1: "b"});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.addData(dbIter, {prop1: "a"});
+        })
+        .should.be.rejected;
+    });
+    it("should succeed when adding non-duplicate unique index", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "a"});
+          testData.push({prop1: "b"});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.addData(dbIter, {prop1: "c"});
+        })
+        .should.eventually.be.fulfilled;
+    });
   });
 
   describe("getDatasetData", function() {
