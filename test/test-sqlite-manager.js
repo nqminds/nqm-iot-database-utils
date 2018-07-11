@@ -866,7 +866,7 @@ describe("sqlite-manager", function() {
         .should.be.rejected;
     });
 
-    it("should succed when updating a unique index with a non duplicate value", function() {
+    it("should succeed when updating a unique index with a non duplicate value", function() {
       let dbIter;
       const testData = [];
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
@@ -926,4 +926,3 @@ describe("sqlite-manager", function() {
     return data;
   }
 });
-
