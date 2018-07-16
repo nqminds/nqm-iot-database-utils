@@ -81,3 +81,7 @@ sqliteUtils.openDatabase("", "memory", "w+")
 ```
 
 # [API](https://nqminds.github.io/nqm-iot-database-utils/module-sqlite-manager.html)
+
+- Online Website <https://nqminds.github.io/nqm-iot-database-utils/module-sqlite-manager.html>
+- Local Markdown [`./api.md`](./api.md)
+
