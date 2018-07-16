@@ -14,7 +14,7 @@ npm test
 ## Build Documentation
 
 ```cmd
-npm docs
+npm run docs
 ```
 
 ### nodejs
