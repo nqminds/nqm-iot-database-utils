@@ -11,6 +11,12 @@ npm install nqm-iot-database-utils
 npm test
 ```
 
+## Build Documentation
+
+```cmd
+npm docs
+```
+
 ### nodejs
 ```js
 const sqliteUtils = require("nqm-iot-database-utils");
