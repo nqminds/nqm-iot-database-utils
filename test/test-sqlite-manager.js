@@ -715,6 +715,48 @@ describe("sqlite-manager", function() {
     });
   });
 
+  describe("getResource", function() {
+    it("should return the a resource for each database", function() {
+      tdxSchemaList.TDX_SCHEMA_LIST.forEach( (entry) => {
+        let dbIter;
+        const resource = sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(async () => {
+            const resource = await sqLiteManager.getResource(dbIter);
+            return resource;
+          });
+        resource.should.eventually.have.property("id");
+        resource.should.eventually.have.property("name");
+        resource.should.eventually.have.property("description");
+        resource.should.eventually.have.property("parents");
+        resource.should.eventually.have.property("schemaDefinition");
+        resource.should.eventually.have.property("tags");
+        resource.should.eventually.not.have.property("super_fake_random_prop");
+      });
+    });
+
+    it("should return the name and description if they are defined",
+      function() {
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[14];
+        let dbIter;
+        const resource = sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(async () => {
+            const resource = await sqLiteManager.getResource(dbIter);
+            return resource;
+          });
+        const expected = (({name, description, tags}) => ({
+          name, description, tags}))(entry);
+        resource.should.eventually.deep.include(expected);
+      });
+  });
+
   describe("updateDataByQuery", function() {
     it("should return zero count for an empty update object", function() {
       let dbIter;
