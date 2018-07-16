@@ -9,8 +9,11 @@
     "lint": "eslint client && echo \"eslint: no lint errors\"",
     "docs": "jsdoc -c jsdoc-config.json"
   },
-  "author": "mereacre@gmail.com",
   "license": "ISC",
+  "author": "Alexandru Mereacre <mereacre@gmail.com>",
+  "contributors": [
+    "Alois Klink <alois.klink@gmail.com> (aloisklink.com)"
+  ],
   "dependencies": {
     "babel-eslint": "^8.2.3",
     "bluebird": "^3.5.0",
