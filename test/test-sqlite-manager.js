@@ -755,6 +755,21 @@ describe("sqlite-manager", function() {
           name, description, tags}))(entry);
         resource.should.eventually.deep.include(expected);
       });
+
+    it("should be rejected if the db is invalid",
+      function() {
+        const dbIter = {};
+        const resource = sqLiteManager.getResource(dbIter);
+        return chai.assert.isRejected(resource);
+      });
+
+    it("should be fine if the db is invalid and noThrow is true",
+      function() {
+        const dbIter = {};
+        const noThrow = true;
+        const resource = sqLiteManager.getResource(dbIter, noThrow);
+        return chai.assert.isFulfilled(resource);
+      });
   });
 
   describe("updateDataByQuery", function() {
