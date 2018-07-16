@@ -22,11 +22,11 @@
     "eslint-plugin-mocha": "^4.7.0",
     "eslint-plugin-node": "^3.0.4",
     "eslint-plugin-react": "^6.7.1",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.10",
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
     "shortid": "^2.2.8",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^4.0.2"
   },
   "private": false,
   "babel": {
