@@ -32,6 +32,9 @@ sqliteUtils.openDatabase("", "memory", "w+")
       return sqliteUtils.addData(dbIter, testData);
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
+    })
+    .catch((error) => {
+      
     });
   
