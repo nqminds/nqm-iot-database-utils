@@ -52,6 +52,7 @@ module.exports = (function() {
   Promise.promisifyAll(sqlite3);
 
   /**
+   * @global
    * @typedef  {object} DatasetData
    * @property  {object} metaData - The dataset metadata (see `nqmMeta` option in `getDatasetData`).
    * @property  {string} metaDataUrl - The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`).
@@ -60,6 +61,7 @@ module.exports = (function() {
 
    /**
     * An object that describes a Resource/Dataset
+    * @global
     * @typedef  {object} Resource
     * @property  {string} description
     * @property  {string} id - The unique ID of the resource
@@ -392,8 +394,27 @@ module.exports = (function() {
   };
 
   /**
+   * @deprecated use {@link getData()}
    * Gets all data from the given dataset that matches the filter provided.
+   * @function
    * @alias module:sqlite-manager.getDatasetData
+   * @param  {object} db - The id of the dataset-based resource.
+   * @param  {object} [filter] - A mongodb filter object. If omitted, all data will be retrieved.
+   * @param  {object} [projection] - A mongodb projection object. Should be used to restrict the payload to the
+   * minimum properties needed if a lot of data is being retrieved.
+   * @param  {object} [options] - A mongodb options object. Can be used to limit, skip, sort etc. Note a default
+   * `limit` of 1000 is applied if none is given here.
+   * @param  {bool} [options.nqmMeta] - When set, the resource metadata will be returned along with the dataset
+   * data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided.
+   * @return  {DatasetData}
+   */
+  manager.getDatasetData = function(db, filter, projection, options) {
+    return manager.getData(db, filter, projection, options);
+  };
+
+  /**
+   * Gets all data from the given dataset that matches the filter provided.
+   * @alias module:sqlite-manager.getData
    * @param {object} db - The sqlite3 db object from module node-sqlite3.
    * @param {object} [filter] - A mongodb filter object. If omitted, all data will be retrieved.
    * @param {object} [projection] - A mongodb projection object. Should be used to restrict the payload to the
@@ -406,9 +427,9 @@ module.exports = (function() {
    *    e.g. `{prop1: 1, prop2: -1}`, where `1` = ascending, `-1` = descending.
    * @param {boolean} [options.nqmMeta] - When set, the resource metadata will be returned along with the dataset
    * data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided.
-   * @return {module:sqlite-manager~DatasetData}
+   * @return {DatasetData}
    */
-  manager.getDatasetData = function(db, filter, projection, options) {
+  manager.getData = function(db, filter, projection, options) {
     // Set the default values
     filter = filter || {};
     projection = projection || {};
@@ -479,8 +500,7 @@ module.exports = (function() {
       data: [],
     };
 
-    // TODO: Needs to be implemented
-    if (nqmMeta) result.metaData = {};
+    if (nqmMeta) result.metaData = manager.getResource(db);
 
     // Return early if no columns selected
     if (selectQuery.columns.length === 1 &amp;&amp; selectQuery.columns[0] === "*")
@@ -645,19 +665,12 @@ module.exports = (function() {
    * @alias module:sqlite-manager.getResource
    * @param  {object} db - The sqlite3 db object from module node-sqlite3.
    * @param  {bool} [noThrow=false] - If set, the call won't reject or throw if the resource doesn't exist.
-   * @return  {Promise&lt;module:sqlite-manager~Resource>}
+   * @return  {Promise&lt;Resource>}
    * @exception  Will throw/reject if the resource is not found (see `noThrow` flag) or permission is denied.
    */
   manager.getResource = async function(db, noThrow) {
     let info_keys;
-    const keysToDisplayKeys = {
-      description: "description",
-      id: "id",
-      name: "name",
-      parents: "parents",
-      tags: "tags",
-      schema: "schemaDefinition",
-    };
+    const keysToDisplayKeys = sqliteConstants.INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS;
     try {
       info_keys = await sqliteInfoTable.getInfoKeys(db, Object.keys(
         keysToDisplayKeys));
@@ -707,13 +720,13 @@ module.exports = (function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 16 2018 15:57:28 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jul 17 2018 10:06:50 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

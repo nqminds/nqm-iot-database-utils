@@ -8,7 +8,7 @@
     "test": "mocha",
     "lint": "eslint client && echo \"eslint: no lint errors\"",
     "docs": "jsdoc -c jsdoc-config.json",
-	"api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
+    "api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
   },
   "license": "ISC",
   "author": "Alexandru Mereacre <mereacre@gmail.com>",

@@ -1,3 +1,21 @@
+## Modules
+
+<dl>
+<dt><a href="#module_sqlite-manager">sqlite-manager</a></dt>
+<dd><p>Module to manage the sqlite database.</p>
+</dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#DatasetData">DatasetData</a> : <code>object</code></dt>
+<dd></dd>
+<dt><a href="#Resource">Resource</a> : <code>object</code></dt>
+<dd><p>An object that describes a Resource/Dataset</p>
+</dd>
+</dl>
+
 <a name="module_sqlite-manager"></a>
 
 ## sqlite-manager
@@ -6,21 +24,18 @@ Module to manage the sqlite database.
 **Author**: Alexandru Mereacre <mereacre@gmail.com>  
 
 * [sqlite-manager](#module_sqlite-manager)
-    * _static_
-        * [.openDatabase(path, type, mode)](#module_sqlite-manager.openDatabase) ⇒ <code>object</code>
-        * [.closeDatabase(db)](#module_sqlite-manager.closeDatabase) ⇒ <code>object</code>
-        * [.createDataset(db, options)](#module_sqlite-manager.createDataset) ⇒ <code>object</code>
-        * [.getGeneralSchema(db)](#module_sqlite-manager.getGeneralSchema) ⇒ <code>object</code>
-        * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>object</code>
-        * [.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#module_sqlite-manager..DatasetData)
-        * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
-        * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
-        * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
-        * [.getResource(db, [noThrow])](#module_sqlite-manager.getResource) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#module_sqlite-manager..Resource)
-        * [.setGeneralSchema(db, schema)](#module_sqlite-manager.setGeneralSchema)
-    * _inner_
-        * [~DatasetData](#module_sqlite-manager..DatasetData) : <code>object</code>
-        * [~Resource](#module_sqlite-manager..Resource) : <code>object</code>
+    * [.openDatabase(path, type, mode)](#module_sqlite-manager.openDatabase) ⇒ <code>object</code>
+    * [.closeDatabase(db)](#module_sqlite-manager.closeDatabase) ⇒ <code>object</code>
+    * [.createDataset(db, options)](#module_sqlite-manager.createDataset) ⇒ <code>object</code>
+    * [.getGeneralSchema(db)](#module_sqlite-manager.getGeneralSchema) ⇒ <code>object</code>
+    * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>object</code>
+    * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#DatasetData)~~
+    * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>DatasetData</code>](#DatasetData)
+    * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
+    * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
+    * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
+    * [.getResource(db, [noThrow])](#module_sqlite-manager.getResource) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#Resource)
+    * [.setGeneralSchema(db, schema)](#module_sqlite-manager.setGeneralSchema)
 
 <a name="module_sqlite-manager.openDatabase"></a>
 
@@ -130,7 +145,22 @@ manager.addData(db, [
 ```
 <a name="module_sqlite-manager.getDatasetData"></a>
 
-### sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>DatasetData</code>](#module_sqlite-manager..DatasetData)
+### ~~sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>DatasetData</code>](#DatasetData)~~
+***Deprecated***
+
+**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| db | <code>object</code> | The id of the dataset-based resource. |
+| [filter] | <code>object</code> | A mongodb filter object. If omitted, all data will be retrieved. |
+| [projection] | <code>object</code> | A mongodb projection object. Should be used to restrict the payload to the minimum properties needed if a lot of data is being retrieved. |
+| [options] | <code>object</code> | A mongodb options object. Can be used to limit, skip, sort etc. Note a default `limit` of 1000 is applied if none is given here. |
+| [options.nqmMeta] | <code>bool</code> | When set, the resource metadata will be returned along with the dataset data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided. |
+
+<a name="module_sqlite-manager.getData"></a>
+
+### sqlite-manager.getData(db, [filter], [projection], [options]) ⇒ [<code>DatasetData</code>](#DatasetData)
 Gets all data from the given dataset that matches the filter provided.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
@@ -192,7 +222,7 @@ Gets a count of the data in a dataset-based resource, after applying the given f
 
 <a name="module_sqlite-manager.getResource"></a>
 
-### sqlite-manager.getResource(db, [noThrow]) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#module_sqlite-manager..Resource)
+### sqlite-manager.getResource(db, [noThrow]) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#Resource)
 Gets the details for a given database.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
@@ -218,10 +248,10 @@ Sets the general schema and the default NULL array.
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
 | schema | <code>object</code> | The general schema. |
 
-<a name="module_sqlite-manager..DatasetData"></a>
+<a name="DatasetData"></a>
 
-### sqlite-manager~DatasetData : <code>object</code>
-**Kind**: inner typedef of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+## DatasetData : <code>object</code>
+**Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
@@ -230,12 +260,12 @@ Sets the general schema and the default NULL array.
 | metaDataUrl | <code>string</code> | The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | data | <code>Array.&lt;object&gt;</code> | The dataset documents. |
 
-<a name="module_sqlite-manager..Resource"></a>
+<a name="Resource"></a>
 
-### sqlite-manager~Resource : <code>object</code>
+## Resource : <code>object</code>
 An object that describes a Resource/Dataset
 
-**Kind**: inner typedef of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+**Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
