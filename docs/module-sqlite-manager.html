@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description">Module to manage the sqlite database.</div>
+            <div class="description"><p>Module to manage the sqlite database.</p></div>
         
 
         
@@ -157,7 +157,7 @@
 
 
 <div class="description">
-    Add data to a dataset resource.
+    <p>Add data to a dataset resource.</p>
 </div>
 
 
@@ -209,7 +209,7 @@
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -235,7 +235,9 @@
 
             
 
-            <td class="description last">The data to add. Must conform to the schema defined by the resource metadata. Supports creating an individual document or many documents.</td>
+            <td class="description last"><p>The data to add.
+    Must conform to the schema defined by the resource metadata.
+    Supports creating an individual document or many documents.</p></td>
         </tr>
 
     
@@ -276,7 +278,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line310">line 310</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line331">line 331</a>
     </li></ul></dd>
     
 
@@ -303,7 +305,9 @@
 
         
 <div class="param-desc">
-    - The promise with the total count of rows added.
+    <ul>
+<li>The promise with the total count of rows added.</li>
+</ul>
 </div>
 
 
@@ -355,7 +359,7 @@
 
 
 <div class="description">
-    Closes a sqlite database.
+    <p>Closes a sqlite database.</p>
 </div>
 
 
@@ -407,7 +411,7 @@
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
         </tr>
 
     
@@ -448,7 +452,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line101">line 101</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -475,7 +479,9 @@
 
         
 <div class="param-desc">
-    - The empty promise or error
+    <ul>
+<li>The empty promise or error</li>
+</ul>
 </div>
 
 
@@ -512,7 +518,7 @@
 
 
 <div class="description">
-    Creates a dataset in the sqlite database.
+    <p>Creates a dataset in the sqlite database.</p>
 </div>
 
 
@@ -564,7 +570,7 @@
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
         </tr>
 
     
@@ -587,7 +593,7 @@
 
             
 
-            <td class="description last">details of the dataset to be added
+            <td class="description last"><p>details of the dataset to be added</p>
                 <h6>Properties</h6>
                 
 
@@ -649,7 +655,7 @@
                 </td>
             
 
-            <td class="description last">the id of the schema on which this resource will be based.</td>
+            <td class="description last"><p>the id of the schema on which this resource will be based.</p></td>
         </tr>
 
     
@@ -686,7 +692,7 @@
                 </td>
             
 
-            <td class="description last">definition of derived filter, implying this resource is a view on an existing dataset.
+            <td class="description last"><p>definition of derived filter, implying this resource is a view on an existing dataset.</p>
                 <h6>Properties</h6>
                 
 
@@ -740,12 +746,12 @@
 
             
 
-            <td class="description last">the (read) filter to apply, in mongodb query format,
-e.g. `{"temperature": {"$gt": 15}}` will mean that only data with a temperature value greater than 15 will be
-available in this view. The filter can be any arbitrarily complex mongodb query. Use the placeholder
-`"@@_identity_@@"` to indicate that the identity of the currently authenticated user should be substituted.
-For example, if the user `bob@acme.com/tdx.acme.com` is currently authenticated, a filter of `{"username":
- "@@_identity_@@"}` will resolve at runtime to `{"username": "bob@acme.com/tdx.acme.com"}`.</td>
+            <td class="description last"><p>the (read) filter to apply, in mongodb query format,
+    e.g. <code>{&quot;temperature&quot;: {&quot;$gt&quot;: 15}}</code> will mean that only data with a temperature value greater than 15 will be
+    available in this view. The filter can be any arbitrarily complex mongodb query. Use the placeholder
+    <code>&quot;@@_identity_@@&quot;</code> to indicate that the identity of the currently authenticated user should be substituted.
+    For example, if the user <a href="mailto:`bob@acme.com">`bob@acme.com</a>/tdx.acme.com<code>is currently authenticated, a filter of</code>{&quot;username&quot;:
+    &quot;@@<em>identity</em>@@&quot;}<code>will resolve at runtime to</code>{&quot;username&quot;: &quot;<a href="mailto:bob@acme.com">bob@acme.com</a>/tdx.acme.com&quot;}`.</p></td>
         </tr>
 
     
@@ -778,9 +784,9 @@ For example, if the user `bob@acme.com/tdx.acme.com` is currently authenticated,
 
             
 
-            <td class="description last">the (read) projection to apply, in mongodb projection format,
-e.g. `{"timestamp": 1, "temperature": 1}` implies only the 'timestamp' and 'temperature' properties will be
-returned.</td>
+            <td class="description last"><p>the (read) projection to apply, in mongodb projection format,
+    e.g. <code>{&quot;timestamp&quot;: 1, &quot;temperature&quot;: 1}</code> implies only the 'timestamp' and 'temperature' properties will be
+    returned.</p></td>
         </tr>
 
     
@@ -813,8 +819,8 @@ returned.</td>
 
             
 
-            <td class="description last">the id of the source dataset on which to apply the filters and
-projections.</td>
+            <td class="description last"><p>the id of the source dataset on which to apply the filters and
+    projections.</p></td>
         </tr>
 
     
@@ -847,10 +853,10 @@ projections.</td>
 
             
 
-            <td class="description last">the write filter to apply, in mongodb query format. This
-controls what data can be written to the underlying source dataset. For example, a write filter of
-`{"temperature": {"$lt": 40}}` means that attempts to write a temperature value greater than or equal to `40`
-will fail. The filter can be any arbitrarily complex mongodb query.</td>
+            <td class="description last"><p>the write filter to apply, in mongodb query format. This
+    controls what data can be written to the underlying source dataset. For example, a write filter of
+    <code>{&quot;temperature&quot;: {&quot;$lt&quot;: 40}}</code> means that attempts to write a temperature value greater than or equal to <code>40</code>
+    will fail. The filter can be any arbitrarily complex mongodb query.</p></td>
         </tr>
 
     
@@ -883,11 +889,11 @@ will fail. The filter can be any arbitrarily complex mongodb query.</td>
 
             
 
-            <td class="description last">the write prdbMemojection to apply, in mongodb projection format.
-This controls what properties can be written to the underlying dataset. For example, a write projection of
-`{"temperature": 1}` means that only the temperature field can be written, and attempts to write data to other
-properties will fail. To allow a view to create new data in the underlying dataset, the primary key fields
-must be included in the write projection.</td>
+            <td class="description last"><p>the write projection to apply, in mongodb projection format.
+    This controls what properties can be written to the underlying dataset. For example, a write projection of
+    <code>{&quot;temperature&quot;: 1}</code> means that only the temperature field can be written, and attempts to write data to other
+    properties will fail. To allow a view to create new data in the underlying dataset, the primary key fields
+    must be included in the write projection.</p></td>
         </tr>
 
     
@@ -931,7 +937,7 @@ must be included in the write projection.</td>
                 </td>
             
 
-            <td class="description last">a description for the resource.</td>
+            <td class="description last"><p>a description for the resource.</p></td>
         </tr>
 
     
@@ -968,8 +974,8 @@ must be included in the write projection.</td>
                 </td>
             
 
-            <td class="description last">the requested ID of the new resource. Must be unique. Will be auto-generated if
-omitted (recommended).</td>
+            <td class="description last"><p>the requested ID of the new resource. Must be unique.
+    Will be auto-generated if omitted (recommended).</p></td>
         </tr>
 
     
@@ -1006,7 +1012,7 @@ omitted (recommended).</td>
                 </td>
             
 
-            <td class="description last">the name of the resource. Must be unique in the parent folder.</td>
+            <td class="description last"><p>the name of the resource. Must be unique in the parent folder.</p></td>
         </tr>
 
     
@@ -1043,7 +1049,7 @@ omitted (recommended).</td>
                 </td>
             
 
-            <td class="description last">a free-form object for storing metadata associated with this resource.</td>
+            <td class="description last"><p>a free-form object for storing metadata associated with this resource.</p></td>
         </tr>
 
     
@@ -1080,8 +1086,8 @@ omitted (recommended).</td>
                 </td>
             
 
-            <td class="description last">the id of the parent resource. If omitted, will default to the appropriate
-root folder based on the type of resource being created.</td>
+            <td class="description last"><p>the id of the parent resource.
+    If omitted, will default to the appropriate root folder based on the type of resource being created.</p></td>
         </tr>
 
     
@@ -1118,8 +1124,8 @@ root folder based on the type of resource being created.</td>
                 </td>
             
 
-            <td class="description last">a description of the provenance of the resource. Markdown format is
-supported.</td>
+            <td class="description last"><p>a description of the provenance of the resource.
+    Markdown format is supported.</p></td>
         </tr>
 
     
@@ -1156,7 +1162,7 @@ supported.</td>
                 </td>
             
 
-            <td class="description last">optional schema definition.
+            <td class="description last"><p>optional schema definition.</p>
                 <h6>Properties</h6>
                 
 
@@ -1210,7 +1216,7 @@ supported.</td>
 
             
 
-            <td class="description last">data schema definition object. Has TDX object structure.</td>
+            <td class="description last"><p>data schema definition object. Has TDX object structure.</p></td>
         </tr>
 
     
@@ -1243,7 +1249,8 @@ supported.</td>
 
             
 
-            <td class="description last">array of key value pairs denoting the ascending or descending order of the columns.</td>
+            <td class="description last"><p>array of key value pairs denoting
+    the ascending or descending order of the columns.</p></td>
         </tr>
 
     
@@ -1287,8 +1294,9 @@ supported.</td>
                 </td>
             
 
-            <td class="description last">the share mode assigned to the new resource. One of [`"pw"`, `"pr"`,
-`"tr"`], corresponding to "public read/write", "public read/trusted write", "trusted only".</td>
+            <td class="description last"><p>the share mode assigned to the new resource.
+    One of [<code>&quot;pw&quot;</code>, <code>&quot;pr&quot;</code>, <code>&quot;tr&quot;</code>], corresponding to:
+    &quot;public read/write&quot;, &quot;public read/trusted write&quot;, &quot;trusted only&quot;.</p></td>
         </tr>
 
     
@@ -1325,7 +1333,7 @@ supported.</td>
                 </td>
             
 
-            <td class="description last">a list of tags to associate with the resource.</td>
+            <td class="description last"><p>a list of tags to associate with the resource.</p></td>
         </tr>
 
     
@@ -1373,7 +1381,7 @@ supported.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line169">line 169</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -1400,7 +1408,9 @@ supported.</td>
 
         
 <div class="param-desc">
-    - The id of the dataset created
+    <ul>
+<li>The id of the dataset created</li>
+</ul>
 </div>
 
 
@@ -1444,7 +1454,7 @@ supported.</td>
     
 
     
-    <h4 class="name" id=".getDatasetData"><span class="type-signature">(static) </span>getDatasetData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {DatasetData}</span></h4>
+    <h4 class="name" id=".getData"><span class="type-signature">(static) </span>getData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#DatasetData">DatasetData</a>}</span></h4>
     
 
     
@@ -1452,7 +1462,7 @@ supported.</td>
 
 
 <div class="description">
-    Gets all data from the given dataset that matches the filter provided.
+    <p>Gets all data from the given dataset that matches the filter provided.</p>
 </div>
 
 
@@ -1514,7 +1524,7 @@ supported.</td>
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -1547,7 +1557,7 @@ supported.</td>
 
             
 
-            <td class="description last">A mongodb filter object. If omitted, all data will be retrieved.</td>
+            <td class="description last"><p>A mongodb filter object. If omitted, all data will be retrieved.</p></td>
         </tr>
 
     
@@ -1580,8 +1590,8 @@ supported.</td>
 
             
 
-            <td class="description last">A mongodb projection object. Should be used to restrict the payload to the
-minimum properties needed if a lot of data is being retrieved.</td>
+            <td class="description last"><p>A mongodb projection object. Should be used to restrict the payload to the
+minimum properties needed if a lot of data is being retrieved.</p></td>
         </tr>
 
     
@@ -1614,8 +1624,8 @@ minimum properties needed if a lot of data is being retrieved.</td>
 
             
 
-            <td class="description last">A mongodb options object. Can be used to limit, skip, sort etc. Note a default
-`limit` of 1000 is applied if none is given here.
+            <td class="description last"><p>A mongodb options object. Can be used to limit, skip, sort etc. Note a default
+<code>limit</code> of 1000 is applied if none is given here.</p>
                 <h6>Properties</h6>
                 
 
@@ -1669,7 +1679,7 @@ minimum properties needed if a lot of data is being retrieved.</td>
 
             
 
-            <td class="description last">Number of documents to skip.</td>
+            <td class="description last"><p>Number of documents to skip.</p></td>
         </tr>
 
     
@@ -1702,7 +1712,7 @@ minimum properties needed if a lot of data is being retrieved.</td>
 
             
 
-            <td class="description last">Limit number of documents to output.</td>
+            <td class="description last"><p>Limit number of documents to output.</p></td>
         </tr>
 
     
@@ -1735,7 +1745,8 @@ minimum properties needed if a lot of data is being retrieved.</td>
 
             
 
-            <td class="description last">Sorting object by schema keys ex: {prop1: 1, prop2: -1}, 1 - ascending, -1 - descending.</td>
+            <td class="description last"><p>Sorting object by schema keys:
+   e.g. <code>{prop1: 1, prop2: -1}</code>, where <code>1</code> = ascending, <code>-1</code> = descending.</p></td>
         </tr>
 
     
@@ -1768,8 +1779,8 @@ minimum properties needed if a lot of data is being retrieved.</td>
 
             
 
-            <td class="description last">When set, the resource metadata will be returned along with the dataset
-data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided.</td>
+            <td class="description last"><p>When set, the resource metadata will be returned along with the dataset
+data. Can be used to avoid a second call to <code>getResource</code>. Otherwise a URL to the metadata is provided.</p></td>
         </tr>
 
     
@@ -1817,7 +1828,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line361">line 361</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line404">line 404</a>
     </li></ul></dd>
     
 
@@ -1851,7 +1862,332 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     </dt>
     <dd>
         
-<span class="param-type">DatasetData</span>
+<span class="param-type"><a href="global.html#DatasetData">DatasetData</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getDatasetData"><span class="type-signature">(static) </span>getDatasetData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#DatasetData">DatasetData</a>}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The id of the dataset-based resource.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A mongodb filter object. If omitted, all data will be retrieved.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>projection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A mongodb projection object. Should be used to restrict the payload to the
+minimum properties needed if a lot of data is being retrieved.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A mongodb options object. Can be used to limit, skip, sort etc. Note a default
+<code>limit</code> of 1000 is applied if none is given here.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>nqmMeta</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>When set, the resource metadata will be returned along with the dataset
+data. Can be used to avoid a second call to <code>getResource</code>. Otherwise a URL to the metadata is provided.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>use getData()
+Gets all data from the given dataset that matches the filter provided.</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#DatasetData">DatasetData</a></span>
 
 
     </dd>
@@ -1877,7 +2213,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Gets a count of the data in a dataset-based resource, after applying the given filter.
+    <p>Gets a count of the data in a dataset-based resource, after applying the given filter.</p>
 </div>
 
 
@@ -1929,7 +2265,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -1952,7 +2288,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">An optional mongodb filter to apply before counting the data.</td>
+            <td class="description last"><p>An optional mongodb filter to apply before counting the data.</p></td>
         </tr>
 
     
@@ -1993,7 +2329,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line562">line 562</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line610">line 610</a>
     </li></ul></dd>
     
 
@@ -2020,7 +2356,9 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
         
 <div class="param-desc">
-    - The promise with the total count of rows.
+    <ul>
+<li>The promise with the total count of rows.</li>
+</ul>
 </div>
 
 
@@ -2057,7 +2395,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Returns the general schema.
+    <p>Returns the general schema.</p>
 </div>
 
 
@@ -2109,7 +2447,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -2150,7 +2488,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line290">line 290</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line309">line 309</a>
     </li></ul></dd>
     
 
@@ -2177,7 +2515,9 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
         
 <div class="param-desc">
-    - The general schema object
+    <ul>
+<li>The general schema object</li>
+</ul>
 </div>
 
 
@@ -2206,6 +2546,226 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
 
     
+    <h4 class="name" id=".getResource"><span class="type-signature">(async, static) </span>getResource<span class="signature">(db, noThrow<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="global.html#Resource">Resource</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Gets the details for a given database.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>noThrow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set, the call won't reject or throw if the resource doesn't exist.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line643">line 643</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Will throw/reject if the resource is not found (see <code>noThrow</code> flag) or permission is denied.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="global.html#Resource">Resource</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id=".openDatabase"><span class="type-signature">(static) </span>openDatabase<span class="signature">(path, type, mode)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
 
@@ -2214,7 +2774,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Opens a sqlite database. Creates if none exists.
+    <p>Opens a sqlite database. Creates if none exists.</p>
 </div>
 
 
@@ -2266,7 +2826,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The path of the db</td>
+            <td class="description last"><p>The path of the db</p></td>
         </tr>
 
     
@@ -2289,7 +2849,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The type of the db: "file" or "memory"</td>
+            <td class="description last"><p>The type of the db: &quot;file&quot; or &quot;memory&quot;</p></td>
         </tr>
 
     
@@ -2312,7 +2872,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The open mode of the db: "w+" or "rw" or "r"</td>
+            <td class="description last"><p>The open mode of the db: &quot;w+&quot; or &quot;rw&quot; or &quot;r&quot;</p></td>
         </tr>
 
     
@@ -2353,7 +2913,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line42">line 42</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -2380,7 +2940,9 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
         
 <div class="param-desc">
-    - Returns the promise with the sqlite3 db object from module node-sqlite3
+    <ul>
+<li>Returns the promise with the sqlite3 db object from module node-sqlite3</li>
+</ul>
 </div>
 
 
@@ -2417,7 +2979,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Sets the general schema and the default NULL array.
+    <p>Sets the general schema and the default NULL array.</p>
 </div>
 
 
@@ -2469,7 +3031,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -2492,7 +3054,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The general schema.</td>
+            <td class="description last"><p>The general schema.</p></td>
         </tr>
 
     
@@ -2533,7 +3095,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line590">line 590</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line679">line 679</a>
     </li></ul></dd>
     
 
@@ -2575,7 +3137,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Truncates the dataset resource.
+    <p>Truncates the dataset resource.</p>
 </div>
 
 
@@ -2627,7 +3189,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -2668,7 +3230,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line532">line 532</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line580">line 580</a>
     </li></ul></dd>
     
 
@@ -2695,7 +3257,9 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
         
 <div class="param-desc">
-    - The promise with the total count of rows deleted.
+    <ul>
+<li>The promise with the total count of rows deleted.</li>
+</ul>
 </div>
 
 
@@ -2732,7 +3296,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
 
 <div class="description">
-    Updates data in a dataset-based resource using a query to specify the documents to be updated.
+    <p>Updates data in a dataset-based resource using a query to specify the documents to be updated.</p>
 </div>
 
 
@@ -2784,7 +3348,7 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The sqlite3 db object from module node-sqlite3.</td>
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
         </tr>
 
     
@@ -2807,8 +3371,8 @@ data. Can be used to avoid a second call to `getResource`. Otherwise a URL to th
 
             
 
-            <td class="description last">The query that specifies the data to update. All documents matching the
-query will be updated.</td>
+            <td class="description last"><p>The query that specifies the data to update. All documents matching the
+query will be updated.</p></td>
         </tr>
 
     
@@ -2831,7 +3395,7 @@ query will be updated.</td>
 
             
 
-            <td class="description last">The update object woith field data to be replaced.</td>
+            <td class="description last"><p>The update object woith field data to be replaced.</p></td>
         </tr>
 
     
@@ -2872,7 +3436,7 @@ query will be updated.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line471">line 471</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line515">line 515</a>
     </li></ul></dd>
     
 
@@ -2899,7 +3463,9 @@ query will be updated.</td>
 
         
 <div class="param-desc">
-    - The promise with the total count of rows updated.
+    <ul>
+<li>The promise with the total count of rows updated.</li>
+</ul>
 </div>
 
 
@@ -2934,176 +3500,6 @@ manager.updateDataByQuery(db, {lsoa: {$regex: "E*"}}, {count: 1000});</code></pr
     
 
     
-        <h3 class="subsection-title">Type Definitions</h3>
-
-        
-                
-<h4 class="name" id="~DatasetData">DatasetData</h4>
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>metaData</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The dataset metadata (see `nqmMeta` option in `getDatasetData`).</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>metaDataUrl</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`).</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The dataset documents.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-            
-    
 
     
 </article>
@@ -3116,13 +3512,13 @@ manager.updateDataByQuery(db, {lsoa: {$regex: "E*"}}, {count: 1000});</code></pr
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jun 14 2018 16:25:11 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jul 17 2018 10:06:50 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

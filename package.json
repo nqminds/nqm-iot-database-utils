@@ -1,15 +1,19 @@
 {
   "name": "nqm-iot-database-utils",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "",
     "test": "mocha",
     "lint": "eslint client && echo \"eslint: no lint errors\"",
-    "docs": "jsdoc -r lib -d docs"
+    "docs": "jsdoc -c jsdoc-config.json",
+    "api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
   },
-  "author": "mereacre@gmail.com",
+  "author": "Alexandru Mereacre <mereacre@gmail.com>",
+  "contributors": [
+    "Alois Klink <alois.klink@gmail.com> (aloisklink.com)"
+  ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "babel-eslint": "^8.2.3",
@@ -22,11 +26,11 @@
     "eslint-plugin-mocha": "^4.7.0",
     "eslint-plugin-node": "^3.0.4",
     "eslint-plugin-react": "^6.7.1",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.10",
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
     "shortid": "^2.2.8",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "^4.0.2"
   },
   "private": false,
   "babel": {
@@ -38,6 +42,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "jsdoc": "^3.5.5",
+    "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^5.2.0"
   }
 }

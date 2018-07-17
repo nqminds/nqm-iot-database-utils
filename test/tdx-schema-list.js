@@ -383,6 +383,36 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
   },
   "sqliteIndex": "",
 },
+{// Test 15, (14 in normal counting from 0)
+  "name": "Super awesome Test Number 0x0E",
+  "description": "The only test schema with a description.",
+  "tags": [
+    "test",
+    "super_cool",
+    "written by Alois Klink",
+    "Test Numbers should start with 0, not 1."
+  ],
+  "schema": {
+    "dataSchema": {
+      "prop1": {
+        "__tdxType": ["number"],
+      },
+      "prop2": {
+        "__tdxType": ["number"],
+      },
+    },
+    "uniqueIndex": [],
+  },
+  "sqliteSchema": {
+    "prop1": "NUMERIC",
+    "prop2": "NUMERIC",
+  },
+  "generalSchema": {
+    "prop1": "NUMERIC",
+    "prop2": "NUMERIC",
+  },
+  "sqliteIndex": "",
+},
 ];
 
 exports.TDX_SCHEMA_LIST_ERROR = [{// Test 1
