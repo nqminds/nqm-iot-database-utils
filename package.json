@@ -10,11 +10,11 @@
     "docs": "jsdoc -c jsdoc-config.json",
     "api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
   },
-  "license": "ISC",
   "author": "Alexandru Mereacre <mereacre@gmail.com>",
   "contributors": [
     "Alois Klink <alois.klink@gmail.com> (aloisklink.com)"
   ],
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "babel-eslint": "^8.2.3",
     "bluebird": "^3.5.0",
