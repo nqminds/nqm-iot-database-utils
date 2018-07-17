@@ -10,7 +10,7 @@
     "docs": "jsdoc -r lib -d docs"
   },
   "author": "mereacre@gmail.com",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "babel-eslint": "^8.2.3",
     "bluebird": "^3.5.0",
