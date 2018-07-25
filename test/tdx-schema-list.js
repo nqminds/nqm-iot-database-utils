@@ -390,7 +390,7 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
     "test",
     "super_cool",
     "written by Alois Klink",
-    "Test Numbers should start with 0, not 1."
+    "Test Numbers should start with 0, not 1.",
   ],
   "schema": {
     "dataSchema": {
@@ -412,6 +412,42 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
     "prop2": "NUMERIC",
   },
   "sqliteIndex": "",
+},
+{// Test 16, (15 in normal counting from 0)
+  "name": "Upsert Test Schema",
+  "tags": [
+    "test",
+    "upsert_was_terrible_to_write",
+    "written by Alois Klink",
+    "Test Numbers should start with 0, not 1.",
+  ],
+  "schema": {
+    "dataSchema": {
+      "prop1": {
+        "__tdxType": ["number"],
+      },
+      "prop2": {
+        "__tdxType": ["number"],
+      },
+      "prop3": {
+        "__tdxType": ["number"],
+      },
+    },
+    "uniqueIndex": [
+      {"asc": "prop1"}
+    ],
+  },
+  "sqliteSchema": {
+    "prop1": "NUMERIC",
+    "prop2": "NUMERIC",
+    "prop3": "NUMERIC",
+  },
+  "generalSchema": {
+    "prop1": "NUMERIC",
+    "prop2": "NUMERIC",
+    "prop3": "NUMERIC",
+  },
+  "sqliteIndex": "CREATE UNIQUE INDEX dataindex ON data(prop1 ASC)",
 },
 ];
 

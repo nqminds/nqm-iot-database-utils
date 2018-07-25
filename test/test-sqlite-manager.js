@@ -764,6 +764,141 @@ describe("sqlite-manager", function() {
       });
   });
 
+  describe("updateData", () => {
+    it("if throws is false, should return a CommandResult object on failure",
+      () => {
+        let dbIter;
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+        const throws = false;
+        const upsert = true;
+
+        return sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(() => {
+            return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
+          }).should.eventually.have.all.keys("commandId", "response", "result");
+      });
+    it("if throws is true, adding invalid data should cause an exception",
+      () => {
+        let dbIter;
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+        const throws = true;
+        const upsert = true;
+
+        return sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(() => {
+            return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
+          }).should.be.rejected;
+      });
+  it("if upsert is true, adding new primary key data should be like an " +
+    "insert",
+    () => {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+      const throws = true;
+      const upsert = true;
+
+      const testData = [];
+
+      for (let idx = 0; idx < 10; idx++) {
+        testData.push({
+          prop1: idx,
+          prop2: 0,
+          prop3: 0,
+        });
+      }
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+        }).then(() => {
+          return sqLiteManager.getData(dbIter);
+        }).should.eventually.deep.contain({data: testData});
+    });
+    it("Inserting data with the same unique index should update existing " +
+      "data",
+      () => {
+        let dbIter;
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+        const throws = true;
+        const upsert = true;
+
+        const testData = [];
+
+        for (let idx = 0; idx < 10; idx++) {
+          testData.push({
+            prop1: idx,
+            prop2: 0,
+            prop3: 0,
+          });
+        }
+
+        return sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(() => {
+            return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+          })
+          .then(() => {
+            testData[4].prop2 = 12345678;
+            return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+          })
+          .then(() => {
+            return sqLiteManager.getData(dbIter);
+          }).should.eventually.deep.contain({data: testData});
+      });
+    it("Updating partial data should only update those fields", () => {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+      const throws = true;
+      const upsert = true;
+
+      const testData = [];
+
+      for (let idx = 0; idx < 10; idx++) {
+        testData.push({
+          prop1: idx,
+          prop2: 0,
+          prop3: 1,
+        });
+      }
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+        })
+        .then(() => {
+          testData[4].prop2 = 12345678;
+          const dataToInsert = [{
+            prop1: testData[4].prop1,
+            prop2: testData[4].prop2,
+            // no prop3
+          }];
+          return sqLiteManager.updateData(dbIter, dataToInsert, upsert, throws);
+        })
+        .then(() => {
+          return sqLiteManager.getData(dbIter);
+        }).should.eventually.deep.contain({data: testData});
+    });
+  });
+
   describe("updateDataByQuery", function() {
     it("should return zero count for an empty update object", function() {
       let dbIter;
