@@ -1,7 +1,7 @@
 {
   "name": "nqm-iot-database-utils",
-  "version": "0.4.0",
-  "description": "",
+  "version": "0.4.3",
+  "description": "nqm-iot-database-utils",
   "main": "index.js",
   "scripts": {
     "start": "",
@@ -12,7 +12,7 @@
   },
   "author": "Alexandru Mereacre <mereacre@gmail.com>",
   "contributors": [
-    "Alois Klink <alois.klink@gmail.com> (aloisklink.com)"
+    "Alois Klink <alois.klink@gmail.com> (https://aloisklink.com/)"
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
