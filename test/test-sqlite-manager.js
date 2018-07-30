@@ -832,7 +832,6 @@ describe("sqlite-manager", function() {
         let dbIter;
         const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
         const throws = true;
-        const upsert = true;
 
         const testData = [];
 
@@ -844,21 +843,24 @@ describe("sqlite-manager", function() {
           });
         }
 
-        return sqLiteManager.openDatabase("", "memory", "w+")
-          .then((db) => {
-            dbIter = db;
-            return sqLiteManager.createDataset(dbIter, entry);
-          })
-          .then(() => {
-            return sqLiteManager.updateData(dbIter, testData, upsert, throws);
-          })
-          .then(() => {
-            testData[4].prop2 = 12345678;
-            return sqLiteManager.updateData(dbIter, testData, upsert, throws);
-          })
-          .then(() => {
-            return sqLiteManager.getData(dbIter);
-          }).should.eventually.deep.contain({data: testData});
+        const upserts = [false, true];
+        return Promise.all(upserts.map((upsert) => {
+          return sqLiteManager.openDatabase("/tmp/secret.db", "file", "w+")
+            .then((db) => {
+              dbIter = db;
+              return sqLiteManager.createDataset(dbIter, entry);
+            })
+            .then(() => {
+              return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+            })
+            .then(() => {
+              testData[4].prop2 = 12345678;
+              return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+            })
+            .then(() => {
+              return sqLiteManager.getData(dbIter);
+            }).should.eventually.deep.contain({data: testData});
+        }));
       });
     it("Updating partial data should only update those fields", () => {
       let dbIter;
