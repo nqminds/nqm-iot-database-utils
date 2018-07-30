@@ -131,14 +131,99 @@ module.exports = (function() {
   };
 
   /**
+   * Escapes an SQLite Identifier, e.g. a column name.
+   *
+   * This will prevent SQLite injections, and column names being incorrectly
+   * classified as string literal values.
+   *
+   * Mixing up the quotes can cause unexpected behaviour, since SQLite guesses
+   * whether something is a column-name or a variable.
+   *
+   * @function
+   * @alias module:sqlite-schema-converter.escapeIdentifier
+   * @param {string} identifier The identifier to quote.
+   * @returns {string} The escaped and double-quoted identifier
+   * @example
+   *   // using back-ticks as JS quote character to avoid confusion
+   *   // returns `"hello""cheeseburg'er"`
+   *   converter.escapeIdentifier(`hello"cheeseburg'er`);
+   */
+  converter.escapeIdentifier = function(identifier) {
+    return `"${identifier.replace(/"/g, '""')}"`;
+  };
+
+  /**
+   * Escapes the first character of the string using HTML standard.
+   *
+   * Unlike encodeURIComponent(), this encodes all characters.
+   * @param {string} charToEscape A string of length 1
+   * @returns {string} The escaped URI character.
+   * @example
+   *   // returns "%4A"
+   *   escapeURIchar("J");
+   */
+  function escapeURIchar(charToEscape) {
+    return `%${charToEscape.codePointAt(0).toString(16)}`;
+  }
+
+  /**
+   * Create a parameter for use in bind variables to SQLite statements.
+   *
+   * This creates a 1-to-1 mapping of column name to named parameter.
+   * It escapes the chars shown in
+   * &lt;https://stackoverflow.com/a/51574648/10149169> using &amp;hex style encoding.
+   *
+   * @function
+   * @alias module:sqlite-schema-converter.makeNamedParameter
+   * @param {string} namedParameter The parameter to escape and make.
+   * @returns {string} The escaped named parameter.
+   * @example
+   *   // returns ":a((/;😀%20%29)"
+   *   makeNamedParameter("(/;😀 )");
+   */
+  converter.makeNamedParameter = function(namedParameter) {
+    // invalid SQLite parameter names are whitespace chars
+    // so we escape them with %signs and escape % signs as well
+    const escapeParameter = namedParameter.replace(
+      // these are the only invalid characters for parameters
+      // ie ASCII whitespace, and the ) bracket. % is used as an escape char.
+      // eslint-disable-next-line no-control-regex
+      /[\%\x09\x0a\x0c\x0d\x20\)]/g, escapeURIchar);
+    return `:a(${escapeParameter})`;
+  };
+
+  /**
+   * Convert row of TDX values to SQLite values.
+   * @function
+   * @alias module:sqlite-schema-converter.convertRowToSqlite
+   * @param {object&lt;string, string>} schema - Object of columns -> SQLite types
+   * @param {object&lt;string, any>} row - Object of a data row of column -> value
+   * @returns {object&lt;string, number|string>} - The converted values.
+   */
+  converter.convertRowToSqlite = function(schema, row) {
+    const converted = {};
+    for (const column in row) {
+      const data = row[column];
+      converted[column] = converter.convertToSqlite(schema[column], data, {
+        onlyStringify: true, // don't need because we are binding values
+      });
+    }
+    return converted;
+  };
+
+  /**
    * Converts a tdx value to a sqlite value based on a sqlite type.
    * @function
    * @alias module:sqlite-schema-converter.convertToSqlite
    * @param {string} type - Sqlite type to convert the value to
    * @param {string} value - TDX value to convert from
    * @param {object} options - optional addition options
-   * @param  {boolean} [options.onlyStringify] - set to true to turn off the doubel quotest replacement and delimiter addition
-   * @returns {number|string} - The converted value. If it is an unrecognized type it will return null.
+   * @param  {boolean} [options.onlyStringify] - set to `true` to turn off
+   *     escaping single-quotes and delimiter addition.
+   *     This shouldn't be required as one should bind strings to SQLite
+   *     statements to avoid SQL injections anyway.
+   * @returns {number|string} - The converted value.
+   *     If it is an unrecognized type it will return `null`.
    */
   converter.convertToSqlite = function(type, value, options) {
     let result;
@@ -150,7 +235,7 @@ module.exports = (function() {
     switch (type) {
       case sqliteConstants.SQLITE_GENERAL_TYPE_OBJECT:
       case sqliteConstants.SQLITE_GENERAL_TYPE_ARRAY:
-        result = (onlyStringify) ? JSON.stringify(value) : `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+        result = (onlyStringify) ? JSON.stringify(value) : `'${JSON.stringify(value).replace(/'/g, "''")}'`;
         break;
       case sqliteConstants.SQLITE_TYPE_NUMERIC:
       case sqliteConstants.SQLITE_TYPE_INTEGER:
@@ -158,12 +243,11 @@ module.exports = (function() {
         result = value;
         break;
       case sqliteConstants.SQLITE_TYPE_TEXT:
-        result = (onlyStringify) ? value : `"${value.replace(/"/g, '""')}"`;
+        result = (onlyStringify) ? value : `'${value.replace(/'/g, "''")}'`;
         break;
       default:
         result = null;
     }
-
     return result;
   };
 
@@ -173,7 +257,8 @@ module.exports = (function() {
    * @alias module:sqlite-schema-converter.convertToTdx
    * @param {string} type - Sqlite type to convert the value to
    * @param {string} value - SQlite value to convert from
-   * @returns {number|string|array|object} - The converted value. If it is an unrecognized type it will return null.
+   * @returns {number|string|array|object} - The converted value.
+   *     If it is an unrecognized type it will return `null`.
    */
   converter.convertToTdx = function(type, value) {
     let result;
@@ -194,7 +279,6 @@ module.exports = (function() {
       default:
         result = null;
     }
-
     return result;
   };
 
@@ -226,7 +310,7 @@ module.exports = (function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jul 17 2018 10:06:50 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 30 2018 16:36:21 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

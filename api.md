@@ -11,6 +11,9 @@
 <dl>
 <dt><a href="#DatasetData">DatasetData</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#CommandResult">CommandResult</a> : <code>object</code></dt>
+<dd><p>An object the shows the status of a command.</p>
+</dd>
 <dt><a href="#Resource">Resource</a> : <code>object</code></dt>
 <dd><p>An object that describes a Resource/Dataset</p>
 </dd>
@@ -31,6 +34,7 @@ Module to manage the sqlite database.
     * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>object</code>
     * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#DatasetData)~~
     * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>DatasetData</code>](#DatasetData)
+    * [.updateData(db, data, [upsert], [throws])](#module_sqlite-manager.updateData) ⇒ [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult)
     * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
     * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
     * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
@@ -176,6 +180,22 @@ Gets all data from the given dataset that matches the filter provided.
 | [options.sort] | <code>number</code> | Sorting object by schema keys:    e.g. `{prop1: 1, prop2: -1}`, where `1` = ascending, `-1` = descending. |
 | [options.nqmMeta] | <code>boolean</code> | When set, the resource metadata will be returned along with the dataset data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided. |
 
+<a name="module_sqlite-manager.updateData"></a>
+
+### sqlite-manager.updateData(db, data, [upsert], [throws]) ⇒ [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult)
+Updates data in a dataset resource.
+
+**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+**Returns**: [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult) - - Use the result property to check for
+    errors.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
+| data | <code>object</code> \| <code>array.&lt;object&gt;</code> |  | The data to update.     Must conform to the schema defined by the resource metadata.     Supports updating individual or multiple rows. |
+| [upsert] | <code>bool</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
+| [throws] | <code>bool</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
+
 <a name="module_sqlite-manager.updateDataByQuery"></a>
 
 ### sqlite-manager.updateDataByQuery(db, query, update) ⇒ <code>object</code>
@@ -188,7 +208,7 @@ Updates data in a dataset-based resource using a query to specify the documents 
 | --- | --- | --- |
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
 | query | <code>object</code> | The query that specifies the data to update. All documents matching the query will be updated. |
-| update | <code>object</code> | The update object woith field data to be replaced. |
+| update | <code>object</code> | The update object with field data to be replaced. |
 
 **Example** *(updates multiple documents)*  
 ```js
@@ -259,6 +279,22 @@ Sets the general schema and the default NULL array.
 | metaData | <code>object</code> | The dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | metaDataUrl | <code>string</code> | The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | data | <code>Array.&lt;object&gt;</code> | The dataset documents. |
+
+<a name="CommandResult"></a>
+
+## CommandResult : <code>object</code>
+An object the shows the status of a command.
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| commandId | <code>string</code> | The auto-generated unique id of the command. |
+| response | <code>object</code> \| <code>string</code> | The response of the command.     If a command is sent asynchronously, this will     simply be the string `"ack"`.     In synchronous mode, this will usually be an object consisting of the     primary key of the data that was affected by the command. |
+| result | <code>object</code> | Contains detailed error information     when available. |
+| result.errors | <code>array</code> | Will contain error information     when appropriate. |
+| result.commit | <code>array</code> | Contains details of each     committed document. |
 
 <a name="Resource"></a>
 
