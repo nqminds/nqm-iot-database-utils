@@ -826,6 +826,36 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getData(dbIter);
         }).should.eventually.deep.contain({data: testData});
     });
+    it("if upsert is false, updating with new primary key data should do nothing",
+    () => {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+      const throws = true;
+      const upsert = false;
+
+      const testData = [];
+
+      for (let idx = 0; idx < 10; idx++) {
+        testData.push({
+          prop1: idx,
+          prop2: 0,
+          prop3: 0,
+        });
+      }
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+        }).then(() => {
+          return sqLiteManager.getData(dbIter);
+        }).then( (response) => {
+          return chai.expect(response.data).to.be.empty;
+        });
+    });
     it("Inserting data with the same unique index should update existing " +
       "data",
       () => {
