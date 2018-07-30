@@ -16,16 +16,8 @@
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "babel-eslint": "^8.2.3",
     "bluebird": "^3.5.0",
     "debug": "^3.0.1",
-    "eslint": "^3.10.2",
-    "eslint-find-rules": "^1.14.3",
-    "eslint-plugin-babel": "^3.2.0",
-    "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-mocha": "^4.7.0",
-    "eslint-plugin-node": "^3.0.4",
-    "eslint-plugin-react": "^6.7.1",
     "lodash": "^4.17.10",
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
@@ -44,6 +36,13 @@
     "chai-as-promised": "^7.1.1",
     "jsdoc": "^3.5.5",
     "jsdoc-to-markdown": "^4.0.1",
+    "eslint": "^3.10.2",
+    "eslint-find-rules": "^1.14.3",
+    "eslint-plugin-babel": "^3.2.0",
+    "eslint-plugin-mocha": "^4.7.0",
+    "eslint-plugin-node": "^3.0.4",
+    "eslint-plugin-react": "^6.7.1",
+    "babel-eslint": "^8.2.3",
     "mocha": "^5.2.0"
   }
 }
