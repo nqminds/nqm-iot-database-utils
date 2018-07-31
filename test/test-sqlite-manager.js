@@ -875,7 +875,7 @@ describe("sqlite-manager", function() {
 
         const upserts = [false, true];
         return Promise.all(upserts.map((upsert) => {
-          return sqLiteManager.openDatabase("/tmp/secret.db", "file", "w+")
+          return sqLiteManager.openDatabase("", "memory", "w+")
             .then((db) => {
               dbIter = db;
               return sqLiteManager.createDataset(dbIter, entry);
