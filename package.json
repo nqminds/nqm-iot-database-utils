@@ -1,8 +1,16 @@
 {
   "name": "nqm-iot-database-utils",
-  "version": "0.4.3",
-  "description": "nqm-iot-database-utils",
+  "version": "0.4.4",
+  "description": "Database Utility functions",
   "main": "index.js",
+  "keywords": [ "database", "nqm"],
+  "bugs": "https://github.com/nqminds/nqm-iot-database-utils/issues",
+  "repository" :
+    { "type" : "git"
+    , "url" : "git@github.com:nqminds/nqm-iot-database-utils.git"
+    },
+  "homepage": "https://github.com/nqminds/nqm-iot-database-utils/",
+  "engines" : {"node": ">=8.0.0"},
   "scripts": {
     "start": "",
     "test": "mocha",
@@ -10,9 +18,17 @@
     "docs": "jsdoc -c jsdoc-config.json",
     "api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
   },
-  "author": "Alexandru Mereacre <mereacre@gmail.com>",
+  "author": {
+    "name": "Alexandru Mereacre",
+    "email": "mereacre@gmail.com",
+    "url": "https://github.com/mereacre"
+  },
   "contributors": [
-    "Alois Klink <alois.klink@gmail.com> (https://aloisklink.com/)"
+    {
+      "name": "Alois Klink",
+      "email": "alois.klink@gmail.com",
+      "url": "https://aloisklink.com"
+    }
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
