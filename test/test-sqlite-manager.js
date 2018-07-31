@@ -797,6 +797,31 @@ describe("sqlite-manager", function() {
             return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
           }).should.be.rejected;
       });
+      it("Adding invalid should fail but the next call should continue working",
+        () => {
+          let dbIter;
+          const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+          const throws = true;
+          const upsert = true;
+
+          const data = [{prop1: 42, prop2: 42, prop3: 43}]
+          return sqLiteManager.openDatabase("", "memory", "w+")
+            .then((db) => {
+              dbIter = db;
+              return sqLiteManager.createDataset(dbIter, entry);
+            })
+            .then(() => {
+              return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
+            }).catch(() => {
+              // should have an error
+              return;
+            }).then(() => {
+              return sqLiteManager.updateData(
+                dbIter, data, upsert, throws);
+            }).then(() => {
+              return sqLiteManager.getData(dbIter);
+            }).should.eventually.deep.contain({data: data});
+        });
   it("if upsert is true, adding new primary key data should be like an " +
     "insert",
     () => {
