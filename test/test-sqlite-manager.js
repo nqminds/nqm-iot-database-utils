@@ -1172,6 +1172,87 @@ describe("sqlite-manager", function() {
     });
   });
 
+  describe.only("getDistinct", function() {
+    it("should return an empty list for an empty dataset", function() {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "prop1", {});
+        })
+        .then((data) => {
+          return Promise.resolve(data.data.length);
+        })
+        .should.eventually.deep.equal(0);
+    });
+
+    it("should return all keys for a present index", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "a"});
+          testData.push({prop1: "b"});
+          testData.push({prop1: "c"});
+          testData.push({prop1: "d"});
+          testData.push({prop1: "e"});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "prop1", {});
+        })
+        .then((data) => {
+          console.log(data);
+          return Promise.resolve((data.data.length === 5) && (data.data[0] === "a") && (data.data[4] === "e"));
+        })
+        .should.eventually.deep.equal(true);
+    });
+
+    it("should return list of distinct keys if there's no index present", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[12];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "abc", prop2: 34});
+          testData.push({prop1: "abc", prop2: 34354});
+          testData.push({prop1: "abc", prop2: 67834});
+          testData.push({prop1: "abc", prop2: 3345344});
+          testData.push({prop1: "abc", prop2: 323534});
+          testData.push({prop1: "bc", prop2: 340});
+          testData.push({prop1: "bc", prop2: 343540});
+          testData.push({prop1: "bc", prop2: 678340});
+          testData.push({prop1: "bc", prop2: 33453440});
+          testData.push({prop1: "bc", prop2: 3235340});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "prop1", {});
+        })
+        .then((data) => {
+          return Promise.resolve(data.data.length);
+        })
+        .should.eventually.deep.equal(2);
+    });
+    
+  });
+
   function generateRandomData(schema, size) {
     const data = [];
 

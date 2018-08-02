@@ -3,14 +3,19 @@
   "version": "0.4.4",
   "description": "Database Utility functions",
   "main": "index.js",
-  "keywords": [ "database", "nqm"],
+  "keywords": [
+    "database",
+    "nqm"
+  ],
   "bugs": "https://github.com/nqminds/nqm-iot-database-utils/issues",
-  "repository" :
-    { "type" : "git"
-    , "url" : "git@github.com:nqminds/nqm-iot-database-utils.git"
-    },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nqminds/nqm-iot-database-utils.git"
+  },
   "homepage": "https://github.com/nqminds/nqm-iot-database-utils/",
-  "engines" : {"node": ">=8.0.0"},
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "start": "",
     "test": "mocha",
