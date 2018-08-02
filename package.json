@@ -1,6 +1,6 @@
 {
   "name": "nqm-iot-database-utils",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Database Utility functions",
   "main": "index.js",
   "keywords": [

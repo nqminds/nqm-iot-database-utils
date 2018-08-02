@@ -31,9 +31,10 @@ Module to manage the sqlite database.
     * [.closeDatabase(db)](#module_sqlite-manager.closeDatabase) ⇒ <code>object</code>
     * [.createDataset(db, options)](#module_sqlite-manager.createDataset) ⇒ <code>object</code>
     * [.getGeneralSchema(db)](#module_sqlite-manager.getGeneralSchema) ⇒ <code>object</code>
-    * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>object</code>
+    * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>Promise.&lt;object.&lt;string, int&gt;&gt;</code>
     * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#DatasetData)~~
     * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>DatasetData</code>](#DatasetData)
+    * [.getDistinct(db, field, [filter])](#module_sqlite-manager.getDistinct) ⇒ [<code>DatasetData</code>](#DatasetData)
     * [.updateData(db, data, [upsert], [throws])](#module_sqlite-manager.updateData) ⇒ [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult)
     * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
     * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
@@ -124,11 +125,11 @@ Returns the general schema.
 
 <a name="module_sqlite-manager.addData"></a>
 
-### sqlite-manager.addData(db, data) ⇒ <code>object</code>
+### sqlite-manager.addData(db, data) ⇒ <code>Promise.&lt;object.&lt;string, int&gt;&gt;</code>
 Add data to a dataset resource.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - The promise with the total count of rows added.  
+**Returns**: <code>Promise.&lt;object.&lt;string, int&gt;&gt;</code> - - The promise with the total count of rows added.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -137,6 +138,7 @@ Add data to a dataset resource.
 
 **Example** *(create an individual document)*  
 ```js
+// returns {"count": 1} if successful
 manager.addData(db, {lsoa: "E0000001", count: 398});
 ```
 **Example** *(create multiple documents)*  
@@ -179,6 +181,19 @@ Gets all data from the given dataset that matches the filter provided.
 | [options.limit] | <code>number</code> | Limit number of documents to output. |
 | [options.sort] | <code>number</code> | Sorting object by schema keys:    e.g. `{prop1: 1, prop2: -1}`, where `1` = ascending, `-1` = descending. |
 | [options.nqmMeta] | <code>boolean</code> | When set, the resource metadata will be returned along with the dataset data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided. |
+
+<a name="module_sqlite-manager.getDistinct"></a>
+
+### sqlite-manager.getDistinct(db, field, [filter]) ⇒ [<code>DatasetData</code>](#DatasetData)
+Gets all distincts keys for a given field and filter.
+
+**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
+| field | <code>string</code> | The sqlite3 field. |
+| [filter] | <code>object</code> | A mongodb filter object. If omitted, all data will be retrieved. |
 
 <a name="module_sqlite-manager.updateData"></a>
 

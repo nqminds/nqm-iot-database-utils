@@ -1172,7 +1172,7 @@ describe("sqlite-manager", function() {
     });
   });
 
-  describe.only("getDistinct", function() {
+  describe("getDistinct", function() {
     it("should return an empty list for an empty dataset", function() {
       let dbIter;
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
@@ -1186,7 +1186,43 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDistinct(dbIter, "prop1", {});
         })
         .then((data) => {
-          return Promise.resolve(data.data.length);
+          return Promise.resolve(data.length);
+        })
+        .should.eventually.deep.equal(0);
+    });
+
+    it("should return early for an empty projection", function() {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "", {});
+        })
+        .then((data) => {
+          return Promise.resolve(data.length);
+        })
+        .should.eventually.deep.equal(0);
+    });
+
+    it("should return early for a false projection", function() {
+      let dbIter;
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "test", {});
+        })
+        .then((data) => {
+          return Promise.resolve(data.length);
         })
         .should.eventually.deep.equal(0);
     });
@@ -1213,8 +1249,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDistinct(dbIter, "prop1", {});
         })
         .then((data) => {
-          console.log(data);
-          return Promise.resolve((data.data.length === 5) && (data.data[0] === "a") && (data.data[4] === "e"));
+          return Promise.resolve((data.length === 5) && (data.indexOf("a") >= 0) && (data.indexOf("e") >= 0));
         })
         .should.eventually.deep.equal(true);
     });
@@ -1246,11 +1281,42 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDistinct(dbIter, "prop1", {});
         })
         .then((data) => {
-          return Promise.resolve(data.data.length);
+          return Promise.resolve(data.length);
         })
         .should.eventually.deep.equal(2);
     });
-    
+
+    it("should return list of distinct keys for a given filter", function() {
+      let dbIter;
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[12];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          testData.push({prop1: "abcf", prop2: 1});
+          testData.push({prop1: "abc", prop2: 2});
+          testData.push({prop1: "abcf", prop2: 3});
+          testData.push({prop1: "abc", prop2: 4});
+          testData.push({prop1: "abc", prop2: 5});
+          testData.push({prop1: "bcc", prop2: 6});
+          testData.push({prop1: "bcc", prop2: 7});
+          testData.push({prop1: "bc", prop2: 8});
+          testData.push({prop1: "bc", prop2: 9});
+          testData.push({prop1: "bcd", prop2: 10});
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          return sqLiteManager.getDistinct(dbIter, "prop1", {$or: [{prop2: {$gte: 4, $lte: 5}}, {prop2: {$gte: 8, $lte: 9}}]});
+        })
+        .then((data) => {
+          return Promise.resolve((data.indexOf("abc") >= 0) && (data.indexOf("bc") >= 0) && data.length === 2);
+        })
+        .should.eventually.deep.equal(true);
+    });
   });
 
   function generateRandomData(schema, size) {
