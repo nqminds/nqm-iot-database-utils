@@ -34,7 +34,7 @@ Module to manage the sqlite database.
     * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>Promise.&lt;object.&lt;string, int&gt;&gt;</code>
     * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#DatasetData)~~
     * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>DatasetData</code>](#DatasetData)
-    * [.getDistinct(db, field, [filter])](#module_sqlite-manager.getDistinct) ⇒ [<code>DatasetData</code>](#DatasetData)
+    * [.getDistinct(db, key, [filter])](#module_sqlite-manager.getDistinct) ⇒ <code>Array.&lt;object&gt;</code>
     * [.updateData(db, data, [upsert], [throws])](#module_sqlite-manager.updateData) ⇒ [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult)
     * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
     * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
@@ -184,16 +184,16 @@ Gets all data from the given dataset that matches the filter provided.
 
 <a name="module_sqlite-manager.getDistinct"></a>
 
-### sqlite-manager.getDistinct(db, field, [filter]) ⇒ [<code>DatasetData</code>](#DatasetData)
-Gets all distincts keys for a given field and filter.
+### sqlite-manager.getDistinct(db, key, [filter]) ⇒ <code>Array.&lt;object&gt;</code>
+Gets a list of distinct values for a given property in a dataset-based resource.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
-| field | <code>string</code> | The sqlite3 field. |
-| [filter] | <code>object</code> | A mongodb filter object. If omitted, all data will be retrieved. |
+| key | <code>string</code> | The name of the property to use. Can be a property path, e.g. "address.postcode". |
+| [filter] | <code>object</code> | An optional mongodb filter to apply. |
 
 <a name="module_sqlite-manager.updateData"></a>
 
