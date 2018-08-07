@@ -20,8 +20,9 @@
     "start": "",
     "test": "mocha",
     "lint": "eslint client && echo \"eslint: no lint errors\"",
-    "docs": "jsdoc -c jsdoc-config.json",
-    "api-md": "jsdoc2md ./lib/sqlite-manager.js > api.md"
+    "jsdocs": "jsdoc -c jsdoc-config.json",
+    "docs": "npm run api-md && TZ=UTC npm run jsdocs",
+    "api-md": "jsdoc2md ./lib/sqlite-manager.js > ./docs/api.md"
   },
   "author": {
     "name": "Alexandru Mereacre",
