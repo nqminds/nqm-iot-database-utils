@@ -1,13 +1,17 @@
 {
 	"plugins": ["plugins/markdown"],
+	"templates": {
+		"default": {
+			"staticFiles": {"paths": ["static"]}
+		}
+	},
 	"opts": {
-		"template": "templates/default",
 		"encoding": "utf8",
 		"destination": "./docs/",
 		"recurse": true
 	},
 	"source": {
-		"include": ["./lib"],
+		"include": ["./lib", "./README.md"],
 		"exclude": [],
 		"includePattern": ".+\\.js(doc|x)?$",
 		"excludePattern": "(^|\\/|\\\\)_"
