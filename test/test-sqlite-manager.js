@@ -215,7 +215,7 @@ describe("sqlite-manager", function() {
       options.schema.dataSchema = {};
 
       return sqLiteManager.createDataset(dbMem, options)
-        .should.be.fulfilled;
+        .should.be.rejected;
     });
 
     it("should not rewrite the general schema when opening two datasets", function() {
