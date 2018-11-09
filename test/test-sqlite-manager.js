@@ -657,6 +657,30 @@ describe("sqlite-manager", function() {
         })
         .should.eventually.equal(true);
     });
+
+    it("should return nqmMeta", async function() {
+      const testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[13];
+      const dataSize = 100;
+
+      const dbIter = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(dbIter, entry);
+      for (let idx = 0; idx < dataSize; idx++) {
+        testData.push({
+          prop1: idx,
+          prop2: dataSize - idx - 1,
+        });
+      }
+      await sqLiteManager.addData(dbIter, testData);
+      const data = await sqLiteManager.getDatasetData(dbIter,
+        null,
+        null,
+        {nqmMeta: true});
+      chai.expect(data).to.have.property("metaData");
+      const metaData = data.metaData;
+      chai.expect(metaData).to.have.all.keys(
+        ["description", "id", "name", "parents", "schemaDefinition", "tags"]);
+    });
   });
 
   describe("truncateResource", function() {
