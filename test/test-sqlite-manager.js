@@ -215,7 +215,7 @@ describe("sqlite-manager", function() {
       options.schema.dataSchema = {};
 
       return sqLiteManager.createDataset(dbMem, options)
-        .should.be.fulfilled;
+        .should.be.rejected;
     });
 
     it("should not rewrite the general schema when opening two datasets", function() {
@@ -277,6 +277,14 @@ describe("sqlite-manager", function() {
           })
           .should.be.rejected;
       });
+    });
+
+    it("should fail if invalid unique index", async function() {
+      await dbMem.runAsync(`CREATE TABLE ${sqliteConstants.DATABASE_DATA_TABLE_NAME}(a,b)`, []);
+      const validSchema = {...tdxSchemaList.TDX_SCHEMA_LIST[0]};
+      validSchema.schema = {...validSchema.schema}; // make a copy we can change
+      validSchema.schema.uniqueIndex = [{}]; // empty unique index
+      return sqLiteManager.createDataset(dbMem, validSchema).should.be.rejected;
     });
 
     it("should fail if data table already exists", function() {
@@ -377,6 +385,7 @@ describe("sqlite-manager", function() {
         })
         .should.be.rejected;
     });
+
     it("should succeed when adding non-duplicate unique index", function() {
       let dbIter;
       const testData = [];
