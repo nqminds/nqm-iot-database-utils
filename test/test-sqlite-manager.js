@@ -5,6 +5,7 @@ const _ = require("lodash");
 const Promise = require("bluebird");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
+const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const shortid = require("shortid");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
@@ -24,6 +25,7 @@ const projectNameIdx = databasePath.indexOf(packageJson.name);
 databasePath = `${databasePath.substring(0, projectNameIdx) + packageJson.name}/test/db/create-dataset-test.db`;
 
 chai.use(chaiAsPromised);
+chai.use(deepEqualInAnyOrder);
 chai.should();
 
 describe("sqlite-manager", function() {
@@ -986,6 +988,80 @@ describe("sqlite-manager", function() {
         .then(() => {
           return sqLiteManager.getData(dbIter);
         }).should.eventually.deep.contain({data: testData});
+    });
+  });
+
+  describe("deleteData", () => {
+    const schema = tdxSchemaList.TDX_SCHEMA_LIST[0];
+    let testData = [];
+    it("should do nothing with no data", async () => {
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, schema);
+      const randomData = generateRandomData(
+        sqLiteManager.getGeneralSchema(db), 10);
+      testData = testData.concat(randomData);
+      await sqLiteManager.addData(db, testData);
+      await sqLiteManager.deleteData(db, []);
+      return (await sqLiteManager.getData(db)).data.should.deep.equalInAnyOrder(
+        testData);
+    });
+    it("should delete one data row", async () => {
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, schema);
+      await sqLiteManager.addData(db, testData);
+      await sqLiteManager.deleteData(db, testData[0]);
+      const expectedData = testData.slice(1);
+      return (await sqLiteManager.getData(db)).data.should.deep.equalInAnyOrder(
+        expectedData);
+    });
+    it("should delete multiple data rows", async () => {
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, schema);
+      await sqLiteManager.addData(db, testData);
+      const dataToDelete = [];
+      const dataToKeep = [];
+      for (let i = 0; i < testData.length; i++) {
+        if (i % 2) dataToDelete.push(testData[i]);
+        else dataToKeep.push(testData[i]);
+      }
+      await sqLiteManager.deleteData(db, dataToDelete);
+      return (await sqLiteManager.getData(db)).data.should.deep.equalInAnyOrder(
+        dataToKeep);
+    });
+    it("should error if deleting row without all primary keys defined",
+      async () => {
+        const db = await sqLiteManager.openDatabase("", "memory", "w+");
+        await sqLiteManager.createDataset(db, schema);
+        await sqLiteManager.addData(db, testData);
+        const dataToDelete = [];
+        const dataToKeep = [];
+        for (let i = 0; i < testData.length; i++) {
+          if (i % 2) dataToDelete.push(testData[i]);
+          else dataToKeep.push(testData[i]);
+        }
+        return sqLiteManager.deleteData(db, [{"TEST": 1}]).should.be.rejected;
+      }
+    );
+    it("deleting data should allow reinsertion", async () => {
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, schema);
+      await sqLiteManager.addData(db, testData);
+      const dataToDelete = [];
+      const dataToKeep = [];
+      for (let i = 0; i < testData.length; i++) {
+        if (i % 2) dataToDelete.push(testData[i]);
+        else dataToKeep.push(testData[i]);
+      }
+      const p1 = sqLiteManager.addData(db, dataToDelete); // should fail
+      await p1.catch((e) => true); // make sure data is inserted now
+      await sqLiteManager.deleteData(db, dataToDelete);
+      const p2 = sqLiteManager.addData(db, dataToDelete); // should suceed
+      await p2.catch();
+      return Promise.all([
+        p1.should.be.rejected,
+        p2.should.eventually.contain({"count": 5}),
+        (await sqLiteManager.getData(db)).data.should.deep.equalInAnyOrder(testData),
+      ]);
     });
   });
 
