@@ -1,4 +1,7 @@
 # nqm-iot-database-utils
+
+[![npm version](https://badge.fury.io/js/nqm-iot-database-utils.svg)](https://badge.fury.io/js/nqm-iot-database-utils)
+
 nquiringminds IoT Database utilities (sqlite implementation for now)
 
 ## Install
