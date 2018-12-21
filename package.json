@@ -1,6 +1,6 @@
 {
   "name": "nqm-iot-database-utils",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Database Utility functions",
   "main": "index.js",
   "keywords": [
@@ -44,7 +44,7 @@
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
     "shortid": "^2.2.8",
-    "sqlite3": "^4.0.2"
+    "sqlite3": "^4.0.4"
   },
   "private": false,
   "babel": {

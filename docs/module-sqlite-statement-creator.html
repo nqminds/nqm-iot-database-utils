@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: sqlite-info-table</title>
+    <title>JSDoc: Module: sqlite-statement-creator</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: sqlite-info-table</h1>
+    <h1 class="page-title">Module: sqlite-statement-creator</h1>
 
     
 
@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Module to manage the info table.</p></div>
+            <div class="description"><p>Stores functions used to create SQLite Statements.</p></div>
         
 
         
@@ -77,13 +77,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li><a href="mailto:mereacre@gmail.com">Alexandru Mereacre</a></li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -94,7 +87,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-info-table.js.html">sqlite-info-table.js</a>, <a href="sqlite-info-table.js.html#line1">line 1</a>
+        <a href="sqlite-statement-creator.js.html">sqlite-statement-creator.js</a>, <a href="sqlite-statement-creator.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -149,7 +142,7 @@
     
 
     
-    <h4 class="name" id=".checkInfoTable"><span class="type-signature">(static) </span>checkInfoTable<span class="signature">(db)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".deleteStatement"><span class="type-signature">(static) </span>deleteStatement<span class="signature">(uniqueIndex, dataRowKeys)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -157,7 +150,7 @@
 
 
 <div class="description">
-    <p>Checks if info table exists.</p>
+    <p>Makes an SQLite Statement for a deletion by primary key match.</p>
 </div>
 
 
@@ -193,13 +186,13 @@
 
         <tr>
             
-                <td class="name"><code>db</code></td>
+                <td class="name"><code>uniqueIndex</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="global.html#UniqueIndex">UniqueIndex</a></span>
 
 
             
@@ -209,332 +202,14 @@
 
             
 
-            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-info-table.js.html">sqlite-info-table.js</a>, <a href="sqlite-info-table.js.html#line110">line 110</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>The promise with true or false</li>
-</ul>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createInfoTable"><span class="type-signature">(static) </span>createInfoTable<span class="signature">(db)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Creates the info table.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>db</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-info-table.js.html">sqlite-info-table.js</a>, <a href="sqlite-info-table.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>The error promise</li>
-</ul>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".getInfoKeys"><span class="type-signature">(static) </span>getInfoKeys<span class="signature">(db, keys)</span><span class="type-signature"> &rarr; {Array.&lt;object>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Returns the object keys for the info table.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>db</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
+            <td class="description last"><p>The uniqueIndex to delete on.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>keys</code></td>
+                <td class="name"><code>dataRowKeys</code></td>
             
 
             <td class="type">
@@ -550,7 +225,7 @@
 
             
 
-            <td class="description last"><p>The named keys to be retrieved from the info table</p></td>
+            <td class="description last"><p>The order of the uniqueIndex columns.</p></td>
         </tr>
 
     
@@ -591,7 +266,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-info-table.js.html">sqlite-info-table.js</a>, <a href="sqlite-info-table.js.html#line70">line 70</a>
+        <a href="sqlite-statement-creator.js.html">sqlite-statement-creator.js</a>, <a href="sqlite-statement-creator.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -619,7 +294,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The promise with array of pairs of key/value or error</li>
+<li>The SQLite deletion statement.</li>
 </ul>
 </div>
 
@@ -631,7 +306,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;object></span>
+<span class="param-type">string</span>
 
 
     </dd>
@@ -649,7 +324,7 @@
     
 
     
-    <h4 class="name" id=".setInfoKeys"><span class="type-signature">(async, static) </span>setInfoKeys<span class="signature">(db, keys)</span><span class="type-signature"> &rarr; {Promise.&lt;object.&lt;string, int>>}</span></h4>
+    <h4 class="name" id=".insertStatement"><span class="type-signature">(static) </span>insertStatement<span class="signature">(uniqueIndex, schema, dataRowKeys, upsert)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -657,7 +332,11 @@
 
 
 <div class="description">
-    <p>Sets the object keys for the info table.</p>
+    <p>Makes an SQLite Statement for an insertion.</p>
+<p>If dataRowKeys is missing a column that is in the schema, it is not added
+into the statement.
+This is so an insert adds the SQLite Column default value, and if there is
+an update, only the defined columns are changed.</p>
 </div>
 
 
@@ -693,7 +372,30 @@
 
         <tr>
             
-                <td class="name"><code>db</code></td>
+                <td class="name"><code>uniqueIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#UniqueIndex">UniqueIndex</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The uniqueIndex to upsert.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schema</code></td>
             
 
             <td class="type">
@@ -709,20 +411,20 @@
 
             
 
-            <td class="description last"><p>The sqlite3 db object from module node-sqlite3</p></td>
+            <td class="description last"><p>The schema of the database.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>keys</code></td>
+                <td class="name"><code>dataRowKeys</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;object></span>
+<span class="param-type">Array.&lt;string></span>
 
 
             
@@ -732,7 +434,30 @@
 
             
 
-            <td class="description last"><p>The object keys to be save in the info table</p></td>
+            <td class="description last"><p>The column names for the data row.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>upsert</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true, updates if the data already exists.</p></td>
         </tr>
 
     
@@ -773,7 +498,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-info-table.js.html">sqlite-info-table.js</a>, <a href="sqlite-info-table.js.html#line38">line 38</a>
+        <a href="sqlite-statement-creator.js.html">sqlite-statement-creator.js</a>, <a href="sqlite-statement-creator.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -801,7 +526,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The count of the keys added.</li>
+<li>The SQLite insert/upsert statement.</li>
 </ul>
 </div>
 
@@ -813,7 +538,376 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;object.&lt;string, int>></span>
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".updateStatement"><span class="type-signature">(static) </span>updateStatement<span class="signature">(uniqueIndex, schema, dataRowKeys)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Makes an SQLite Statement for an update.</p>
+<p>If dataRowKeys is missing a column that is in the schema, it is not added
+into the statement.
+This is so an insert adds the SQLite Column default value, and if there is
+an update, only the defined columns are changed.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uniqueIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#UniqueIndex">UniqueIndex</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The uniqueIndex to upsert.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>schema</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The schema of the database.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dataRowKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The column names for the data row.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-statement-creator.js.html">sqlite-statement-creator.js</a>, <a href="sqlite-statement-creator.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>The SQLite insert/upsert statement.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// returns
+// `UPDATE table SET "unique" = :a(unique) WHERE "unique" = :a(unique);`
+updateStatement([{"asc": "unique"}], {"unique": "TEXT"}, ["unique"]);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~makeUniqueIndexSet"><span class="type-signature">(inner) </span>makeUniqueIndexSet<span class="signature">(uniqueIndex)</span><span class="type-signature"> &rarr; {Set.&lt;string>}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uniqueIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#UniqueIndex">UniqueIndex</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The uniqueIndex.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-statement-creator.js.html">sqlite-statement-creator.js</a>, <a href="sqlite-statement-creator.js.html#line12">line 12</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The set of uniqueIndex columns.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Set.&lt;string></span>
 
 
     </dd>

@@ -12,6 +12,9 @@
 <dl>
 <dt><a href="#DatasetData">DatasetData</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#DataRow">DataRow</a> : <code>Object</code></dt>
+<dd><p>A row of data, with <code>{columnname: rowvalue}</code>.</p>
+</dd>
 <dt><a href="#CommandResult">CommandResult</a> : <code>object</code></dt>
 <dd><p>An object the shows the status of a command.</p>
 </dd>
@@ -33,28 +36,29 @@ Module to manage the sqlite database.
 **Author**: Alexandru Mereacre <mereacre@gmail.com>  
 
 * [sqlite-manager](#module_sqlite-manager)
-    * [.openDatabase(path, type, mode)](#module_sqlite-manager.openDatabase) ⇒ <code>object</code>
-    * [.closeDatabase(db)](#module_sqlite-manager.closeDatabase) ⇒ <code>object</code>
-    * [.createDataset(db, options)](#module_sqlite-manager.createDataset) ⇒ <code>object</code>
+    * [.openDatabase(path, type, mode)](#module_sqlite-manager.openDatabase) ⇒ <code>Promise.&lt;object&gt;</code>
+    * [.closeDatabase(db)](#module_sqlite-manager.closeDatabase) ⇒ <code>Promise.&lt;object&gt;</code>
+    * [.createDataset(db, options)](#module_sqlite-manager.createDataset) ⇒ <code>Promise.&lt;string&gt;</code>
     * [.getGeneralSchema(db)](#module_sqlite-manager.getGeneralSchema) ⇒ <code>object</code>
     * [.addData(db, data)](#module_sqlite-manager.addData) ⇒ <code>Promise.&lt;object.&lt;string, int&gt;&gt;</code>
-    * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>DatasetData</code>](#DatasetData)~~
-    * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>DatasetData</code>](#DatasetData)
-    * [.getDistinct(db, key, [filter])](#module_sqlite-manager.getDistinct) ⇒ <code>Array.&lt;object&gt;</code>
+    * ~~[.getDatasetData(db, [filter], [projection], [options])](#module_sqlite-manager.getDatasetData) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)~~
+    * [.getData(db, [filter], [projection], [options])](#module_sqlite-manager.getData) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)
+    * [.getDistinct(db, key, [filter])](#module_sqlite-manager.getDistinct) ⇒ <code>Promise.&lt;Array.&lt;object&gt;&gt;</code>
     * [.updateData(db, data, [upsert], [throws])](#module_sqlite-manager.updateData) ⇒ [<code>Promise.&lt;CommandResult&gt;</code>](#CommandResult)
-    * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>object</code>
+    * [.updateDataByQuery(db, query, update)](#module_sqlite-manager.updateDataByQuery) ⇒ <code>Promise.&lt;object&gt;</code>
     * [.truncateResource(db)](#module_sqlite-manager.truncateResource) ⇒ <code>object</code>
+    * [.deleteData(db, data, [doNotThrow])](#module_sqlite-manager.deleteData)
     * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
     * [.getResource(db, [noThrow])](#module_sqlite-manager.getResource) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#Resource)
     * [.setGeneralSchema(db, schema)](#module_sqlite-manager.setGeneralSchema)
 
 <a name="module_sqlite-manager.openDatabase"></a>
 
-### sqlite-manager.openDatabase(path, type, mode) ⇒ <code>object</code>
+### sqlite-manager.openDatabase(path, type, mode) ⇒ <code>Promise.&lt;object&gt;</code>
 Opens a sqlite database. Creates if none exists.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - Returns the promise with the sqlite3 db object from module node-sqlite3  
+**Returns**: <code>Promise.&lt;object&gt;</code> - Returns the sqlite3 db object from module node-sqlite3  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,11 +68,11 @@ Opens a sqlite database. Creates if none exists.
 
 <a name="module_sqlite-manager.closeDatabase"></a>
 
-### sqlite-manager.closeDatabase(db) ⇒ <code>object</code>
+### sqlite-manager.closeDatabase(db) ⇒ <code>Promise.&lt;object&gt;</code>
 Closes a sqlite database.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - The empty promise or error  
+**Returns**: <code>Promise.&lt;object&gt;</code> - - The empty promise or error  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -76,11 +80,11 @@ Closes a sqlite database.
 
 <a name="module_sqlite-manager.createDataset"></a>
 
-### sqlite-manager.createDataset(db, options) ⇒ <code>object</code>
+### sqlite-manager.createDataset(db, options) ⇒ <code>Promise.&lt;string&gt;</code>
 Creates a dataset in the sqlite database.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - The id of the dataset created  
+**Returns**: <code>Promise.&lt;string&gt;</code> - - The id of the dataset created  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -140,7 +144,7 @@ Add data to a dataset resource.
 | Param | Type | Description |
 | --- | --- | --- |
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
-| data | <code>object</code> \| <code>array</code> | The data to add.     Must conform to the schema defined by the resource metadata.     Supports creating an individual document or many documents. |
+| data | [<code>DataRow</code>](#DataRow) \| [<code>Array.&lt;DataRow&gt;</code>](#DataRow) | The data to add.     Must conform to the schema defined by the resource metadata.     Supports creating an individual document or many documents. |
 
 **Example** *(create an individual document)*  
 ```js
@@ -157,7 +161,7 @@ manager.addData(db, [
 ```
 <a name="module_sqlite-manager.getDatasetData"></a>
 
-### ~~sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>DatasetData</code>](#DatasetData)~~
+### ~~sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)~~
 ***Deprecated***
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
@@ -168,11 +172,11 @@ manager.addData(db, [
 | [filter] | <code>object</code> | A mongodb filter object. If omitted, all data will be retrieved. |
 | [projection] | <code>object</code> | A mongodb projection object. Should be used to restrict the payload to the minimum properties needed if a lot of data is being retrieved. |
 | [options] | <code>object</code> | A mongodb options object. Can be used to limit, skip, sort etc. Note a default `limit` of 1000 is applied if none is given here. |
-| [options.nqmMeta] | <code>bool</code> | When set, the resource metadata will be returned along with the dataset data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided. |
+| [options.nqmMeta] | <code>boolean</code> | If:   - `true`, the resource metadata will be returned along with the dataset     data. Can be used to avoid a second call to `getResource`.   - `false`-y, a URL to the metadata is provided. |
 
 <a name="module_sqlite-manager.getData"></a>
 
-### sqlite-manager.getData(db, [filter], [projection], [options]) ⇒ [<code>DatasetData</code>](#DatasetData)
+### sqlite-manager.getData(db, [filter], [projection], [options]) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)
 Gets all data from the given dataset that matches the filter provided.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
@@ -185,12 +189,12 @@ Gets all data from the given dataset that matches the filter provided.
 | [options] | <code>object</code> | A mongodb options object. Can be used to limit, skip, sort etc. Note a default `limit` of 1000 is applied if none is given here. |
 | [options.skip] | <code>number</code> | Number of documents to skip. |
 | [options.limit] | <code>number</code> | Limit number of documents to output. |
-| [options.sort] | <code>number</code> | Sorting object by schema keys:    e.g. `{prop1: 1, prop2: -1}`, where `1` = ascending, `-1` = descending. |
+| [options.sort] | <code>Object</code> | Sorting object by schema keys:    e.g. `{prop1: 1, prop2: -1}`, where `1` = ascending, `-1` = descending. |
 | [options.nqmMeta] | <code>boolean</code> | When set, the resource metadata will be returned along with the dataset data. Can be used to avoid a second call to `getResource`. Otherwise a URL to the metadata is provided. |
 
 <a name="module_sqlite-manager.getDistinct"></a>
 
-### sqlite-manager.getDistinct(db, key, [filter]) ⇒ <code>Array.&lt;object&gt;</code>
+### sqlite-manager.getDistinct(db, key, [filter]) ⇒ <code>Promise.&lt;Array.&lt;object&gt;&gt;</code>
 Gets a list of distinct values for a given property in a dataset-based resource.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
@@ -213,17 +217,17 @@ Updates data in a dataset resource.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
-| data | <code>object</code> \| <code>array.&lt;object&gt;</code> |  | The data to update.     Must conform to the schema defined by the resource metadata.     Supports updating individual or multiple rows. |
+| data | [<code>DataRow</code>](#DataRow) \| [<code>Array.&lt;DataRow&gt;</code>](#DataRow) |  | The data to update.     Must conform to the schema defined by the resource metadata.     Supports updating individual or multiple rows. |
 | [upsert] | <code>bool</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
 | [throws] | <code>bool</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
 
 <a name="module_sqlite-manager.updateDataByQuery"></a>
 
-### sqlite-manager.updateDataByQuery(db, query, update) ⇒ <code>object</code>
+### sqlite-manager.updateDataByQuery(db, query, update) ⇒ <code>Promise.&lt;object&gt;</code>
 Updates data in a dataset-based resource using a query to specify the documents to be updated.
 
 **Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - The promise with the total count of rows updated.  
+**Returns**: <code>Promise.&lt;object&gt;</code> - The promise with the total count of rows updated.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -247,6 +251,19 @@ Truncates the dataset resource.
 | Param | Type | Description |
 | --- | --- | --- |
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
+
+<a name="module_sqlite-manager.deleteData"></a>
+
+### sqlite-manager.deleteData(db, data, [doNotThrow])
+Deletes data from a dataset-based resource.
+
+**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
+| data | [<code>DataRow</code>](#DataRow) \| [<code>Array.&lt;DataRow&gt;</code>](#DataRow) |  | The primary key data to delete. |
+| [doNotThrow] | <code>boolean</code> | <code>false</code> | set to override default error handling. |
 
 <a name="module_sqlite-manager.getDatasetDataCount"></a>
 
@@ -299,8 +316,14 @@ Sets the general schema and the default NULL array.
 | --- | --- | --- |
 | metaData | <code>object</code> | The dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | metaDataUrl | <code>string</code> | The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`). |
-| data | <code>Array.&lt;object&gt;</code> | The dataset documents. |
+| data | [<code>Array.&lt;DataRow&gt;</code>](#DataRow) | The dataset documents. |
 
+<a name="DataRow"></a>
+
+## DataRow : <code>Object</code>
+A row of data, with `{columnname: rowvalue}`.
+
+**Kind**: global typedef  
 <a name="CommandResult"></a>
 
 ## CommandResult : <code>object</code>

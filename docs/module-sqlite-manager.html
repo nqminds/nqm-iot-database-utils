@@ -223,10 +223,10 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="global.html#DataRow">DataRow</a></span>
 |
 
-<span class="param-type">array</span>
+<span class="param-type">Array.&lt;<a href="global.html#DataRow">DataRow</a>></span>
 
 
             
@@ -279,7 +279,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line426">line 426</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line419">line 419</a>
     </li></ul></dd>
     
 
@@ -353,7 +353,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     
 
     
-    <h4 class="name" id=".closeDatabase"><span class="type-signature">(static) </span>closeDatabase<span class="signature">(db)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".closeDatabase"><span class="type-signature">(static) </span>closeDatabase<span class="signature">(db)</span><span class="type-signature"> &rarr; {Promise.&lt;object>}</span></h4>
     
 
     
@@ -454,7 +454,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line206">line 206</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line216">line 216</a>
     </li></ul></dd>
     
 
@@ -494,7 +494,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">Promise.&lt;object></span>
 
 
     </dd>
@@ -512,7 +512,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     
 
     
-    <h4 class="name" id=".createDataset"><span class="type-signature">(static) </span>createDataset<span class="signature">(db, options)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".createDataset"><span class="type-signature">(static) </span>createDataset<span class="signature">(db, options)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></h4>
     
 
     
@@ -1383,7 +1383,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line277">line 277</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -1423,7 +1423,7 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">Promise.&lt;string></span>
 
 
     </dd>
@@ -1456,7 +1456,235 @@ manager.addData(db, {lsoa: "E0000001", count: 398});</code></pre>
     
 
     
-    <h4 class="name" id=".getData"><span class="type-signature">(static) </span>getData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#DatasetData">DatasetData</a>}</span></h4>
+    <h4 class="name" id=".deleteData"><span class="type-signature">(async, static) </span>deleteData<span class="signature">(db, data, doNotThrow<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Deletes data from a dataset-based resource.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#DataRow">DataRow</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="global.html#DataRow">DataRow</a>></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The primary key data to delete.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>doNotThrow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>set to override default error handling.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line821">line 821</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getData"><span class="type-signature">(static) </span>getData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="global.html#DatasetData">DatasetData</a>>}</span></h4>
     
 
     
@@ -1727,7 +1955,7 @@ minimum properties needed if a lot of data is being retrieved.</p></td>
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1830,7 +2058,7 @@ data. Can be used to avoid a second call to <code>getResource</code>. Otherwise 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line484">line 484</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line481">line 481</a>
     </li></ul></dd>
     
 
@@ -1864,7 +2092,7 @@ data. Can be used to avoid a second call to <code>getResource</code>. Otherwise 
     </dt>
     <dd>
         
-<span class="param-type"><a href="global.html#DatasetData">DatasetData</a></span>
+<span class="param-type">Promise.&lt;<a href="global.html#DatasetData">DatasetData</a>></span>
 
 
     </dd>
@@ -1882,7 +2110,7 @@ data. Can be used to avoid a second call to <code>getResource</code>. Otherwise 
     
 
     
-    <h4 class="name" id=".getDatasetData"><span class="type-signature">(static) </span>getDatasetData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#DatasetData">DatasetData</a>}</span></h4>
+    <h4 class="name" id=".getDatasetData"><span class="type-signature">(static) </span>getDatasetData<span class="signature">(db, filter<span class="signature-attributes">opt</span>, projection<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="global.html#DatasetData">DatasetData</a>>}</span></h4>
     
 
     
@@ -2083,7 +2311,7 @@ minimum properties needed if a lot of data is being retrieved.</p></td>
             <td class="type">
             
                 
-<span class="param-type">bool</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -2103,8 +2331,12 @@ minimum properties needed if a lot of data is being retrieved.</p></td>
 
             
 
-            <td class="description last"><p>When set, the resource metadata will be returned along with the dataset
-data. Can be used to avoid a second call to <code>getResource</code>. Otherwise a URL to the metadata is provided.</p></td>
+            <td class="description last"><p>If:</p>
+<ul>
+<li><code>true</code>, the resource metadata will be returned along with the dataset
+data. Can be used to avoid a second call to <code>getResource</code>.</li>
+<li><code>false</code>-y, a URL to the metadata is provided.</li>
+</ul></td>
         </tr>
 
     
@@ -2155,7 +2387,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line463">line 463</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line459">line 459</a>
     </li></ul></dd>
     
 
@@ -2189,7 +2421,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     </dt>
     <dd>
         
-<span class="param-type"><a href="global.html#DatasetData">DatasetData</a></span>
+<span class="param-type">Promise.&lt;<a href="global.html#DatasetData">DatasetData</a>></span>
 
 
     </dd>
@@ -2331,7 +2563,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line947">line 947</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line860">line 860</a>
     </li></ul></dd>
     
 
@@ -2389,7 +2621,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
 
     
-    <h4 class="name" id=".getDistinct"><span class="type-signature">(static) </span>getDistinct<span class="signature">(db, key, filter<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;object>}</span></h4>
+    <h4 class="name" id=".getDistinct"><span class="type-signature">(static) </span>getDistinct<span class="signature">(db, key, filter<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;object>>}</span></h4>
     
 
     
@@ -2564,7 +2796,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line496">line 496</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line493">line 493</a>
     </li></ul></dd>
     
 
@@ -2598,7 +2830,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;object></span>
+<span class="param-type">Promise.&lt;Array.&lt;object>></span>
 
 
     </dd>
@@ -2717,7 +2949,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line401">line 401</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line394">line 394</a>
     </li></ul></dd>
     
 
@@ -2931,7 +3163,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line980">line 980</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line893">line 893</a>
     </li></ul></dd>
     
 
@@ -2995,7 +3227,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
 
     
-    <h4 class="name" id=".openDatabase"><span class="type-signature">(static) </span>openDatabase<span class="signature">(path, type, mode)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".openDatabase"><span class="type-signature">(async, static) </span>openDatabase<span class="signature">(path, type, mode)</span><span class="type-signature"> &rarr; {Promise.&lt;object>}</span></h4>
     
 
     
@@ -3142,7 +3374,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line142">line 142</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -3169,9 +3401,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
 
         
 <div class="param-desc">
-    <ul>
-<li>Returns the promise with the sqlite3 db object from module node-sqlite3</li>
-</ul>
+    <p>Returns the sqlite3 db object from module node-sqlite3</p>
 </div>
 
 
@@ -3182,7 +3412,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">Promise.&lt;object></span>
 
 
     </dd>
@@ -3324,7 +3554,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line1018">line 1018</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line931">line 931</a>
     </li></ul></dd>
     
 
@@ -3459,7 +3689,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line917">line 917</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line789">line 789</a>
     </li></ul></dd>
     
 
@@ -3606,10 +3836,10 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="global.html#DataRow">DataRow</a></span>
 |
 
-<span class="param-type">array.&lt;object></span>
+<span class="param-type">Array.&lt;<a href="global.html#DataRow">DataRow</a>></span>
 
 
             
@@ -3755,7 +3985,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line792">line 792</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line662">line 662</a>
     </li></ul></dd>
     
 
@@ -3814,7 +4044,7 @@ Gets all data from the given dataset that matches the filter provided.</li></ul>
     
 
     
-    <h4 class="name" id=".updateDataByQuery"><span class="type-signature">(static) </span>updateDataByQuery<span class="signature">(db, query, update)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id=".updateDataByQuery"><span class="type-signature">(static) </span>updateDataByQuery<span class="signature">(db, query, update)</span><span class="type-signature"> &rarr; {Promise.&lt;object>}</span></h4>
     
 
     
@@ -3962,7 +4192,7 @@ query will be updated.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line852">line 852</a>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line724">line 724</a>
     </li></ul></dd>
     
 
@@ -3989,9 +4219,7 @@ query will be updated.</p></td>
 
         
 <div class="param-desc">
-    <ul>
-<li>The promise with the total count of rows updated.</li>
-</ul>
+    <p>The promise with the total count of rows updated.</p>
 </div>
 
 
@@ -4002,7 +4230,7 @@ query will be updated.</p></td>
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">Promise.&lt;object></span>
 
 
     </dd>
@@ -4038,13 +4266,13 @@ manager.updateDataByQuery(db, {lsoa: {$regex: "E*"}}, {count: 1000});</code></pr
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Aug 07 2018 17:38:51 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 21 2018 11:43:12 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
