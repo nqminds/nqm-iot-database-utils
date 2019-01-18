@@ -449,6 +449,28 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
   },
   "sqliteIndex": "CREATE UNIQUE INDEX dataindex ON data(prop1 ASC)",
 },
+{// Test 17
+  "schema": {
+    "dataSchema": {
+      "timestamp": {
+        "__tdxType": ["number"],
+      },
+      "data": {
+        "__tdxType": ["ndarray"],
+      },
+    },
+    "uniqueIndex": [],
+  },
+  "sqliteSchema": {
+    "timestamp": "NUMERIC",
+    "data": "TEXT",
+  },
+  "generalSchema": {
+    "timestamp": "NUMERIC",
+    "data": "NDARRAY",
+  },
+  "sqliteIndex": "",
+},
 ];
 
 exports.TDX_SCHEMA_LIST_ERROR = [{// Test 1
