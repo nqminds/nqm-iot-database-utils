@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 "use strict";
 
+const path = require('path');
 const _ = require("lodash");
 const Promise = require("bluebird");
 const chai = require("chai");
@@ -49,6 +50,22 @@ describe("sqlite-manager", function() {
         })
         .then(() => {
           return Promise.resolve(dbResult);
+        })
+        .should.eventually.deep.equal({
+          "open": true,
+          "filename": databasePath,
+          "mode": 6,
+        });
+    });
+
+    it.only("should create the ndarr folder on database create", function() {
+      return sqLiteManager.openDatabase(databasePath, "file", "w+")
+        .then(() => {
+          let re = /.[.]$/;
+          let dbFile = path.basename(databasePath);
+          let suffixFile = re.exec(dbFile)[0];
+          let dbPath = path.dirname(databasePath);
+          console.log(suffixFile);
         })
         .should.eventually.deep.equal({
           "open": true,
