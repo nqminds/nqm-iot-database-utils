@@ -1,7 +1,8 @@
 /* eslint-env mocha */
 "use strict";
 
-const path = require('path');
+const path = require("path");
+const fs = require("fs");
 const _ = require("lodash");
 const Promise = require("bluebird");
 const chai = require("chai");
@@ -61,17 +62,13 @@ describe("sqlite-manager", function() {
     it.only("should create the ndarr folder on database create", function() {
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
         .then(() => {
-          let re = /.[.]$/;
-          let dbFile = path.basename(databasePath);
-          let suffixFile = re.exec(dbFile)[0];
-          let dbPath = path.dirname(databasePath);
-          console.log(suffixFile);
+          const dbFile = path.basename(databasePath);
+          const dbPath = path.dirname(databasePath);
+          const dataPath = path.join(dbPath, dbFile.replace(/\.[^/.]+$/, "") + sqliteConstants.DATABASE_FOLDER_SUFFIX);
+          
+          return Promise.resolve(fs.existsSync(dataPath));
         })
-        .should.eventually.deep.equal({
-          "open": true,
-          "filename": databasePath,
-          "mode": 6,
-        });
+        .should.eventually.equal(true);
     });
 
     it("should create and then open a database", function() {
