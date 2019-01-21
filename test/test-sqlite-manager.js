@@ -4,10 +4,11 @@
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
+const del = require("del");
 const Promise = require("bluebird");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const shortid = require("shortid");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
@@ -34,6 +35,9 @@ describe("sqlite-manager", function() {
   this.timeout(testTimeout);
   describe("openDatabase", function() {
     beforeEach(function() {
+      const dbFile = path.basename(databasePath);
+      const dbPath = path.dirname(databasePath);
+      del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
       helper.deleteFile(databasePath);
     });
 
@@ -64,7 +68,7 @@ describe("sqlite-manager", function() {
         .then(() => {
           const dbFile = path.basename(databasePath);
           const dbPath = path.dirname(databasePath);
-          const dataPath = path.join(dbPath, dbFile.replace(/\.[^/.]+$/, "") + sqliteConstants.DATABASE_FOLDER_SUFFIX);
+          const dataPath = path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX);
           
           return Promise.resolve(fs.existsSync(dataPath));
         })
