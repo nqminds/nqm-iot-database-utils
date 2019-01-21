@@ -63,7 +63,7 @@ describe("sqlite-manager", function() {
         });
     });
 
-    it.only("should create the ndarr folder on database create", function() {
+    it("should create the data folder on database create", function() {
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
         .then(() => {
           const dbFile = path.basename(databasePath);
@@ -85,7 +85,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.openDatabase(databasePath, "file", "rw");
         })
         .then((db) => {
-          dbResult = _.pick(db, ["open", "filename", "mode"]);
+          dbResult = _.pick(db, ["open", "filename", "mode", "dataFolder"]);
           return sqLiteManager.closeDatabase(db);
         })
         .then(() => {
@@ -95,6 +95,8 @@ describe("sqlite-manager", function() {
           "open": true,
           "filename": databasePath,
           "mode": 2,
+          "dataFolder": path.join(path.dirname(databasePath), path.basename(databasePath) +
+                        sqliteConstants.DATABASE_FOLDER_SUFFIX),
         });
     });
 
