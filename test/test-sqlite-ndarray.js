@@ -17,7 +17,7 @@ chai.should();
 
 describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
-  it.only("should return a meta object for a ndarray object", function() {
+  it("should return a meta object for a ndarray object", function() {
     const array = nd(new Float64Array(2 * 3), [2, 3]);
     const meta = sqliteNdarray.getNdarrayMeta(array);
     const result = _.pick(meta, ["t", "s", "v", "f", "c"]);

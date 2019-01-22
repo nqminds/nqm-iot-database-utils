@@ -46,7 +46,8 @@
     "ndarray": "^1.0.18",
     "path": "^0.12.7",
     "shortid": "^2.2.8",
-    "sqlite3": "^4.0.4"
+    "sqlite3": "^4.0.4",
+    "temp-dir": "^1.0.0"
   },
   "private": false,
   "babel": {

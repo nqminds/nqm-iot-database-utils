@@ -10,6 +10,7 @@ const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const shortid = require("shortid");
+const tempDir = require("temp-dir");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
 // @ts-ignore
@@ -63,7 +64,7 @@ describe("sqlite-manager", function() {
         });
     });
 
-    it("should create the data folder on database create", function() {
+    it("should create the data folder on database create (file mode)", function() {
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
         .then(() => {
           const dbFile = path.basename(databasePath);
@@ -75,6 +76,17 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
+    it("should create the data folder on database create (memory mode)", function() {
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then(() => {
+          const dataFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+          const dataFolderPath = path.join(tempDir, dataFolderName);
+          
+          return Promise.resolve(fs.existsSync(dataFolderPath));
+        })
+        .should.eventually.equal(true);
+    });
+    
     it("should create and then open a database", function() {
       let dbResult = {};
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
