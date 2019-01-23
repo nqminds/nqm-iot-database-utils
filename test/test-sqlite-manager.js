@@ -25,8 +25,8 @@ let dbMem;
 
 let databasePath = process.argv[1];
 const projectNameIdx = databasePath.indexOf(packageJson.name);
-
-databasePath = `${databasePath.substring(0, projectNameIdx) + packageJson.name}/test/db/create-dataset-test.db`;
+const databaseFolder = `${databasePath.substring(0, projectNameIdx) + packageJson.name}/test/db`;
+databasePath = `${databaseFolder}/create-dataset-test.db`;
 
 chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
@@ -34,11 +34,16 @@ chai.should();
 
 describe("sqlite-manager", function() {
   this.timeout(testTimeout);
+  before(function() {
+    fs.mkdirSync(databaseFolder);
+  });
+
   after(function() {
     const dbFile = path.basename(databasePath);
     const dbPath = path.dirname(databasePath);
     del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
     helper.deleteFile(databasePath);
+    del.sync(databaseFolder);
   });
 
   describe("openDatabase", function() {

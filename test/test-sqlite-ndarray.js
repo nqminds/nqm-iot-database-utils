@@ -15,10 +15,8 @@ const packageJson = require("../package.json");
 
 const testTimeout = 20000;
 
-let bufferPath = process.argv[1];
-const projectNameIdx = bufferPath.indexOf(packageJson.name);
-
-bufferPath = `${bufferPath.substring(0, projectNameIdx) + packageJson.name}/test/db/buffer`;
+const projectNameIdx = process.argv[1].indexOf(packageJson.name);
+const databaseFolder = `${process.argv[1].substring(0, projectNameIdx) + packageJson.name}/test/db`;
 
 chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
@@ -26,13 +24,12 @@ chai.should();
 
 describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
-  after(function() {
-    del.sync(bufferPath);
+  before(function() {
+    fs.mkdirSync(databaseFolder);
   });
 
-  beforeEach(function() {
-    del.sync(bufferPath);
-    fs.mkdirSync(bufferPath);
+  after(function() {
+    del.sync(databaseFolder);
   });
 
   it("should return a meta object for a ndarray object (row - order, 2D, Float64)", function() {
@@ -84,7 +81,7 @@ describe("sqlite-ndarray", function() {
       }
     );
 
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": bufferPath}, data, "data");
+    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data");
     for (const row of newData) {
       row["data"] = _.omit(row["data"], "p");
     }
