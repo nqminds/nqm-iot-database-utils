@@ -2,14 +2,23 @@
 "use strict";
 
 const _ = require("lodash");
-const Promise = require("bluebird");
+const fs = require("fs");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
 const nd = require("ndarray");
+const del = require("del");
 const sqliteNdarray = require("../lib/sqlite-ndarray.js");
 
+// @ts-ignore
+const packageJson = require("../package.json");
+
 const testTimeout = 20000;
+
+let bufferPath = process.argv[1];
+const projectNameIdx = bufferPath.indexOf(packageJson.name);
+
+bufferPath = `${bufferPath.substring(0, projectNameIdx) + packageJson.name}/test/db/buffer`;
 
 chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
@@ -17,6 +26,15 @@ chai.should();
 
 describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
+  after(function() {
+    del.sync(bufferPath);
+  });
+
+  beforeEach(function() {
+    del.sync(bufferPath);
+    fs.mkdirSync(bufferPath);
+  });
+
   it("should return a meta object for a ndarray object (row - order, 2D, Float64)", function() {
     const array = nd(new Float64Array(2 * 3), [2, 3]);
     const meta = sqliteNdarray.getNdarrayMeta(array);
@@ -66,7 +84,7 @@ describe("sqlite-ndarray", function() {
       }
     );
 
-    const newData = sqliteNdarray.writeNdarrayMany({}, data, "data");
+    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": bufferPath}, data, "data");
     for (const row of newData) {
       row["data"] = _.omit(row["data"], "p");
     }

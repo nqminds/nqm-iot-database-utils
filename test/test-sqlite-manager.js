@@ -34,6 +34,13 @@ chai.should();
 
 describe("sqlite-manager", function() {
   this.timeout(testTimeout);
+  after(function() {
+    const dbFile = path.basename(databasePath);
+    const dbPath = path.dirname(databasePath);
+    del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
+    helper.deleteFile(databasePath);
+  });
+
   describe("openDatabase", function() {
     beforeEach(function() {
       const dbFile = path.basename(databasePath);
