@@ -4,6 +4,7 @@
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
+const nd = require("ndarray");
 const del = require("del");
 const Promise = require("bluebird");
 const chai = require("chai");
@@ -1488,6 +1489,9 @@ describe("sqlite-manager", function() {
             break;
           case sqliteConstants.SQLITE_GENERAL_TYPE_ARRAY:
             dataElement[key] = [dataIdx, 2, 3, 4, 5, 6, "test", {a: 1, b: "test"}];
+            break;
+          case sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY:
+            dataElement[key] = nd(new Float64Array(23 * 34), [23, 34]);
             break;
           case sqliteConstants.SQLITE_TYPE_NUMERIC:
           case sqliteConstants.SQLITE_TYPE_INTEGER:

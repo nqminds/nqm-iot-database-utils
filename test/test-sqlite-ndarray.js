@@ -104,14 +104,15 @@ describe("sqlite-ndarray", function() {
       }
     );
 
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data");
-    const fileNames = [];
-    for (const row of newData)
-      fileNames.push(row["data"].p);
-    const unique = new Set(fileNames);
-
-    unique.size.should.equal(data.length);
-    newData.should.have.length(data.length);
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data")
+      .then((newData) => {
+        const fileNames = [];
+        for (const row of newData)
+          fileNames.push(row["data"].p);
+        const unique = new Set(fileNames);
+        return Promise.resolve((newData.length === 7) && (unique.size === 7));
+      })
+      .should.eventually.equal(true);
   });
 
   it("should write the ndarray documents to file (one per document)", function() {
@@ -147,28 +148,29 @@ describe("sqlite-ndarray", function() {
       }
     );
 
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data");
-    const readData = [];
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data")
+      .then((newData) => {
+        const readData = [];
+        for (const row of newData) {
+          const filePath = path.join(databaseFolder, row["data"]["p"]);
+          const buffer = sqliteNdarray.getTypedArray(row["data"]["t"], row["data"]["s"]);
+          const bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
+          readData.push({
+            "bytesRead": bytesRead,
+            "bufferSize": Buffer.byteLength(buffer),
+          });
+        }
 
-    for (const row of newData) {
-      const filePath = path.join(databaseFolder, row["data"]["p"]);
-      const buffer = sqliteNdarray.getTypedArray(row["data"]["t"], row["data"]["s"]);
-      const bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
-      readData.push({
-        "bytesRead": bytesRead,
-        "bufferSize": Buffer.byteLength(buffer),
-      });
-    }
-
-    const sizeData = [];
-    for (const row of data) {
-      sizeData.push({
-        "bytesRead": Buffer.byteLength(row.data.data),
-        "bufferSize": Buffer.byteLength(row.data.data),
-      });
-    }
-
-    JSON.stringify(sizeData).should.equal(JSON.stringify(readData));
+        const sizeData = [];
+        for (const row of data) {
+          sizeData.push({
+            "bytesRead": Buffer.byteLength(row.data.data),
+            "bufferSize": Buffer.byteLength(row.data.data),
+          });
+        }
+        return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
+      })
+      .should.eventually.equal(true);
   });
 
   it("should write the ndarray documents to file (multiple per document)", function() {
@@ -217,33 +219,34 @@ describe("sqlite-ndarray", function() {
         "data3": nd(new Int16Array(1), [1]),
       }
     );
-    
     const dataKeys = ["data1", "data2", "data3"];
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, dataKeys);
-    const readData = [];
 
-    for (const row of newData) {
-      let buffer;
-      let bytesRead;
-      const sizeRow = [];
-      for (const key of dataKeys) {
-        const filePath = path.join(databaseFolder, row[key]["p"]);
-        buffer = sqliteNdarray.getTypedArray(row[key]["t"], row[key]["s"]);
-        bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
-        sizeRow.push([bytesRead, Buffer.byteLength(buffer)]);
-      }
-      readData.push(sizeRow);
-    }
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, dataKeys)
+      .then((newData) => {
+        const readData = [];
+        for (const row of newData) {
+          let buffer;
+          let bytesRead;
+          const sizeRow = [];
+          for (const key of dataKeys) {
+            const filePath = path.join(databaseFolder, row[key]["p"]);
+            buffer = sqliteNdarray.getTypedArray(row[key]["t"], row[key]["s"]);
+            bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
+            sizeRow.push([bytesRead, Buffer.byteLength(buffer)]);
+          }
+          readData.push(sizeRow);
+        }
 
-    const sizeData = [];
-    for (const row of data) {
-      const sizeRow = [];
-      for (const key of dataKeys)
-        sizeRow.push([Buffer.byteLength(row[key].data), Buffer.byteLength(row[key].data)]);
-      sizeData.push(sizeRow);
-    }
-
-    JSON.stringify(sizeData).should.equal(JSON.stringify(readData));
+        const sizeData = [];
+        for (const row of data) {
+          const sizeRow = [];
+          for (const key of dataKeys)
+            sizeRow.push([Buffer.byteLength(row[key].data), Buffer.byteLength(row[key].data)]);
+          sizeData.push(sizeRow);
+        }
+        return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
+      })
+      .should.eventually.equal(true);
   });
 
   it("should read the ndarray documents from file (one per document)", function() {
@@ -278,23 +281,30 @@ describe("sqlite-ndarray", function() {
         "data": nd(new Float64Array(2 * 3), [2, 3]),
       }
     );
+    
+    let newData = [];
 
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data");
-    const readData = sqliteNdarray.readNdarrayMany({"dataFolder": databaseFolder}, newData, "data");
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data")
+      .then((result) => {
+        newData = result;
+        return sqliteNdarray.readNdarrayMany({"dataFolder": databaseFolder}, newData, "data");
+      })
+      .then((readData) => {
+        for (const row of newData) {
+          row["data"] = _.omit(row["data"], "p");
+        }
+    
+        for (const row of readData) {
+          const meta = sqliteNdarray.getNdarrayMeta(row["data"]);
+          row["data"] = _.omit(meta, "p");
+        }
 
-    for (const row of newData) {
-      row["data"] = _.omit(row["data"], "p");
-    }
-
-    for (const row of readData) {
-      const meta = sqliteNdarray.getNdarrayMeta(row["data"]);
-      row["data"] = _.omit(meta, "p");
-    }
-
-    JSON.stringify(newData).should.equal(JSON.stringify(readData));
+        return Promise.resolve(JSON.stringify(readData) === JSON.stringify(newData));
+      })
+      .should.eventually.equal(true);
   });
 
-  it("should read the ndarray documents from file (one per document)", function() {
+  it("should read the ndarray documents from file (multiple per document)", function() {
     const data = [];
     data.push(
       {
@@ -342,21 +352,150 @@ describe("sqlite-ndarray", function() {
     );
 
     const dataKeys = ["data1", "data2", "data3"];
-    const newData = sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, dataKeys);
-    const readData = sqliteNdarray.readNdarrayMany({"dataFolder": databaseFolder}, newData, dataKeys);
+    let newData = [];
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, dataKeys)
+      .then((result) => {
+        newData = result;
+        return sqliteNdarray.readNdarrayMany({"dataFolder": databaseFolder}, newData, dataKeys);
+      })
+      .then((readData) => {
+        for (const row of newData) {
+          for (const key of dataKeys)
+            row[key] = _.omit(row[key], "p");
+        }
+    
+        for (const row of readData) {
+          for (const key of dataKeys) {
+            const meta = sqliteNdarray.getNdarrayMeta(row[key]);
+            row[key] = _.omit(meta, "p");
+          }
+        }
+        return Promise.resolve(JSON.stringify(readData) === JSON.stringify(newData));
+      })
+      .should.eventually.equal(true);
+  });
 
-    for (const row of newData) {
-      for (const key of dataKeys)
-        row[key] = _.omit(row[key], "p");
+  it("should read the same elemenst as written in ndarray documents (one per document)", function() {
+    const data = [];
+    let size = [];
+    let length = 0;
+    const sizes = [];
+    const lengths = [];
+    const arrays = [];
+
+    const sizeToLength = (size) => (size.reduce((a, b) => (a * b)));
+
+    size = [1, 2, 3, 4];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Uint8Array(length));
+
+    size = [0];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Uint16Array(length));
+
+    size = [23, 56];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Uint32Array(length));
+
+    const stride = [1, 4, 20];
+    size = [4, 5, 6];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Int8Array(length));
+
+    size = [1];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Int16Array(length));
+
+    size = [123, 567];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Int32Array(length));
+
+    size = [2, 3];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Float32Array(length));
+
+    size = [2, 3];
+    length = sizeToLength(size);
+    sizes.push(size);
+    lengths.push(length);
+    arrays.push(new Float64Array(length));
+
+    for (let idx = 0; idx < 7; idx++) {
+      length = lengths[idx];
+      for (let j = 0; j < length; j++)
+        arrays[idx][j] = j;
     }
 
-    for (const row of readData) {
-      for (const key of dataKeys) {
-        const meta = sqliteNdarray.getNdarrayMeta(row[key]);
-        row[key] = _.omit(meta, "p");
+    data.push(
+      {
+        "timestamp": 0,
+        "data": nd(arrays[0], sizes[0]),
+      },
+      {
+        "timestamp": 1,
+        "data": nd(arrays[1], sizes[1]),
+      },
+      {
+        "timestamp": 2,
+        "data": nd(arrays[2], sizes[2]),
+      },
+      {
+        "timestamp": 3,
+        "data": nd(arrays[3], sizes[3], stride),
+      },
+      {
+        "timestamp": 4,
+        "data": nd(arrays[4], sizes[4]),
+      },
+      {
+        "timestamp": 5,
+        "data": nd(arrays[5], sizes[5]),
+      },
+      {
+        "timestamp": 6,
+        "data": nd(arrays[6], sizes[6]),
+      },
+      {
+        "timestamp": 7,
+        "data": nd(arrays[7], sizes[7]),
       }
-    }
+    );
 
-    JSON.stringify(newData).should.equal(JSON.stringify(readData));
+    let newData = [];
+    sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data")
+      .then((result) => {
+        newData = result;
+        return sqliteNdarray.readNdarrayMany({"dataFolder": databaseFolder}, newData, "data");
+      })
+      .then((readData) => {
+        let truth = true;
+        for (let idx = 0; idx < data.length; idx++ ) {
+          const writeBuffer = data[idx].data.data;
+          const readBuffer = readData[idx].data.data;
+          truth = truth && (writeBuffer.length === readBuffer.length);
+    
+          if (!truth) break;
+    
+          for (let j = 0; j < writeBuffer.length; j++)
+            truth = truth && (writeBuffer[j] === readBuffer[j]);
+        }
+
+        return Promise.resolve(truth);
+      })
+      .should.eventually.equal(true);
   });
 });
