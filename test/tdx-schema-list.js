@@ -455,7 +455,7 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
       "timestamp": {
         "__tdxType": ["number"],
       },
-      "data": {
+      "arrayData": {
         "__tdxType": ["ndarray"],
       },
     },
@@ -463,11 +463,11 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
   },
   "sqliteSchema": {
     "timestamp": "NUMERIC",
-    "data": "TEXT",
+    "arrayData": "TEXT",
   },
   "generalSchema": {
     "timestamp": "NUMERIC",
-    "data": "NDARRAY",
+    "arrayData": "NDARRAY",
   },
   "sqliteIndex": "",
 },

@@ -36,15 +36,19 @@ chai.should();
 describe("sqlite-manager", function() {
   this.timeout(testTimeout);
   before(function() {
+    const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+    del.sync(path.join(tempDir, tmpFolderName), {force: true});
     fs.mkdirSync(databaseFolder);
   });
 
   after(function() {
     const dbFile = path.basename(databasePath);
     const dbPath = path.dirname(databasePath);
+    const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
     del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
     helper.deleteFile(databasePath);
     del.sync(databaseFolder);
+    del.sync(path.join(tempDir, tmpFolderName), {force: true});
   });
 
   describe("openDatabase", function() {
@@ -455,7 +459,7 @@ describe("sqlite-manager", function() {
     });
   });
 
-  describe("getDatasetData", function() {
+  describe.only("getDatasetData", function() {
     it("should return exactly the same element as inserted with non optimal search for object/array", function() {
       let dbIter;
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[0];
@@ -636,7 +640,7 @@ describe("sqlite-manager", function() {
           })
           .then(() => {
             generalSchema = sqLiteManager.getGeneralSchema(dbIter);
-            testData = generateRandomData(generalSchema, 100);
+            testData = generateRandomData(generalSchema, /*100*/1);
 
             return sqLiteManager.addData(dbIter, testData);
           })
