@@ -24,10 +24,10 @@ chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-describe("sqlite-ndarray", function() {
+describe.only("sqlite-ndarray", function() {
   this.timeout(testTimeout);
   after(function() {
-    del.sync(databaseFolder);
+    // del.sync(databaseFolder);
   });
 
   beforeEach(function() {
@@ -115,7 +115,7 @@ describe("sqlite-ndarray", function() {
       .should.eventually.equal(true);
   });
 
-  it("should write the ndarray documents to file (one per document)", function() {
+  it.only("should write the ndarray documents to file (one per document)", function() {
     const data = [];
     data.push(
       {
@@ -153,14 +153,20 @@ describe("sqlite-ndarray", function() {
         const readData = [];
         for (const row of newData) {
           const filePath = path.join(databaseFolder, row["data"]["p"]);
-          const buffer = sqliteNdarray.getTypedArray(row["data"]["t"], row["data"]["s"]);
-          const bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
+          const bufferSize = sqliteNdarray.getTypedBufferSize(row["data"]["t"], row["data"]["s"]);
+          // const buffer = sqliteNdarray.getTypedArray(row["data"]["t"], row["data"]["s"]);
+          // const bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
+          const fileBuffer = Buffer.alloc(bufferSize);
+          const bytesRead = helper.readFile(filePath, fileBuffer, bufferSize);
+          const typedBuffer = sqliteNdarray.getTypedArrayFromBuffer(fileBuffer, row["data"]["t"]);
+          console.log(typedBuffer.buffer.byteLength);
           readData.push({
             "bytesRead": bytesRead,
-            "bufferSize": Buffer.byteLength(buffer),
+            "bufferSize": Buffer.byteLength(typedBuffer),
           });
         }
 
+        console.log(readData);
         const sizeData = [];
         for (const row of data) {
           sizeData.push({
@@ -168,6 +174,7 @@ describe("sqlite-ndarray", function() {
             "bufferSize": Buffer.byteLength(row.data.data),
           });
         }
+        
         return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
       })
       .should.eventually.equal(true);

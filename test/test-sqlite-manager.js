@@ -459,7 +459,7 @@ describe("sqlite-manager", function() {
     });
   });
 
-  describe.only("getDatasetData", function() {
+  describe("getDatasetData", function() {
     it("should return exactly the same element as inserted with non optimal search for object/array", function() {
       let dbIter;
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[0];
@@ -625,7 +625,47 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
-    it("should return data with projection inclusion", function() {
+    it("should return data with projection on ndarray", function() {
+      let dbIter;
+      let truth;
+      let testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[16];
+      let generalSchema = {};
+      const projection = {};
+      const schemaKeys = [];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+          testData = generateRandomData(generalSchema, 1);
+          console.log(testData);
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          _.forEach(generalSchema, (value, key) => {
+            projection[key] = 1;
+            if (projection[key]) schemaKeys.push(key);
+          });
+          return sqLiteManager.getDatasetData(dbIter, null, projection, {limit: 1});
+        })
+        .then((result) => {
+          const dataKeys = _.keys(result.data[0]);
+          let truth = (schemaKeys.length === dataKeys.length);
+
+          _.forEach(schemaKeys, (value) => {
+            truth = truth && (dataKeys.indexOf(value) >= 0);
+          });
+
+          return Promise.resolve(truth);
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should return data with projection inclusion (random projectcion selection)", function() {
       return Promise.each(tdxSchemaList.TDX_SCHEMA_LIST, (entry) => {
         let dbIter;
         let testData = [];
@@ -640,7 +680,7 @@ describe("sqlite-manager", function() {
           })
           .then(() => {
             generalSchema = sqLiteManager.getGeneralSchema(dbIter);
-            testData = generateRandomData(generalSchema, /*100*/1);
+            testData = generateRandomData(generalSchema, 100);
 
             return sqLiteManager.addData(dbIter, testData);
           })

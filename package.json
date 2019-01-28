@@ -47,7 +47,8 @@
     "path": "^0.12.7",
     "shortid": "^2.2.8",
     "sqlite3": "^4.0.4",
-    "temp-dir": "^1.0.0"
+    "temp-dir": "^1.0.0",
+    "typedarray-to-buffer": "^3.1.5"
   },
   "private": false,
   "babel": {
