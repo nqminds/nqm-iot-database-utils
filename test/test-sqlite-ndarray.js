@@ -24,10 +24,10 @@ chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-describe.only("sqlite-ndarray", function() {
+describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
   after(function() {
-    // del.sync(databaseFolder);
+    del.sync(databaseFolder);
   });
 
   beforeEach(function() {
@@ -115,7 +115,7 @@ describe.only("sqlite-ndarray", function() {
       .should.eventually.equal(true);
   });
 
-  it.only("should write the ndarray documents to file (one per document)", function() {
+  it("should write the ndarray documents to file (one per document)", function() {
     const data = [];
     data.push(
       {
@@ -154,24 +154,20 @@ describe.only("sqlite-ndarray", function() {
         for (const row of newData) {
           const filePath = path.join(databaseFolder, row["data"]["p"]);
           const bufferSize = sqliteNdarray.getTypedBufferSize(row["data"]["t"], row["data"]["s"]);
-          // const buffer = sqliteNdarray.getTypedArray(row["data"]["t"], row["data"]["s"]);
-          // const bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
           const fileBuffer = Buffer.alloc(bufferSize);
-          const bytesRead = helper.readFile(filePath, fileBuffer, bufferSize);
+          const bytesRead = helper.readFile(filePath, fileBuffer, fileBuffer.length);
           const typedBuffer = sqliteNdarray.getTypedArrayFromBuffer(fileBuffer, row["data"]["t"]);
-          console.log(typedBuffer.buffer.byteLength);
           readData.push({
             "bytesRead": bytesRead,
-            "bufferSize": Buffer.byteLength(typedBuffer),
+            "bufferSize": typedBuffer.buffer.byteLength,
           });
         }
 
-        console.log(readData);
         const sizeData = [];
         for (const row of data) {
           sizeData.push({
-            "bytesRead": Buffer.byteLength(row.data.data),
-            "bufferSize": Buffer.byteLength(row.data.data),
+            "bytesRead": row.data.data.buffer.byteLength,
+            "bufferSize": row.data.data.buffer.byteLength,
           });
         }
         
@@ -232,14 +228,16 @@ describe.only("sqlite-ndarray", function() {
       .then((newData) => {
         const readData = [];
         for (const row of newData) {
-          let buffer;
           let bytesRead;
           const sizeRow = [];
           for (const key of dataKeys) {
             const filePath = path.join(databaseFolder, row[key]["p"]);
-            buffer = sqliteNdarray.getTypedArray(row[key]["t"], row[key]["s"]);
-            bytesRead = helper.readFile(filePath, buffer, Buffer.byteLength(buffer));
-            sizeRow.push([bytesRead, Buffer.byteLength(buffer)]);
+            const bufferSize = sqliteNdarray.getTypedBufferSize(row[key]["t"], row[key]["s"]);
+            const fileBuffer = Buffer.alloc(bufferSize);
+            bytesRead = helper.readFile(filePath, fileBuffer, fileBuffer.length);
+            const typedBuffer = sqliteNdarray.getTypedArrayFromBuffer(fileBuffer, row[key]["t"]);
+
+            sizeRow.push([bytesRead, typedBuffer.buffer.byteLength]);
           }
           readData.push(sizeRow);
         }
@@ -248,7 +246,7 @@ describe.only("sqlite-ndarray", function() {
         for (const row of data) {
           const sizeRow = [];
           for (const key of dataKeys)
-            sizeRow.push([Buffer.byteLength(row[key].data), Buffer.byteLength(row[key].data)]);
+            sizeRow.push([row[key].data.buffer.byteLength, row[key].data.buffer.byteLength]);
           sizeData.push(sizeRow);
         }
         return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));

@@ -434,7 +434,7 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
       },
     },
     "uniqueIndex": [
-      {"asc": "prop1"}
+      {"asc": "prop1"},
     ],
   },
   "sqliteSchema": {
@@ -470,6 +470,23 @@ exports.TDX_SCHEMA_LIST = [{// Test 1
     "arrayData": "NDARRAY",
   },
   "sqliteIndex": "",
+},
+{// Test 18
+  "schema": {
+    "dataSchema": {
+      "arrayData": {
+        "__tdxType": ["ndarray"],
+      },
+    },
+    "uniqueIndex": [{"asc": "arrayData"}],
+  },
+  "sqliteSchema": {
+    "arrayData": "TEXT",
+  },
+  "generalSchema": {
+    "arrayData": "NDARRAY",
+  },
+  "sqliteIndex": "CREATE UNIQUE INDEX dataindex ON data(arrayData ASC)",
 },
 ];
 

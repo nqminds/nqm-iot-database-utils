@@ -627,7 +627,6 @@ describe("sqlite-manager", function() {
 
     it("should return data with projection on ndarray", function() {
       let dbIter;
-      let truth;
       let testData = [];
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[16];
       let generalSchema = {};
@@ -641,8 +640,7 @@ describe("sqlite-manager", function() {
         })
         .then(() => {
           generalSchema = sqLiteManager.getGeneralSchema(dbIter);
-          testData = generateRandomData(generalSchema, 1);
-          console.log(testData);
+          testData = generateRandomData(generalSchema, 100);
           return sqLiteManager.addData(dbIter, testData);
         })
         .then(() => {
@@ -665,7 +663,38 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
-    it("should return data with projection inclusion (random projectcion selection)", function() {
+    it("should return the same ndarray as written", function() {
+      let dbIter;
+      let writeData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[16];
+      let truth = true;
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          writeData = generateRandomData(sqLiteManager.getGeneralSchema(dbIter), 1);
+          return sqLiteManager.addData(dbIter, writeData);
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetData(dbIter, null, null, null);
+        })
+        .then((result) => {
+          const writeNdData = writeData[0].arrayData;
+          const readNdData = result.data[0].arrayData;
+          
+          truth = _.isEqual(readNdData.shape, writeNdData.shape) && _.isEqual(readNdData.stride, writeNdData.stride) &&
+                   (readNdData.data.buffer.byteLength === writeNdData.data.buffer.byteLength);
+
+          for (let idx = 0; idx < readNdData.data.buffer.byteLength; idx ++)
+            truth = truth && (readNdData.data.buffer[idx] == writeNdData.data.buffer[idx]);
+          return Promise.resolve(truth);
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should return data with projection inclusion (random projection selection)", function() {
       return Promise.each(tdxSchemaList.TDX_SCHEMA_LIST, (entry) => {
         let dbIter;
         let testData = [];
@@ -1535,7 +1564,9 @@ describe("sqlite-manager", function() {
             dataElement[key] = [dataIdx, 2, 3, 4, 5, 6, "test", {a: 1, b: "test"}];
             break;
           case sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY:
-            dataElement[key] = nd(new Float64Array(23 * 34), [23, 34]);
+            const array = new Float64Array(23 * 34);
+            array.fill(-1.8934579345);
+            dataElement[key] = nd(array, [23, 34]);
             break;
           case sqliteConstants.SQLITE_TYPE_NUMERIC:
           case sqliteConstants.SQLITE_TYPE_INTEGER:
