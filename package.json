@@ -39,6 +39,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "console.table": "^0.10.0",
     "debug": "^3.0.1",
     "del": "^3.0.0",
     "lodash": "^4.17.10",
