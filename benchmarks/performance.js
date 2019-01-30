@@ -36,7 +36,7 @@ const arrayShapes = [
 ];
 
 const TOTAL_ITERATIONS = 5;
-const main = async function () {
+const mainwrite = async function () {
   const statTable = [];
   let timestamp = 0;
   const dbFileName = shortid.generate() + ".sqlite";
@@ -126,4 +126,13 @@ const main = async function () {
   console.log("Done!");
 };
 
-main();
+const mainread = function() {
+
+};
+
+const param = process.argv[2] || "read";
+
+if (param === "write")
+  mainwrite();
+else
+  mainread();
