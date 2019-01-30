@@ -9,3 +9,14 @@ exports.deleteFile = function(name) {
     }
   }
 };
+
+exports.readFile = function(name, buffer, length) {
+  try {
+    const fd = fs.openSync(name, "r");
+    const bytesRead = fs.readSync(fd, buffer, 0, length, 0);
+    fs.closeSync(fd);
+    return bytesRead;
+  } catch (error) {
+    throw error;
+  }
+};

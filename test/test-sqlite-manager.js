@@ -1,12 +1,17 @@
 /* eslint-env mocha */
 "use strict";
 
+const path = require("path");
+const fs = require("fs");
 const _ = require("lodash");
+const nd = require("ndarray");
+const del = require("del");
 const Promise = require("bluebird");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const shortid = require("shortid");
+const tempDir = require("temp-dir");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
 // @ts-ignore
@@ -21,8 +26,8 @@ let dbMem;
 
 let databasePath = process.argv[1];
 const projectNameIdx = databasePath.indexOf(packageJson.name);
-
-databasePath = `${databasePath.substring(0, projectNameIdx) + packageJson.name}/test/db/create-dataset-test.db`;
+const databaseFolder = `${databasePath.substring(0, projectNameIdx) + packageJson.name}/test/db`;
+databasePath = `${databaseFolder}/create-dataset-test.db`;
 
 chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
@@ -30,8 +35,27 @@ chai.should();
 
 describe("sqlite-manager", function() {
   this.timeout(testTimeout);
+  before(function() {
+    const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+    del.sync(path.join(tempDir, tmpFolderName), {force: true});
+    fs.mkdirSync(databaseFolder);
+  });
+
+  after(function() {
+    const dbFile = path.basename(databasePath);
+    const dbPath = path.dirname(databasePath);
+    const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+    del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
+    helper.deleteFile(databasePath);
+    del.sync(databaseFolder);
+    del.sync(path.join(tempDir, tmpFolderName), {force: true});
+  });
+
   describe("openDatabase", function() {
     beforeEach(function() {
+      const dbFile = path.basename(databasePath);
+      const dbPath = path.dirname(databasePath);
+      del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
       helper.deleteFile(databasePath);
     });
 
@@ -57,6 +81,29 @@ describe("sqlite-manager", function() {
         });
     });
 
+    it("should create the data folder on database create (file mode)", function() {
+      return sqLiteManager.openDatabase(databasePath, "file", "w+")
+        .then(() => {
+          const dbFile = path.basename(databasePath);
+          const dbPath = path.dirname(databasePath);
+          const dataPath = path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX);
+          
+          return Promise.resolve(fs.existsSync(dataPath));
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should create the data folder on database create (memory mode)", function() {
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then(() => {
+          const dataFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+          const dataFolderPath = path.join(tempDir, dataFolderName);
+          
+          return Promise.resolve(fs.existsSync(dataFolderPath));
+        })
+        .should.eventually.equal(true);
+    });
+    
     it("should create and then open a database", function() {
       let dbResult = {};
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
@@ -67,7 +114,7 @@ describe("sqlite-manager", function() {
           return sqLiteManager.openDatabase(databasePath, "file", "rw");
         })
         .then((db) => {
-          dbResult = _.pick(db, ["open", "filename", "mode"]);
+          dbResult = _.pick(db, ["open", "filename", "mode", "dataFolder"]);
           return sqLiteManager.closeDatabase(db);
         })
         .then(() => {
@@ -77,6 +124,8 @@ describe("sqlite-manager", function() {
           "open": true,
           "filename": databasePath,
           "mode": 2,
+          "dataFolder": path.join(path.dirname(databasePath), path.basename(databasePath) +
+                        sqliteConstants.DATABASE_FOLDER_SUFFIX),
         });
     });
 
@@ -576,7 +625,76 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(true);
     });
 
-    it("should return data with projection inclusion", function() {
+    it("should return data with projection on ndarray", function() {
+      let dbIter;
+      let testData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[16];
+      let generalSchema = {};
+      const projection = {};
+      const schemaKeys = [];
+
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+          testData = generateRandomData(generalSchema, 100);
+          return sqLiteManager.addData(dbIter, testData);
+        })
+        .then(() => {
+          _.forEach(generalSchema, (value, key) => {
+            projection[key] = 1;
+            if (projection[key]) schemaKeys.push(key);
+          });
+          return sqLiteManager.getDatasetData(dbIter, null, projection, {limit: 1});
+        })
+        .then((result) => {
+          const dataKeys = _.keys(result.data[0]);
+          let truth = (schemaKeys.length === dataKeys.length);
+
+          _.forEach(schemaKeys, (value) => {
+            truth = truth && (dataKeys.indexOf(value) >= 0);
+          });
+
+          return Promise.resolve(truth);
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should return the same ndarray as written", function() {
+      let dbIter;
+      let writeData = [];
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[16];
+      let truth = true;
+      return sqLiteManager.openDatabase("", "memory", "w+")
+        .then((db) => {
+          dbIter = db;
+          return sqLiteManager.createDataset(dbIter, entry);
+        })
+        .then(() => {
+          writeData = generateRandomData(sqLiteManager.getGeneralSchema(dbIter), 1);
+          return sqLiteManager.addData(dbIter, writeData);
+        })
+        .then(() => {
+          return sqLiteManager.getDatasetData(dbIter, null, null, null);
+        })
+        .then((result) => {
+          const writeNdData = writeData[0].arrayData;
+          const readNdData = result.data[0].arrayData;
+          
+          truth = _.isEqual(readNdData.shape, writeNdData.shape) && _.isEqual(readNdData.stride, writeNdData.stride) &&
+                   (readNdData.data.buffer.byteLength === writeNdData.data.buffer.byteLength);
+
+          for (let idx = 0; idx < readNdData.data.buffer.byteLength; idx ++)
+            truth = truth && (readNdData.data.buffer[idx] == writeNdData.data.buffer[idx]);
+          return Promise.resolve(truth);
+        })
+        .should.eventually.equal(true);
+    });
+
+    it("should return data with projection inclusion (random projection selection)", function() {
       return Promise.each(tdxSchemaList.TDX_SCHEMA_LIST, (entry) => {
         let dbIter;
         let testData = [];
@@ -1444,6 +1562,11 @@ describe("sqlite-manager", function() {
             break;
           case sqliteConstants.SQLITE_GENERAL_TYPE_ARRAY:
             dataElement[key] = [dataIdx, 2, 3, 4, 5, 6, "test", {a: 1, b: "test"}];
+            break;
+          case sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY:
+            const array = new Float64Array(23 * 34);
+            array.fill(-1.8934579345);
+            dataElement[key] = nd(array, [23, 34]);
             break;
           case sqliteConstants.SQLITE_TYPE_NUMERIC:
           case sqliteConstants.SQLITE_TYPE_INTEGER:
