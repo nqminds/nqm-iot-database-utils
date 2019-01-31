@@ -126,13 +126,106 @@ const mainwrite = async function () {
   console.log("Done!");
 };
 
-const mainread = function() {
+const mainread = async function() {
+  const statTable = [];
+  let timestamp = 0;
+  const dbFileName = shortid.generate() + ".sqlite";
+  const db = await sqliteUtils.openDatabase(dbFileName, "file", "w+");
+  const datasetId = await sqliteUtils.createDataset(db, datasetSchema);
+  console.log(`Created dataset [${datasetId}]`);
 
+  console.log("1 per insert:");
+  for (let idx = 0; idx < arrayShapes.length; idx++) {
+    const arrayShape = arrayShapes[idx];
+    const arraySize = arrayShapes[idx].reduce((a, b) => (a * b));
+    let duration = 0;
+    console.log(`Adding array shape [${arrayShapes[idx]}] and size ${arraySize} (bytes)`);
+    const array = nd(new Uint8Array(arraySize), arrayShape);
+
+    await sqliteUtils.addData(db, {"timestamp": 0, "arrayData": array});
+    
+    profiler.start();
+    await sqliteUtils.getData(db, null, null, null);
+    profiler.stop();
+
+    // Truncate resource
+    await sqliteUtils.truncateResource(db);
+
+    // Get the number of ms
+    duration = profiler.getDuration();
+
+    // Get the number of seconds
+    duration /= TOTAL_ITERATIONS * 1000;
+
+    // Estimate speed in bits per second
+    const dataSpeed = ((arraySize * 8) / duration) / 1024;
+    statTable.push({
+      "rows": 1,
+      "shape": `[${arrayShapes[idx][0]},${arrayShapes[idx][1]}]`,
+      "bytes": arraySize,
+      "duration": duration,
+      "speed (Kbs)": dataSpeed.toFixed(2),
+      "speed (Mbs)": (dataSpeed / 1024).toFixed(2),
+    });
+  }
+  
+  console.log("1000 per insert:");
+  for (let idx = 0; idx < arrayShapes.length; idx++) {
+    const arrayShape = arrayShapes[idx];
+    const arraySize = arrayShapes[idx].reduce((a, b) => (a * b));
+    let duration = 0;
+    console.log(`Adding array shape [${arrayShapes[idx]}] and size ${arraySize} (bytes)`);
+    const sqliteData = [];
+    for (let rows = 0; rows < 1000; rows++) {
+      const array = nd(new Uint8Array(arraySize), arrayShape);
+      sqliteData.push({
+        "timestamp": timestamp,
+        "arrayData": array,
+      });
+
+      timestamp++;
+    }
+
+    await sqliteUtils.addData(db, sqliteData);
+
+    profiler.start();
+    await sqliteUtils.getData(db, null, null, null);
+    profiler.stop();
+
+    // Truncate resource
+    await sqliteUtils.truncateResource(db);
+
+    // Get the number of ms
+    duration = profiler.getDuration();
+
+    // Get the number of seconds
+    duration /= 1000;
+
+    // Estimate speed in bits per second
+    const dataSpeed = ((arraySize * 8) / duration) / 1024;
+    statTable.push({
+      "rows": 1000,
+      "shape": `[${arrayShapes[idx][0]},${arrayShapes[idx][1]}]`,
+      "bytes": arraySize,
+      "duration": duration,
+      "speed (Kbs)": dataSpeed.toFixed(2),
+      "speed (Mbs)": (dataSpeed / 1024).toFixed(2),
+    });
+  }
+
+  const plotTable = cTable.getTable(statTable);
+  console.log("[Data Table]");
+  console.log(plotTable);
+
+  console.log("Deleting database...");
+  del.sync(db.dataFolder);
+  helper.deleteFile(dbFileName);
+  console.log("Done!");
 };
 
-const param = process.argv[2] || "read";
+const param = process.argv[2];
 
 if (param === "write")
   mainwrite();
-else
+else if (param === "read")
   mainread();

@@ -37,7 +37,7 @@ describe("sqlite-ndarray", function() {
 
   it("should return a meta object for a ndarray object (row - order, 2D, Float64)", function() {
     const array = nd(new Float64Array(2 * 3), [2, 3]);
-    const meta = sqliteNdarray.getNdarrayMeta(array);
+    const meta = sqliteNdarray.ndarrayToNumpy(array);
     const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
     result.should.deep.equal({
       "t": "<f8",
@@ -49,7 +49,7 @@ describe("sqlite-ndarray", function() {
 
   it("should return a meta object for a ndarray object (row - order, 0D, Int8)", function() {
     const array = nd(new Int8Array(0), [0]);
-    const meta = sqliteNdarray.getNdarrayMeta(array);
+    const meta = sqliteNdarray.ndarrayToNumpy(array);
     const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
     result.should.deep.equal({
       "t": "<b",
@@ -61,7 +61,7 @@ describe("sqlite-ndarray", function() {
 
   it("should return a meta object for a ndarray object (column - order, 3D, Int8)", function() {
     const array = nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]);
-    const meta = sqliteNdarray.getNdarrayMeta(array);
+    const meta = sqliteNdarray.ndarrayToNumpy(array);
     const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
     result.should.deep.equal({
       "t": "<b",
@@ -300,7 +300,7 @@ describe("sqlite-ndarray", function() {
         }
     
         for (const row of readData) {
-          const meta = sqliteNdarray.getNdarrayMeta(row["data"]);
+          const meta = sqliteNdarray.ndarrayToNumpy(row["data"]);
           row["data"] = _.omit(meta, "p");
         }
 
@@ -371,7 +371,7 @@ describe("sqlite-ndarray", function() {
     
         for (const row of readData) {
           for (const key of dataKeys) {
-            const meta = sqliteNdarray.getNdarrayMeta(row[key]);
+            const meta = sqliteNdarray.ndarrayToNumpy(row[key]);
             row[key] = _.omit(meta, "p");
           }
         }
