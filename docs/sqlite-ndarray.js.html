@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sqlite-ndarray.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sqlite-ndarray.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Module to manage the ndarray entries for sqlite.
  *
  * ![nqminds-blue-logo.png][1] ![interlinq-logo-darker.png][2]
@@ -7,7 +35,7 @@
  * [2]: ./img/interlinq-logo-darker.png
  *
  * @module sqlite-ndarray
- * @author Alexandru Mereacre <mereacre@gmail.com>
+ * @author Alexandru Mereacre &lt;mereacre@gmail.com>
  */
 
 module.exports = (function() {
@@ -48,7 +76,7 @@ module.exports = (function() {
     if (major) {
       for (let i = size.length - 1; i >= 1; i--) {
         let mult = 1;
-        for (let j = 1; j <= i; j++)
+        for (let j = 1; j &lt;= i; j++)
           mult *= size[j];
         stride.push(mult);
       }
@@ -57,9 +85,9 @@ module.exports = (function() {
     } else {
       stride.push(1);
 
-      for (let i = 0; i <= size.length - 2; i++) {
+      for (let i = 0; i &lt;= size.length - 2; i++) {
         let mult = 1;
-        for (let j = 0; j <= i; j++)
+        for (let j = 0; j &lt;= i; j++)
           mult *= size[j];
         stride.push(mult);
       }
@@ -70,10 +98,10 @@ module.exports = (function() {
 
   /**
    * Returns the numpy endianness of the system.
-   * @returns {string} < - little endian, > - bing endian.
+   * @returns {string} &lt; - little endian, > - bing endian.
    */
   function getEndianness() {
-    return (os.endianness() === "BE") ? ">" : "<";
+    return (os.endianness() === "BE") ? ">" : "&lt;";
   }
 
   /**
@@ -118,7 +146,7 @@ module.exports = (function() {
    * @sync
    * @param {Buffer} byteBuffer - The byte buffer object
    * @param {string} numpyType - The numpy array type
-   * @returns {<Buffer>|<TypedArray>|<DataView>} - The buffer object
+   * @returns {&lt;Buffer>|&lt;TypedArray>|&lt;DataView>} - The buffer object
    */
   ndamodule.getTypedArrayFromBuffer = function(byteBuffer, numpyType) {
     const arrayType = numpyType.slice(1);
@@ -146,73 +174,55 @@ module.exports = (function() {
   };
 
   /**
-   * Returns the ndarray metadata
+   * Returns the numpy metadata from an ndarray instance
    * @function
-   * @alias module:sqlite-ndarray.getNdarrayMeta
+   * @alias module:sqlite-ndarray.ndarrayToNumpy
    * @sync
-   * @param {Buffer|Stream} data - The input data buffer or data stream
-   * @param {string} [dtype] - The data type
-   * @param {array} [shape] - The shape of the data
-   * @param {boolean} [major] - The data major (true - row-major, false - column-major)
-   * @param {string} [ftype] - The file type ("raw", "base64", "compressed")
-   * @returns {object} - The ndarray metadata
+   * @param {object} array - The ndarray input object
+   * @returns {object} - The numpy metadata
    */
-  ndamodule.getNdarrayMeta = function(data, dtype, shape, major, ftype) {
-    const meta = {"data": data};
-
+  ndamodule.ndarrayToNumpy = function(array) {
     // Default platform alignment byte order
-    // ">" (big-endian), "<" (little-endian), "=" (hardware-native)
-    let numpyType = getEndianness();
+    // ">" (big-endian), "&lt;" (little-endian), "=" (hardware-native)
+    let dtype = getEndianness();
 
-    if (data instanceof Buffer) {
-      dtype = dtype || sqliteConstants.NDARRAY_BUFFER_TYPE;
-      shape = shape || [data.length];
-    } else {
-      dtype = dtype || sqliteConstants.NDARRAY_STREAM_TYPE;
-      shape = shape || [0];
-    }
-
-    // Default is row-major
-    if (typeof major === "undefined")
-      major = major || true;
-
-    // Default is raw file type
-    ftype = ftype || sqliteConstants.NDARRAY_FILE_TYPE_RAW;
-
-    switch (dtype) {
-      case sqliteConstants.NDARRAY_UINT8_TYPE:
-        numpyType += "B";
+    switch (array.dtype) {
+      case "uint8":
+        dtype += "B";
         break;
-      case sqliteConstants.NDARRAY_UINT16_TYPE:
-        numpyType += "H";
+      case "uint16":
+        dtype += "H";
         break;
-      case sqliteConstants.NDARRAY_UINT32_TYPE:
-        numpyType += "u32";
+      case "uint32":
+        dtype += "u32";
         break;
-      case sqliteConstants.NDARRAY_INT8_TYPE:
-        numpyType += "b";
+      case "int8":
+        dtype += "b";
         break;
-      case sqliteConstants.NDARRAY_INT16_TYPE:
-        numpyType += "h";
+      case "int16":
+        dtype += "h";
         break;
-      case sqliteConstants.NDARRAY_INT32_TYPE:
-        numpyType += "i4";
+      case "int32":
+        dtype += "i4";
         break;
-      case sqliteConstants.NDARRAY_FLOAT_TYPE:
-      case sqliteConstants.NDARRAY_FLOAT32_TYPE:
-        numpyType += "f4";
+      case "float":
+      case "float32":
+        dtype += "f4";
         break;
-      case sqliteConstants.NDARRAY_DOUBLE_TYPE:
-      case sqliteConstants.NDARRAY_FLOAT64_TYPE:
-        numpyType += "f8";
+      case "double":
+      case "float64":
+        dtype += "f8";
         break;
-      case sqliteConstants.NDARRAY_STREAM_TYPE:
-      case sqliteConstants.NDARRAY_BUFFER_TYPE:
-        numpyType += "B";
+      case "stream":
+      case "uint8_clamped":
+      case "buffer":
+      case "data":
+      case "dataview":
+        dtype += "B";
         break;
 
       default:
-        numpyType += "B";
+        dtype += "";
     }
 
     // Retrieve the timestamp buffer in milliseoncds
@@ -221,22 +231,81 @@ module.exports = (function() {
     // Make the filename (check the Python construct)
     const fileName = Buffer.from(timestampArray).toString("base64") + shortid.generate() + sqliteConstants.DATABASE_DATA_SUFFIX;
 
-    meta["t"] = numpyType;
-    meta["s"] = shape;
-    switch (ftype) {
-      case sqliteConstants.NDARRAY_FILE_TYPE_RAW:
-      case sqliteConstants.NDARRAY_FILE_TYPE_B64:
-      case sqliteConstants.NDARRAY_FILE_TYPE_ZIP:
-        meta["v"] = "f";
+    return {
+      "t": dtype,
+      "s": array.shape,
+      "v": "f",
+      "c": strideOrderToMajor(array.order),
+      "p": fileName,
+    };
+  };
+
+  /**
+   * Returns the ndarray metadata
+   * @function
+   * @alias module:sqlite-ndarray.getNdarrayMeta
+   * @sync
+   * @param {Buffer|Stream} data - The input data buffer or data stream
+   * @param {string} [dtype] - The data type
+   * @param {number[]} [shape] - The shape of the data
+   * @param {boolean} [major] - The data major (true - row-major, false - column-major)
+   * @param {string} [ftype] - The file type ("raw", "base64", "compressed")
+   * @returns {object} - The ndarray metadata
+   */
+  ndamodule.getNdarrayMeta = function(data, dtype, shape, major, ftype) {
+    const meta = {"t": getEndianness()};
+    // Default platform alignment byte order
+    // ">" (big-endian), "&lt;" (little-endian), "=" (hardware-native)
+    if (data instanceof Buffer) {
+      dtype = dtype || sqliteConstants.NDARRAY_BUFFER_TYPE;
+      // If it's a stream assign the shape later
+      shape = shape || [data.length];
+    } else dtype = dtype || sqliteConstants.NDARRAY_STREAM_TYPE;
+
+    // Default is row-major
+    if (typeof major === "undefined")
+      major = major || true;
+
+    ftype = ftype || sqliteConstants.NDARRAY_FILE_TYPE_RAW;
+
+    switch (dtype) {
+      case "uint8":
+        meta["t"] += "B";
         break;
+      case "uint16":
+        meta["t"] += "H";
+        break;
+      case "uint32":
+        meta["t"] += "u32";
+        break;
+      case "int8":
+        meta["t"] += "b";
+        break;
+      case "int16":
+        meta["t"] += "h";
+        break;
+      case "int32":
+        meta["t"] += "i4";
+        break;
+      case "float":
+      case "float32":
+        meta["t"] += "f4";
+        break;
+      case "double":
+      case "float64":
+        meta["t"] += "f8";
+        break;
+      case "stream":
+      case "uint8_clamped":
+      case "buffer":
+      case "data":
+      case "dataview":
+        meta["t"] += "B";
+        break;
+
       default:
-        meta["v"] = "f";
+        meta["t"] += "B";
     }
-
-    meta["c"] = major;
-    meta["p"] = fileName;
-
-    return meta;
   };
 
   /**
@@ -245,9 +314,9 @@ module.exports = (function() {
    * @alias module:sqlite-ndarray.writeNdarrayMany
    * @async
    * @param {object} db - The sqlite3 db object from module node-sqlite3.
-   * @param {array<object>} data - A list of all the data rows to write to file.
+   * @param {array&lt;object>} data - A list of all the data rows to write to file.
    * @param {string|string[]} key - The key(s) representing the ndarray(s).
-   * @returns {Promise<array<object>>} - The modified data list with ndarray metadata
+   * @returns {Promise&lt;array&lt;object>>} - The modified data list with ndarray metadata
    */
   ndamodule.writeNdarrayMany = function(db, data, key) {
     return new Promise((resolve, reject) => {
@@ -260,22 +329,20 @@ module.exports = (function() {
 
         // Iterate over ndarray keys
         for (const keyValue of dataKeys) {
-          const meta = dataRow[keyValue];
-          newRow[keyValue] = _.omit(meta, "data");
+          const meta = ndamodule.ndarrayToNumpy(dataRow[keyValue]);
+          newRow[keyValue] = meta;
 
           // Save data to file
           const filePath = path.join(db.dataFolder, meta.p);
           try {
-            let bytesWritten;
-            // Write to file using the sync method
-            if (meta.data instanceof Buffer) {
-              const fd = fs.openSync(filePath, "wx");
-              bytesWritten = fs.writeSync(fd, meta.data, 0, meta.data.length);
-              fs.closeSync(fd);
-            }
+            const fd = fs.openSync(filePath, "wx");
+            const typedBuffer = dataRow[keyValue].data;
+            const bufSize = typedBuffer.buffer.byteLength;
+            const bytesWritten = fs.writeSync(fd, toBuffer(typedBuffer), 0, bufSize);
+            fs.closeSync(fd);
 
             // Check if what's written is consistent with metadata
-            if (bytesWritten !== meta.data.length)
+            if (bytesWritten !== bufSize)
               reject(Error(`Metadata size different to file size for ${JSON.stringify(meta)} while write`));
           } catch (error) {
             reject(error);
@@ -295,9 +362,9 @@ module.exports = (function() {
    * @alias module:sqlite-ndarray.readNdarrayMany
    * @async
    * @param {object} db - The sqlite3 db object from module node-sqlite3.
-   * @param {array<object>} data - A list of all the data rows to read from files.
+   * @param {array&lt;object>} data - A list of all the data rows to read from files.
    * @param {string|string[]} key - The key(s) representing the ndarray(s).
-   * @returns {Promise<array<object>>} - The modified data list with ndarray objects
+   * @returns {Promise&lt;array&lt;object>>} - The modified data list with ndarray objects
    */
   ndamodule.readNdarrayMany = function(db, data, key) {
     return new Promise((resolve, reject) => {
@@ -371,3 +438,26 @@ module.exports = (function() {
 
   return ndamodule;
 }());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-ndarray.html">sqlite-ndarray</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li><li><a href="global.html#NDARRAY_FILE_TYPE_RAW">NDARRAY_FILE_TYPE_RAW</a></li><li><a href="global.html#NDARRAY_UINT8_TYPE">NDARRAY_UINT8_TYPE</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 31 2019 16:13:32 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

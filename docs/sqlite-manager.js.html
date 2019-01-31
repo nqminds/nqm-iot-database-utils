@@ -42,6 +42,7 @@ module.exports = (function() {
   "use strict";
 
   const _ = require("lodash");
+  const del = require("del");
   const sqlite3 = require("sqlite3");
   const Promise = require("bluebird");
   const shortid = require("shortid");
@@ -50,12 +51,14 @@ module.exports = (function() {
   const util = require("util");
   const fs = require("fs");
   const path = require("path");
+  const tempDir = require("temp-dir");
 
   const sqliteConstants = require("./sqlite-constants.js");
   const sqliteInfoTable = require("./sqlite-info-table.js");
   const sqliteConverter = require("./sqlite-schema-converter.js");
   const sqliteHelper = require("./sqlite-helper.js");
   const sqliteCreator = require("./sqlite-statement-creator.js");
+  const sqliteNdarray = require("./sqlite-ndarray.js");
 
   const manager = {};
   const generalSchema = {};
@@ -117,6 +120,21 @@ module.exports = (function() {
     };
   }
 
+  /**
+   * Find all the keys in a collection that sattsify a given value
+   * @param {object} collection - The input collection.
+   * @param {string} searchValue - The search value.
+   * @returns {string[]} The list of keys.
+   */
+  function findCollectionKeys(collection, searchValue) {
+    const keys = [];
+
+    _.forEach(collection, (value, key) => {
+      if (value === searchValue) keys.push(key);
+    });
+
+    return keys;
+  }
    /**
     * An object that describes a Resource/Dataset
     * @global
@@ -139,7 +157,7 @@ module.exports = (function() {
    */
   async function mkdirs(dirPath, its) {
     if (its === undefined) {
-      its = 100;
+      its = sqliteConstants.MAX_PATH_RECURSIONS;
     }
     if (its &lt;= 0) {
       throw Error("its was greater than 0, there is probably a loop in dirPath:" +
@@ -154,7 +172,7 @@ module.exports = (function() {
       // file does not exist
       if (error.code === "ENOENT") {
         const parentDirName = path.dirname(dirPath);
-        // recusrion, yay!
+        // recursion, yay!
         await mkdirs(parentDirName, its - 1);
         await mkdir(dirPath);
       } else {
@@ -165,6 +183,9 @@ module.exports = (function() {
 
   // path is a parameter in openDatabase() so define the function we need here
   const dirname = path.dirname;
+  const basename = path.basename;
+  const join = path.join;
+
   /**
    * Opens a sqlite database. Creates if none exists.
    * @function
@@ -205,6 +226,22 @@ module.exports = (function() {
     }
 
     const db = await connectToDB();
+
+    // Make the data folder
+    let dataFolderPath = "";
+    if (type === sqliteConstants.DATABASE_FILE_TYPE) {
+      const dataFolderName = basename(databasePath) + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+      dataFolderPath = join(dirname(databasePath), dataFolderName);
+    } else if (type === sqliteConstants.DATABASE_MEMORY_TYPE) {
+      const dataFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
+      dataFolderPath = join(tempDir, dataFolderName);
+    }
+
+    // Make the data folders
+    await mkdirs(dataFolderPath);
+
+    // Store the data folder path in the db object
+    db.dataFolder = dataFolderPath;
 
     // Generate an id to store the general schema in the dictionary
     db.id = shortid.generate();
@@ -447,8 +484,17 @@ module.exports = (function() {
   manager.addData = async function(db, data) {
     const schema = manager.getGeneralSchema(db);
     const dataToConvert = [].concat(data);
+
+    // Get the ndarray keys
+    const ndarrayKeys = findCollectionKeys(schema, sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY);
+
+    // Save the ndarray data to file
+    let arrayProcData = dataToConvert;
+    if (ndarrayKeys. length > 0)
+      arrayProcData = await sqliteNdarray.writeNdarrayMany(db, dataToConvert, ndarrayKeys);
+
     // convert all the data to SQLite types
-    const sqlData = dataToConvert.map((row) => {
+    const sqlData = arrayProcData.map((row) => {
       return sqliteConverter.convertRowToSqlite(schema, row);
     });
     const infoTable = await sqliteInfoTable.getInfoKeys(db, ["schema"]);
@@ -457,13 +503,11 @@ module.exports = (function() {
     // set function for creating SQLite String, INSERT
     const upsert = false;
     const makeSqlStatementStr = (dataRowKeys) => {
-      return sqliteCreator.insertStatement(
-        uniqueIndex, schema, dataRowKeys, upsert);
+      return sqliteCreator.insertStatement(uniqueIndex, schema, dataRowKeys, upsert);
     };
 
     // throws an error if it fails
-    await sqliteHelper.executeMany(db, makeSqlStatementStr,
-      sqlData);
+    await sqliteHelper.executeMany(db, makeSqlStatementStr, sqlData);
     return {"count": sqlData.length};
   };
 
@@ -608,6 +652,7 @@ module.exports = (function() {
     else if (excludedColumns.length &amp;&amp; !includedColumns.length)
       selectQuery.columns = excludedColumns;
 
+    const distinctKey = includedColumns[0] || "";
     const sqliteTranslation = builder.sql(selectQuery, []);
 
     // Set the return value
@@ -631,12 +676,19 @@ module.exports = (function() {
     if (distinct === true &amp;&amp; includedColumns.length !== 1)
       return result;
 
-    const rows = await db.allAsync(
-      sqliteTranslation.query, sqliteTranslation.values)
+    // Return early if selected distinct on ndarrays
+    // Not implemented function
+    if (schema[distinctKey] === sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY &amp;&amp; distinct === true)
+      return result;
+
+    // Read the sqlite data
+    const rows = await db.allAsync(sqliteTranslation.query, sqliteTranslation.values)
+
     // Check if there's an object or array type in the generalSchema object
     // Convert each element of the rows
     // Becomes slow if one of the types is object or array
-    if (_.includes(schema, sqliteConstants.SQLITE_GENERAL_TYPE_OBJECT) ||
+    if (_.includes(schema, sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY) ||
+        _.includes(schema, sqliteConstants.SQLITE_GENERAL_TYPE_OBJECT) ||
         _.includes(schema, sqliteConstants.SQLITE_GENERAL_TYPE_ARRAY)
       ) {
         // Check if it's not select distinct
@@ -651,21 +703,30 @@ module.exports = (function() {
           result.data.push(convertedRow);
         });
       } else {
-        const key = includedColumns[0];
+        // const key = includedColumns[0];
         _.forEach(rows, (row) => {
-          result.push(sqliteConverter.convertToTdx(schema[key], row[key]));
+          result.push(sqliteConverter.convertToTdx(schema[distinctKey], row[distinctKey]));
         });
       }
     } else {
       if (distinct === false)
         result.data = rows;
       else {
-        const key = includedColumns[0];
+        // const key = includedColumns[0];
 
         _.forEach(rows, (row) => {
-          result.push(row[key]);
+          result.push(row[distinctKey]);
         });
       }
+    }
+
+    // Read the ndarray files
+    // Distinct is not implemented for ndarrays
+    if (distinct === false) {
+      // Get the ndarray keys
+      const ndarrayKeys = findCollectionKeys(schema, sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY);
+      if (ndarrayKeys.length > 0)
+        result.data = await sqliteNdarray.readNdarrayMany(db, result.data, ndarrayKeys);
     }
 
     return result;
@@ -815,13 +876,13 @@ module.exports = (function() {
    * @return  {object} - The promise with the total count of rows deleted.
    */
   manager.truncateResource = function(db) {
+    let sqlResult = {};
     return new Promise((resolve, reject) => {
       db.serialize(() => {
-        let result = {};
         // Count the total number of rows in the dataset
         db.get(`SELECT Count(*) AS count FROM ${sqliteConstants.DATABASE_DATA_TABLE_NAME};`, [], (error, row) => {
           if (error) reject(error);
-          else result = row;
+          else sqlResult = row;
         });
 
         db.run(`DELETE FROM ${sqliteConstants.DATABASE_DATA_TABLE_NAME};`, [], (error) => {
@@ -830,9 +891,17 @@ module.exports = (function() {
 
         db.run("VACUUM;", [], (error) => {
           if (error) reject(error);
-          else resolve(result);
+          else resolve();
         });
       });
+    })
+    .then(() => {
+      // Delete the ndarray data (not the folder)
+      const datFiles = path.join(db.dataFolder, `*${sqliteConstants.DATABASE_DATA_SUFFIX}`);
+      return del.sync(datFiles, {force: true});
+    })
+    .then(() => {
+      return Promise.resolve(sqlResult);
     });
   };
 
@@ -972,13 +1041,13 @@ module.exports = (function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-ndarray.html">sqlite-ndarray</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li><li><a href="global.html#NDARRAY_FILE_TYPE_RAW">NDARRAY_FILE_TYPE_RAW</a></li><li><a href="global.html#NDARRAY_UINT8_TYPE">NDARRAY_UINT8_TYPE</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 21 2018 11:43:12 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 31 2019 16:13:32 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

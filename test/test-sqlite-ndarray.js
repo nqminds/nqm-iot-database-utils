@@ -7,7 +7,6 @@ const path = require("path");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const deepEqualInAnyOrder = require('deep-equal-in-any-order');
-const nd = require("ndarray");
 const del = require("del");
 const sqliteNdarray = require("../lib/sqlite-ndarray.js");
 
@@ -24,7 +23,7 @@ chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-describe("sqlite-ndarray", function() {
+describe.only("sqlite-ndarray", function() {
   this.timeout(testTimeout);
   after(function() {
     del.sync(databaseFolder);
@@ -36,36 +35,33 @@ describe("sqlite-ndarray", function() {
   });
 
   it("should return a meta object for a ndarray object (row - order, 2D, Float64)", function() {
-    const array = nd(new Float64Array(2 * 3), [2, 3]);
-    const meta = sqliteNdarray.ndarrayToNumpy(array);
-    const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
+    const meta = sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "buffer", [2, 3]);
+    const result = _.pick(meta, ["t", "s", "v", "c"]);
     result.should.deep.equal({
-      "t": "<f8",
-      "s": array.shape,
+      "t": "<B",
+      "s": [2, 3],
       "v": "f",
       "c": true,
     });
   });
 
   it("should return a meta object for a ndarray object (row - order, 0D, Int8)", function() {
-    const array = nd(new Int8Array(0), [0]);
-    const meta = sqliteNdarray.ndarrayToNumpy(array);
-    const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
+    const meta = sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "int8");
+    const result = _.pick(meta, ["t", "s", "v", "c"]);
     result.should.deep.equal({
       "t": "<b",
-      "s": array.shape,
+      "s": [0],
       "v": "f",
       "c": true,
     });
   });
 
   it("should return a meta object for a ndarray object (column - order, 3D, Int8)", function() {
-    const array = nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]);
-    const meta = sqliteNdarray.ndarrayToNumpy(array);
-    const result = _.pick(meta, ["t", "s", "v", "f", "c"]);
+    const meta = sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false);
+    const result = _.pick(meta, ["t", "s", "v", "c"]);
     result.should.deep.equal({
       "t": "<b",
-      "s": array.shape,
+      "s": [4, 5, 6],
       "v": "f",
       "c": false,
     });
@@ -76,31 +72,31 @@ describe("sqlite-ndarray", function() {
     data.push(
       {
         "timestamp": 0,
-        "data": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
       },
       {
         "timestamp": 1,
-        "data": nd(new Uint16Array(0), [0]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
       },
       {
         "timestamp": 2,
-        "data": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 3,
-        "data": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
       },
       {
         "timestamp": 4,
-        "data": nd(new Int16Array(1), [1]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       },
       {
         "timestamp": 5,
-        "data": nd(new Int32Array(123 * 567), [123, 567]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
       },
       {
         "timestamp": 6,
-        "data": nd(new Float64Array(2 * 3), [2, 3]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       }
     );
 
@@ -120,31 +116,31 @@ describe("sqlite-ndarray", function() {
     data.push(
       {
         "timestamp": 0,
-        "data": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
       },
       {
         "timestamp": 1,
-        "data": nd(new Uint16Array(0), [0]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
       },
       {
         "timestamp": 2,
-        "data": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 3,
-        "data": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
       },
       {
         "timestamp": 4,
-        "data": nd(new Int16Array(1), [1]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       },
       {
         "timestamp": 5,
-        "data": nd(new Int32Array(123 * 567), [123, 567]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
       },
       {
         "timestamp": 6,
-        "data": nd(new Float64Array(2 * 3), [2, 3]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       }
     );
 
@@ -156,27 +152,19 @@ describe("sqlite-ndarray", function() {
           const bufferSize = sqliteNdarray.getTypedBufferSize(row["data"]["t"], row["data"]["s"]);
           const fileBuffer = Buffer.alloc(bufferSize);
           const bytesRead = helper.readFile(filePath, fileBuffer, fileBuffer.length);
-          const typedBuffer = sqliteNdarray.getTypedArrayFromBuffer(fileBuffer, row["data"]["t"]);
-          readData.push({
-            "bytesRead": bytesRead,
-            "bufferSize": typedBuffer.buffer.byteLength,
-          });
+          readData.push(bytesRead);
         }
 
         const sizeData = [];
-        for (const row of data) {
-          sizeData.push({
-            "bytesRead": row.data.data.buffer.byteLength,
-            "bufferSize": row.data.data.buffer.byteLength,
-          });
-        }
+        for (const row of data)
+          sizeData.push(row.data.data.length);
         
         return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
       })
       .should.eventually.equal(true);
   });
 
-  it("should write the ndarray documents to file (multiple per document)", function() {
+  it.only("should write the ndarray documents to file (multiple per document)", function() {
     const data = [];
     data.push(
       {
