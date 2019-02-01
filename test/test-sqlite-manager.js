@@ -4,7 +4,6 @@
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
-const nd = require("ndarray");
 const del = require("del");
 const Promise = require("bluebird");
 const chai = require("chai");
@@ -14,6 +13,7 @@ const shortid = require("shortid");
 const tempDir = require("temp-dir");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
+const sqliteNdarray = require("../lib/sqlite-ndarray.js");
 // @ts-ignore
 const packageJson = require("../package.json");
 const helper = require("./helper.js");
@@ -681,14 +681,14 @@ describe("sqlite-manager", function() {
           return sqLiteManager.getDatasetData(dbIter, null, null, null);
         })
         .then((result) => {
-          const writeNdData = writeData[0].arrayData;
+          const writeNdData = sqliteNdarray.getNdarrayData(writeData[0].arrayData.data, writeData[0].arrayData);
           const readNdData = result.data[0].arrayData;
-          
-          truth = _.isEqual(readNdData.shape, writeNdData.shape) && _.isEqual(readNdData.stride, writeNdData.stride) &&
-                   (readNdData.data.buffer.byteLength === writeNdData.data.buffer.byteLength);
+          truth = _.isEqual(readNdData.shape, writeNdData.shape) && (readNdData.dtype === writeNdData.dtype) &&
+                    (readNdData.major === writeNdData.major) && (readNdData.ftype === writeNdData.ftype) &&
+                    (readNdData.data.length === writeNdData.data.length);
 
-          for (let idx = 0; idx < readNdData.data.buffer.byteLength; idx ++)
-            truth = truth && (readNdData.data.buffer[idx] == writeNdData.data.buffer[idx]);
+          for (let idx = 0; idx < readNdData.data.length; idx++)
+            truth = truth && (readNdData.data[idx] === writeNdData.data[idx]);
           return Promise.resolve(truth);
         })
         .should.eventually.equal(true);
@@ -1566,7 +1566,7 @@ describe("sqlite-manager", function() {
           case sqliteConstants.SQLITE_GENERAL_TYPE_NDARRAY:
             const array = new Float64Array(23 * 34);
             array.fill(-1.8934579345);
-            dataElement[key] = nd(array, [23, 34]);
+            dataElement[key] = sqliteNdarray.getNdarrayMeta(Buffer.from(array.buffer), "float64", [23, 34]);
             break;
           case sqliteConstants.SQLITE_TYPE_NUMERIC:
           case sqliteConstants.SQLITE_TYPE_INTEGER:

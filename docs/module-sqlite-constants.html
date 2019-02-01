@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: sqlite-helper</title>
+    <title>JSDoc: Module: sqlite-constants</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: sqlite-helper</h1>
+    <h1 class="page-title">Module: sqlite-constants</h1>
 
     
 
@@ -38,7 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Module to insert data into a db.</p></div>
+            <div class="description"><p>Module to define library constants.</p>
+<p><img src="./img/nqminds-blue-logo.png" alt="nqminds-blue-logo.png"> <img src="./img/interlinq-logo-darker.png" alt="interlinq-logo-darker.png"></p></div>
         
 
         
@@ -94,7 +95,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-helper.js.html">sqlite-helper.js</a>, <a href="sqlite-helper.js.html#line1">line 1</a>
+        <a href="sqlite-constants.js.html">sqlite-constants.js</a>, <a href="sqlite-constants.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -139,130 +140,21 @@
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id=".INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS"><span class="type-signature">(static) </span>INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS<span class="type-signature"></span></h4>
 
-    
-
-    
-    <h4 class="name" id=".executeMany"><span class="type-signature">(async, static) </span>executeMany<span class="signature">(db, sqliteStatementCreator, data)</span><span class="type-signature"> &rarr; {Promise.&lt;null>}</span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    <p>Runs an SQLite statement for each row in data.</p>
-<p>It caches statements depending on the columns in each row of data.</p>
+    <p>For use in <a href="module-sqlite-manager.html#.getResource">module:sqlite-manager.getResource</a>.</p>
+<p>Maps the keyname stored in the info table with the key expected in the API's
+<a href="global.html#Resource">Resource</a> type.</p>
 </div>
 
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>db</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The sqlite3 db object from module node-sqlite3.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>sqliteStatementCreator</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#SQLiteStatementCreator">SQLiteStatementCreator</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A function that
-    creates SQLite strings.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array.&lt;object></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A list of all the data rows to execute.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -298,7 +190,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-helper.js.html">sqlite-helper.js</a>, <a href="sqlite-helper.js.html#line38">line 38</a>
+        <a href="sqlite-constants.js.html">sqlite-constants.js</a>, <a href="sqlite-constants.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -314,37 +206,9 @@
 
 
 
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
         
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;null></span>
-
-
-    </dd>
-</dl>
-
     
 
-
-
-
-
-        
     
 
     

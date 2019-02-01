@@ -12,6 +12,8 @@
 <dl>
 <dt><a href="#DatasetData">DatasetData</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#NdarrayData">NdarrayData</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#DataRow">DataRow</a> : <code>Object</code></dt>
 <dd><p>A row of data, with <code>{columnname: rowvalue}</code>.</p>
 </dd>
@@ -159,6 +161,11 @@ manager.addData(db, [
  {lsoa: "E0000005", count: 4533},
 ]);
 ```
+**Example** *(add a 2D ndarray)*  
+```js
+buffer = Buffer.alloc(23*34);
+manager.addData(db, {id: 1, array: manager.getNdarrayMeta(buffer, "float64", [23, 34])});
+```
 <a name="module_sqlite-manager.getDatasetData"></a>
 
 ### ~~sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)~~
@@ -218,8 +225,8 @@ Updates data in a dataset resource.
 | --- | --- | --- | --- |
 | db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
 | data | [<code>DataRow</code>](#DataRow) \| [<code>Array.&lt;DataRow&gt;</code>](#DataRow) |  | The data to update.     Must conform to the schema defined by the resource metadata.     Supports updating individual or multiple rows. |
-| [upsert] | <code>bool</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
-| [throws] | <code>bool</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
+| [upsert] | <code>boolean</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
+| [throws] | <code>boolean</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
 
 <a name="module_sqlite-manager.updateDataByQuery"></a>
 
@@ -292,7 +299,7 @@ Gets the details for a given database.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
-| [noThrow] | <code>bool</code> | <code>false</code> | If set, the call won't reject or throw if the resource doesn't exist. |
+| [noThrow] | <code>boolean</code> | <code>false</code> | If set, the call won't reject or throw if the resource doesn't exist. |
 
 <a name="module_sqlite-manager.setGeneralSchema"></a>
 
@@ -317,6 +324,20 @@ Sets the general schema and the default NULL array.
 | metaData | <code>object</code> | The dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | metaDataUrl | <code>string</code> | The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | data | [<code>Array.&lt;DataRow&gt;</code>](#DataRow) | The dataset documents. |
+
+<a name="NdarrayData"></a>
+
+## NdarrayData : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| data | <code>Buffer</code> \| <code>Object</code> | The ndarray data Buffer or Stream. |
+| dtype | <code>string</code> | The ndarray data type is of type `NDARRAY_DTYPES`. |
+| shape | <code>Array.&lt;number&gt;</code> | The ndarray shape. |
+| major | <code>boolean</code> | The ndarray major (`true` - row-major, `false` - column-major). |
+| ftype | <code>string</code> | The ndarray file type is of type `NDARRAY_FTYPES`. |
 
 <a name="DataRow"></a>
 
