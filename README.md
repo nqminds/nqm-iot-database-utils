@@ -122,7 +122,7 @@ sqliteUtils.openDatabase("", "memory", "w+")
       return sqliteUtils.addData(dbIter, {timestamp: 123456789, array: arrayData});
     })
     .then(() => {
-      return sqliteUtils.getData(dbIter, null, null, null, null);
+      return sqliteUtils.getData(dbIter, null, null, null);
     })
     .then((result) => {
       const row = result.data[0];
