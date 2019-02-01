@@ -15,6 +15,8 @@
 <dt><a href="#DataRow">DataRow</a> : <code>Object</code></dt>
 <dd><p>A row of data, with <code>{columnname: rowvalue}</code>.</p>
 </dd>
+<dt><a href="#NdarrayData">NdarrayData</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#CommandResult">CommandResult</a> : <code>object</code></dt>
 <dd><p>An object the shows the status of a command.</p>
 </dd>
@@ -341,6 +343,20 @@ Returns the ndarray metadata
 A row of data, with `{columnname: rowvalue}`.
 
 **Kind**: global typedef  
+<a name="NdarrayData"></a>
+
+## NdarrayData : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| data | <code>object</code> | The ndarray data Buffer or Stream. |
+| dtype | <code>string</code> | The ndarray data type. |
+| shape | <code>Array.&lt;number&gt;</code> | The ndarray shape. |
+| major | <code>boolean</code> | The ndarray major (true - row-major, false - column-major). |
+| ftype | <code>string</code> | The ndarray file type. |
+
 <a name="CommandResult"></a>
 
 ## CommandResult : <code>object</code>
