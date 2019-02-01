@@ -351,8 +351,8 @@ A row of data, with `{columnname: rowvalue}`.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| data | <code>Buffer</code> \| <code>object</code> | The ndarray data Buffer or Stream. |
-| dtype | <code>string</code> | The ndarray data type @see [NDARRAY_DTYPES](NDARRAY_DTYPES). |
+| data | <code>Buffer</code> \| <code>Object</code> | The ndarray data Buffer or Stream. |
+| dtype | <code>NDARRAY_DTYPES</code> | The ndarray data type . |
 | shape | <code>Array.&lt;number&gt;</code> | The ndarray shape. |
 | major | <code>boolean</code> | The ndarray major (`true` - row-major, `false` - column-major). |
 | ftype | <code>string</code> | The ndarray file type. |
