@@ -24,7 +24,7 @@ chai.use(chaiAsPromised);
 chai.use(deepEqualInAnyOrder);
 chai.should();
 
-describe.only("sqlite-ndarray", function() {
+describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
   after(function() {
     del.sync(databaseFolder);
@@ -368,7 +368,7 @@ describe.only("sqlite-ndarray", function() {
       .should.eventually.equal(true);
   });
 
-  it.only("should read the same elemenst as written in ndarray documents (one per document)", function() {
+  it("should read the same elemenst as written in ndarray documents (one per document)", function() {
     const data = [];
     let size = [];
     let length = 0;
@@ -396,7 +396,6 @@ describe.only("sqlite-ndarray", function() {
     lengths.push(length);
     arrays.push(new Uint32Array(length));
 
-    const stride = [1, 4, 20];
     size = [4, 5, 6];
     length = sizeToLength(size);
     sizes.push(size);
@@ -436,35 +435,43 @@ describe.only("sqlite-ndarray", function() {
     data.push(
       {
         "timestamp": 0,
-        "data": nd(arrays[0], sizes[0]),
+        "dtype": "uint8",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[0].buffer), "uint8", sizes[0]),
       },
       {
         "timestamp": 1,
-        "data": nd(arrays[1], sizes[1]),
+        "dtype": "uint16",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[1].buffer), "uint16", sizes[1]),
       },
       {
         "timestamp": 2,
-        "data": nd(arrays[2], sizes[2]),
+        "dtype": "uint32",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[2].buffer), "uint32", sizes[2]),
       },
       {
         "timestamp": 3,
-        "data": nd(arrays[3], sizes[3], stride),
+        "dtype": "int8",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[3].buffer), "int8", sizes[3], false),
       },
       {
         "timestamp": 4,
-        "data": nd(arrays[4], sizes[4]),
+        "dtype": "int16",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[4].buffer), "int16", sizes[4]),
       },
       {
         "timestamp": 5,
-        "data": nd(arrays[5], sizes[5]),
+        "dtype": "int32",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[5].buffer), "int32", sizes[5]),
       },
       {
         "timestamp": 6,
-        "data": nd(arrays[6], sizes[6]),
+        "dtype": "float32",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[6].buffer), "float32", sizes[6]),
       },
       {
         "timestamp": 7,
-        "data": nd(arrays[7], sizes[7]),
+        "dtype": "float64",
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.from(arrays[7].buffer), "float64", sizes[7]),
       }
     );
 
@@ -476,15 +483,16 @@ describe.only("sqlite-ndarray", function() {
       })
       .then((readData) => {
         let truth = true;
-        for (let idx = 0; idx < data.length; idx++ ) {
+        for (let idx = 0; idx < data.length; idx++) {
           const writeBuffer = data[idx].data.data;
           const readBuffer = readData[idx].data.data;
-          truth = truth && (writeBuffer.length === readBuffer.length);
-    
+          const typedWrite = sqliteNdarray.getTypedArrayFromBuffer(writeBuffer, data[idx].dtype);
+          const typedRead = sqliteNdarray.getTypedArrayFromBuffer(readBuffer, readData[idx].dtype);
+          truth = truth && (typedWrite.length === typedRead.length);
           if (!truth) break;
-    
+
           for (let j = 0; j < writeBuffer.length; j++)
-            truth = truth && (writeBuffer[j] === readBuffer[j]);
+            truth = truth && (typedWrite[j] === typedRead[j]);
         }
 
         return Promise.resolve(truth);

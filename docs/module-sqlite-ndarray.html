@@ -205,7 +205,7 @@
 <span class="param-type">Buffer</span>
 |
 
-<span class="param-type">Stream</span>
+<span class="param-type">object</span>
 
 
             
@@ -269,7 +269,7 @@
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">array</span>
 
 
             
@@ -396,7 +396,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line227">line 227</a>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line124">line 124</a>
     </li></ul></dd>
     
 
@@ -454,7 +454,7 @@
     
 
     
-    <h4 class="name" id=".getTypedArrayFromBuffer"><span class="type-signature">(static) </span>getTypedArrayFromBuffer<span class="signature">(byteBuffer, numpyType)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".getNdarrayObject"><span class="type-signature">(static) </span>getNdarrayObject<span class="signature">(data, meta<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#NdarrayData">NdarrayData</a>}</span></h4>
     
 
     
@@ -462,7 +462,7 @@
 
 
 <div class="description">
-    <p>Returns the Javascript typed array from a numpy type and a buffer</p>
+    <p>Returns the ndarray object</p>
 </div>
 
 
@@ -486,6 +486,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -498,46 +500,67 @@
 
         <tr>
             
-                <td class="name"><code>byteBuffer</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">Buffer</span>
+|
+
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>The byte buffer object</p></td>
+            <td class="description last"><p>The input data buffer or data stream</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>numpyType</code></td>
+                <td class="name"><code>meta</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>The numpy array type</p></td>
+            <td class="description last"><p>The ndarray metadata</p></td>
         </tr>
 
     
@@ -578,7 +601,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line123">line 123</a>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -604,7 +627,207 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <ul>
+<li>The ndarray object with the structure<pre class="prettyprint source"><code>               {data: Buffer|Stream, dtype: string, shape: array, major: boolean, ftype: string}</code></pre></li>
+</ul>
+</div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#NdarrayData">NdarrayData</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTypedArrayFromBuffer"><span class="type-signature">(static) </span>getTypedArrayFromBuffer<span class="signature">(buffer, dtype)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns the Javascript typed array from a buffer of a given type</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Buffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data buffer</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dtype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data type</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>The typed array</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -742,7 +965,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line88">line 88</a>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -800,166 +1023,7 @@
     
 
     
-    <h4 class="name" id=".ndarrayToNumpy"><span class="type-signature">(static) </span>ndarrayToNumpy<span class="signature">(array)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Returns the numpy metadata from an ndarray instance</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>array</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The ndarray input object</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line156">line 156</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <ul>
-<li>The numpy metadata</li>
-</ul>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".readNdarrayMany"><span class="type-signature">(async, static) </span>readNdarrayMany<span class="signature">(db, data, key)</span><span class="type-signature"> &rarr; {Promise.&lt;array.&lt;object>>}</span></h4>
+    <h4 class="name" id=".readNdarrayMany"><span class="type-signature">(async, static) </span>readNdarrayMany<span class="signature">(db, data, key, type<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;object>>}</span></h4>
     
 
     
@@ -991,6 +1055,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -1016,6 +1082,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1032,12 +1106,20 @@
             <td class="type">
             
                 
-<span class="param-type">array.&lt;object></span>
+<span class="param-type">Array.&lt;object></span>
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -1065,10 +1147,51 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The key(s) representing the ndarray(s).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The return type (true - Buffer, false - Stream), default is true.</p></td>
         </tr>
 
     
@@ -1109,7 +1232,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line341">line 341</a>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -1149,7 +1272,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;array.&lt;object>></span>
+<span class="param-type">Promise.&lt;Array.&lt;object>></span>
 
 
     </dd>
@@ -1167,7 +1290,7 @@
     
 
     
-    <h4 class="name" id=".writeNdarrayMany"><span class="type-signature">(async, static) </span>writeNdarrayMany<span class="signature">(db, data, key)</span><span class="type-signature"> &rarr; {Promise.&lt;array.&lt;object>>}</span></h4>
+    <h4 class="name" id=".writeNdarrayMany"><span class="type-signature">(async, static) </span>writeNdarrayMany<span class="signature">(db, data, key)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;object>>}</span></h4>
     
 
     
@@ -1240,7 +1363,7 @@
             <td class="type">
             
                 
-<span class="param-type">array.&lt;object></span>
+<span class="param-type">Array.&lt;object></span>
 
 
             
@@ -1317,7 +1440,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line293">line 293</a>
+        <a href="sqlite-ndarray.js.html">sqlite-ndarray.js</a>, <a href="sqlite-ndarray.js.html#line278">line 278</a>
     </li></ul></dd>
     
 
@@ -1357,7 +1480,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;array.&lt;object>></span>
+<span class="param-type">Promise.&lt;Array.&lt;object>></span>
 
 
     </dd>
@@ -1385,13 +1508,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-ndarray.html">sqlite-ndarray</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li><li><a href="global.html#NDARRAY_FILE_TYPE_RAW">NDARRAY_FILE_TYPE_RAW</a></li><li><a href="global.html#NDARRAY_UINT8_TYPE">NDARRAY_UINT8_TYPE</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sqlite-helper.html">sqlite-helper</a></li><li><a href="module-sqlite-info-table.html">sqlite-info-table</a></li><li><a href="module-sqlite-manager.html">sqlite-manager</a></li><li><a href="module-sqlite-ndarray.html">sqlite-ndarray</a></li><li><a href="module-sqlite-schema-converter.html">sqlite-schema-converter</a></li><li><a href="module-sqlite-statement-creator.html">sqlite-statement-creator</a></li></ul><h3>Global</h3><ul><li><a href="global.html#INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS">INFO_TABLE_KEYS_TO_TDX_RESOURCE_KEYS</a></li><li>{NDARRAY_DTYPES}</li><li>{NDARRAY_FTYPES}</li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jan 31 2019 16:13:32 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 15:31:41 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

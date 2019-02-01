@@ -51,6 +51,7 @@ Module to manage the sqlite database.
     * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
     * [.getResource(db, [noThrow])](#module_sqlite-manager.getResource) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#Resource)
     * [.setGeneralSchema(db, schema)](#module_sqlite-manager.setGeneralSchema)
+    * [.getNdarrayMeta(data, [dtype], [shape], [major], [ftype])](#module_sqlite-manager.getNdarrayMeta) ⇒ <code>object</code>
 
 <a name="module_sqlite-manager.openDatabase"></a>
 
@@ -218,8 +219,8 @@ Updates data in a dataset resource.
 | --- | --- | --- | --- |
 | db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
 | data | [<code>DataRow</code>](#DataRow) \| [<code>Array.&lt;DataRow&gt;</code>](#DataRow) |  | The data to update.     Must conform to the schema defined by the resource metadata.     Supports updating individual or multiple rows. |
-| [upsert] | <code>bool</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
-| [throws] | <code>bool</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
+| [upsert] | <code>boolean</code> | <code>false</code> | Indicates the data should be created if no     document/row is found matching the primary key. |
+| [throws] | <code>boolean</code> | <code>true</code> | Indicates whether this function should reject     if there is an error. The TDX-API doesn't, as it returns a field which     states if there has been an error. |
 
 <a name="module_sqlite-manager.updateDataByQuery"></a>
 
@@ -292,7 +293,7 @@ Gets the details for a given database.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | db | <code>object</code> |  | The sqlite3 db object from module node-sqlite3. |
-| [noThrow] | <code>bool</code> | <code>false</code> | If set, the call won't reject or throw if the resource doesn't exist. |
+| [noThrow] | <code>boolean</code> | <code>false</code> | If set, the call won't reject or throw if the resource doesn't exist. |
 
 <a name="module_sqlite-manager.setGeneralSchema"></a>
 
@@ -305,6 +306,22 @@ Sets the general schema and the default NULL array.
 | --- | --- | --- |
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
 | schema | <code>object</code> | The general schema. |
+
+<a name="module_sqlite-manager.getNdarrayMeta"></a>
+
+### sqlite-manager.getNdarrayMeta(data, [dtype], [shape], [major], [ftype]) ⇒ <code>object</code>
+Returns the ndarray metadata
+
+**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
+**Returns**: <code>object</code> - - The ndarray metadata  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>Buffer</code> \| <code>object</code> | The input data buffer or data stream |
+| [dtype] | <code>string</code> | The data type |
+| [shape] | <code>Array.&lt;number&gt;</code> | The shape of the data |
+| [major] | <code>boolean</code> | The data major (true - row-major, false - column-major) |
+| [ftype] | <code>string</code> | The file type ("raw", "base64", "compressed") |
 
 <a name="DatasetData"></a>
 
