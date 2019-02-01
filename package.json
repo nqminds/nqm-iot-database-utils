@@ -39,17 +39,13 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "console.table": "^0.10.0",
-    "debug": "^3.0.1",
     "del": "^3.0.0",
     "lodash": "^4.17.10",
     "mongo-sql": "^5.0.4",
-    "ndarray": "^1.0.18",
     "path": "^0.12.7",
     "shortid": "^2.2.8",
     "sqlite3": "^4.0.4",
-    "temp-dir": "^1.0.0",
-    "typedarray-to-buffer": "^3.1.5"
+    "temp-dir": "^1.0.0"
   },
   "private": false,
   "babel": {
@@ -71,6 +67,7 @@
     "eslint-plugin-react": "^6.7.1",
     "jsdoc": "^3.5.5",
     "jsdoc-to-markdown": "^4.0.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "console.table": "^0.10.0"
   }
 }
