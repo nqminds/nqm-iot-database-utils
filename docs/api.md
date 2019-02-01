@@ -12,11 +12,11 @@
 <dl>
 <dt><a href="#DatasetData">DatasetData</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#NdarrayData">NdarrayData</a> : <code>object</code></dt>
+<dd></dd>
 <dt><a href="#DataRow">DataRow</a> : <code>Object</code></dt>
 <dd><p>A row of data, with <code>{columnname: rowvalue}</code>.</p>
 </dd>
-<dt><a href="#NdarrayData">NdarrayData</a> : <code>object</code></dt>
-<dd></dd>
 <dt><a href="#CommandResult">CommandResult</a> : <code>object</code></dt>
 <dd><p>An object the shows the status of a command.</p>
 </dd>
@@ -53,7 +53,6 @@ Module to manage the sqlite database.
     * [.getDatasetDataCount(db, filter)](#module_sqlite-manager.getDatasetDataCount) ⇒ <code>object</code>
     * [.getResource(db, [noThrow])](#module_sqlite-manager.getResource) ⇒ [<code>Promise.&lt;Resource&gt;</code>](#Resource)
     * [.setGeneralSchema(db, schema)](#module_sqlite-manager.setGeneralSchema)
-    * [.getNdarrayMeta(data, [dtype], [shape], [major], [ftype])](#module_sqlite-manager.getNdarrayMeta) ⇒ <code>object</code>
 
 <a name="module_sqlite-manager.openDatabase"></a>
 
@@ -314,22 +313,6 @@ Sets the general schema and the default NULL array.
 | db | <code>object</code> | The sqlite3 db object from module node-sqlite3. |
 | schema | <code>object</code> | The general schema. |
 
-<a name="module_sqlite-manager.getNdarrayMeta"></a>
-
-### sqlite-manager.getNdarrayMeta(data, [dtype], [shape], [major], [ftype]) ⇒ <code>object</code>
-Returns the ndarray metadata
-
-**Kind**: static method of [<code>sqlite-manager</code>](#module_sqlite-manager)  
-**Returns**: <code>object</code> - - The ndarray metadata  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| data | <code>Buffer</code> \| <code>object</code> | The input data buffer or data stream |
-| [dtype] | <code>string</code> | The data type |
-| [shape] | <code>Array.&lt;number&gt;</code> | The shape of the data |
-| [major] | <code>boolean</code> | The data major (true - row-major, false - column-major) |
-| [ftype] | <code>string</code> | The file type ("raw", "base64", "compressed") |
-
 <a name="DatasetData"></a>
 
 ## DatasetData : <code>object</code>
@@ -342,12 +325,6 @@ Returns the ndarray metadata
 | metaDataUrl | <code>string</code> | The URL to the dataset metadata (see `nqmMeta` option in `getDatasetData`). |
 | data | [<code>Array.&lt;DataRow&gt;</code>](#DataRow) | The dataset documents. |
 
-<a name="DataRow"></a>
-
-## DataRow : <code>Object</code>
-A row of data, with `{columnname: rowvalue}`.
-
-**Kind**: global typedef  
 <a name="NdarrayData"></a>
 
 ## NdarrayData : <code>object</code>
@@ -362,6 +339,12 @@ A row of data, with `{columnname: rowvalue}`.
 | major | <code>boolean</code> | The ndarray major (`true` - row-major, `false` - column-major). |
 | ftype | <code>string</code> | The ndarray file type is of type `NDARRAY_FTYPES`. |
 
+<a name="DataRow"></a>
+
+## DataRow : <code>Object</code>
+A row of data, with `{columnname: rowvalue}`.
+
+**Kind**: global typedef  
 <a name="CommandResult"></a>
 
 ## CommandResult : <code>object</code>

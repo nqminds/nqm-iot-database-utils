@@ -69,13 +69,13 @@ module.exports = (function() {
   }
 
   /**
-   * Returns the buffer size in bytes from a numpy type
+   * Returns the buffer size in bytes from a numpy type.
    * @function
    * @alias module:sqlite-ndarray.getTypedBufferSize
    * @sync
-   * @param {string} numpyType - The numpy array type
-   * @param {array} numpySize - The numpy array size
-   * @returns {number} - The buffer size
+   * @param {string} numpyType - The numpy array type.
+   * @param {array} numpySize - The numpy array size.
+   * @returns {number} - The buffer size.
    */
   ndamodule.getTypedBufferSize = function(numpyType, numpySize) {
     const size = numpySize.reduce((a, b) => (a * b));
@@ -104,13 +104,13 @@ module.exports = (function() {
   };
 
   /**
-   * Returns the Javascript typed array from a buffer of a given type
+   * Returns the Javascript typed array from a buffer of a given type.
    * @function
    * @alias module:sqlite-ndarray.getTypedArrayFromBuffer
    * @sync
-   * @param {Buffer} buffer - The data buffer
-   * @param {string} dtype - The data type
-   * @returns {object} - The typed array
+   * @param {Buffer} buffer - The data buffer.
+   * @param {string} dtype - The data type is of type `NDARRAY_DTYPES`.
+   * @returns {object} - The typed array.
    */
   ndamodule.getTypedArrayFromBuffer = function(buffer, dtype) {
     switch (dtype) {
@@ -138,16 +138,16 @@ module.exports = (function() {
   };
 
   /**
-   * Returns the ndarray metadata
+   * Returns the ndarray metadata.
    * @function
    * @alias module:sqlite-ndarray.getNdarrayMeta
    * @sync
-   * @param {Buffer|object} data - The input data buffer or data stream
-   * @param {string} [dtype] - The data type
-   * @param {array} [shape] - The shape of the data
-   * @param {boolean} [major] - The data major (true - row-major, false - column-major)
-   * @param {string} [ftype] - The file type ("raw", "base64", "compressed")
-   * @returns {object} - The ndarray metadata
+   * @param {Buffer|{object: any}} data - The input data buffer or data stream.
+   * @param {string} [dtype] - The data type is of type `NDARRAY_DTYPES`.
+   * @param {array} [shape] - The shape of the data.
+   * @param {boolean} [major] - The data major (true - row-major, false - column-major).
+   * @param {string} [ftype] - The ndarray file type is of type `NDARRAY_FTYPES`.
+   * @returns {object} - The ndarray metadata.
    */
   ndamodule.getNdarrayMeta = function(data, dtype, shape, major, ftype) {
     const meta = {"data": data};
@@ -233,14 +233,14 @@ module.exports = (function() {
   };
 
   /**
-   * Returns the ndarray object
+   * Returns the ndarray object.
    * @function
    * @alias module:sqlite-ndarray.getNdarrayObject
    * @sync
-   * @param {Buffer|object} data - The input data buffer or data stream
-   * @param {object} [meta] - The ndarray metadata
-   * @returns {NdarrayData} - The ndarray object with the structure
-   *                      {data: Buffer|Stream, dtype: string, shape: array, major: boolean, ftype: string}
+   * @param {Buffer|object} data - The input data buffer or data stream.
+   * @param {object} [meta] - The ndarray metadata.
+   * @returns {NdarrayData} - The ndarray object with the structure.
+   *                      {data: Buffer|Stream, dtype: string, shape: array, major: boolean, ftype: string}.
    */
   ndamodule.getNdarrayData = function(data, meta) {
     const ndData = {};
@@ -301,7 +301,7 @@ module.exports = (function() {
    * @param {object} db - The sqlite3 db object from module node-sqlite3.
    * @param {object[]} data - A list of all the data rows to write to file.
    * @param {string|string[]} key - The key(s) representing the ndarray(s).
-   * @returns {Promise&lt;object[]>} - The modified data list with ndarray metadata
+   * @returns {Promise&lt;object[]>} - The modified data list with ndarray metadata.
    */
   ndamodule.writeNdarrayMany = function(db, data, key) {
     return new Promise((resolve, reject) => {
@@ -352,7 +352,7 @@ module.exports = (function() {
    * @param {object[]} data - A list of all the data rows to read from files.
    * @param {string|string[]} key - The key(s) representing the ndarray(s).
    * @param {boolean} [type] - The return type (true - Buffer, false - Stream), default is true.
-   * @returns {Promise&lt;object[]>} - The modified data list with ndarray objects
+   * @returns {Promise&lt;object[]>} - The modified data list with ndarray objects.
    */
   ndamodule.readNdarrayMany = function(db, data, key, type) {
     return new Promise((resolve, reject) => {
@@ -416,9 +416,7 @@ module.exports = (function() {
           }
 
           // Assign the new ndarray object
-          // const typedBuffer = ndamodule.getTypedArrayFromBuffer(fileBuffer, meta["t"]);
           newRow[keyValue] = ndamodule.getNdarrayData(dataBuffer, meta);
-          // nd(typedBuffer, meta["s"], majorToStride(meta["c"], meta["s"]));
         }
 
         // Save to the new list
@@ -447,7 +445,7 @@ module.exports = (function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 16:13:04 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 16:20:05 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

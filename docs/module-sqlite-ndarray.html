@@ -205,7 +205,7 @@
 <span class="param-type">Buffer</span>
 |
 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -223,7 +223,7 @@
 
             
 
-            <td class="description last"><p>The input data buffer or data stream</p></td>
+            <td class="description last"><p>The input data buffer or data stream.</p></td>
         </tr>
 
     
@@ -256,7 +256,7 @@
 
             
 
-            <td class="description last"><p>The data type</p></td>
+            <td class="description last"><p>The data type is of type <code>NDARRAY_DTYPES</code>.</p></td>
         </tr>
 
     
@@ -289,7 +289,7 @@
 
             
 
-            <td class="description last"><p>The shape of the data</p></td>
+            <td class="description last"><p>The shape of the data.</p></td>
         </tr>
 
     
@@ -322,7 +322,7 @@
 
             
 
-            <td class="description last"><p>The data major (true - row-major, false - column-major)</p></td>
+            <td class="description last"><p>The data major (true - row-major, false - column-major).</p></td>
         </tr>
 
     
@@ -355,7 +355,311 @@
 
             
 
-            <td class="description last"><p>The file type (&quot;raw&quot;, &quot;base64&quot;, &quot;compressed&quot;)</p></td>
+            <td class="description last"><p>The ndarray file type is of type <code>NDARRAY_FTYPES</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line1029">line 1029</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>The ndarray metadata.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getNdarrayMeta"><span class="type-signature">(static) </span>getNdarrayMeta<span class="signature">(data, dtype<span class="signature-attributes">opt</span>, shape<span class="signature-attributes">opt</span>, major<span class="signature-attributes">opt</span>, ftype<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns the ndarray metadata.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Buffer</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The input data buffer or data stream.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dtype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The data type is of type <code>NDARRAY_DTYPES</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>shape</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The shape of the data.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>major</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The data major (true - row-major, false - column-major).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ftype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The ndarray file type is of type <code>NDARRAY_FTYPES</code>.</p></td>
         </tr>
 
     
@@ -424,7 +728,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The ndarray metadata</li>
+<li>The ndarray metadata.</li>
 </ul>
 </div>
 
@@ -462,7 +766,7 @@
 
 
 <div class="description">
-    <p>Returns the ndarray object</p>
+    <p>Returns the ndarray object.</p>
 </div>
 
 
@@ -527,7 +831,7 @@
 
             
 
-            <td class="description last"><p>The input data buffer or data stream</p></td>
+            <td class="description last"><p>The input data buffer or data stream.</p></td>
         </tr>
 
     
@@ -560,7 +864,7 @@
 
             
 
-            <td class="description last"><p>The ndarray metadata</p></td>
+            <td class="description last"><p>The ndarray metadata.</p></td>
         </tr>
 
     
@@ -629,7 +933,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The ndarray object with the structure<pre class="prettyprint source"><code>               {data: Buffer|Stream, dtype: string, shape: array, major: boolean, ftype: string}</code></pre></li>
+<li>The ndarray object with the structure.<pre class="prettyprint source"><code>               {data: Buffer|Stream, dtype: string, shape: array, major: boolean, ftype: string}.</code></pre></li>
 </ul>
 </div>
 
@@ -719,7 +1023,7 @@
 
             
 
-            <td class="description last"><p>The data buffer</p></td>
+            <td class="description last"><p>The data buffer.</p></td>
         </tr>
 
     
@@ -742,7 +1046,189 @@
 
             
 
-            <td class="description last"><p>The data type</p></td>
+            <td class="description last"><p>The data type is of type <code>NDARRAY_DTYPES</code>.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sqlite-manager.js.html">sqlite-manager.js</a>, <a href="sqlite-manager.js.html#line1040">line 1040</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <ul>
+<li>The typed array.</li>
+</ul>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTypedArrayFromBuffer"><span class="type-signature">(static) </span>getTypedArrayFromBuffer<span class="signature">(buffer, dtype)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns the Javascript typed array from a buffer of a given type.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Buffer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data buffer.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dtype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data type is of type <code>NDARRAY_DTYPES</code>.</p></td>
         </tr>
 
     
@@ -811,7 +1297,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The typed array</li>
+<li>The typed array.</li>
 </ul>
 </div>
 
@@ -849,7 +1335,7 @@
 
 
 <div class="description">
-    <p>Returns the buffer size in bytes from a numpy type</p>
+    <p>Returns the buffer size in bytes from a numpy type.</p>
 </div>
 
 
@@ -901,7 +1387,7 @@
 
             
 
-            <td class="description last"><p>The numpy array type</p></td>
+            <td class="description last"><p>The numpy array type.</p></td>
         </tr>
 
     
@@ -924,7 +1410,7 @@
 
             
 
-            <td class="description last"><p>The numpy array size</p></td>
+            <td class="description last"><p>The numpy array size.</p></td>
         </tr>
 
     
@@ -993,7 +1479,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The buffer size</li>
+<li>The buffer size.</li>
 </ul>
 </div>
 
@@ -1260,7 +1746,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The modified data list with ndarray objects</li>
+<li>The modified data list with ndarray objects.</li>
 </ul>
 </div>
 
@@ -1468,7 +1954,7 @@
         
 <div class="param-desc">
     <ul>
-<li>The modified data list with ndarray metadata</li>
+<li>The modified data list with ndarray metadata.</li>
 </ul>
 </div>
 
@@ -1514,7 +2000,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 16:13:04 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 16:20:05 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
