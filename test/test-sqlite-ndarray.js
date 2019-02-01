@@ -6,9 +6,10 @@ const fs = require("fs");
 const path = require("path");
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const del = require("del");
 const sqliteNdarray = require("../lib/sqlite-ndarray.js");
+
 
 // @ts-ignore
 const packageJson = require("../package.json");
@@ -164,50 +165,50 @@ describe.only("sqlite-ndarray", function() {
       .should.eventually.equal(true);
   });
 
-  it.only("should write the ndarray documents to file (multiple per document)", function() {
+  it("should write the ndarray documents to file (multiple per document)", function() {
     const data = [];
     data.push(
       {
         "timestamp": 0,
-        "data1": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data2": nd(new Uint16Array(0), [0]),
-        "data3": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 1,
-        "data1": nd(new Uint16Array(0), [0]),
-        "data2": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
-        "data3": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 2,
-        "data1": nd(new Uint32Array(23 * 56), [23, 56]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int16Array(1), [1]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       },
       {
         "timestamp": 3,
-        "data1": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int32Array(123 * 567), [123, 567]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
       },
       {
         "timestamp": 4,
-        "data1": nd(new Int16Array(1), [1]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Float32Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "float32", [1, 2, 3, 4]),
       },
       {
         "timestamp": 5,
-        "data1": nd(new Int32Array(123 * 567), [123, 567]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Float64Array(2 * 3), [2, 3]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       },
       {
         "timestamp": 6,
-        "data1": nd(new Float64Array(2 * 3), [2, 3]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int16Array(1), [1]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       }
     );
     const dataKeys = ["data1", "data2", "data3"];
@@ -223,9 +224,8 @@ describe.only("sqlite-ndarray", function() {
             const bufferSize = sqliteNdarray.getTypedBufferSize(row[key]["t"], row[key]["s"]);
             const fileBuffer = Buffer.alloc(bufferSize);
             bytesRead = helper.readFile(filePath, fileBuffer, fileBuffer.length);
-            const typedBuffer = sqliteNdarray.getTypedArrayFromBuffer(fileBuffer, row[key]["t"]);
 
-            sizeRow.push([bytesRead, typedBuffer.buffer.byteLength]);
+            sizeRow.push(bytesRead);
           }
           readData.push(sizeRow);
         }
@@ -234,7 +234,7 @@ describe.only("sqlite-ndarray", function() {
         for (const row of data) {
           const sizeRow = [];
           for (const key of dataKeys)
-            sizeRow.push([row[key].data.buffer.byteLength, row[key].data.buffer.byteLength]);
+            sizeRow.push(row[key].data.length);
           sizeData.push(sizeRow);
         }
         return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
@@ -247,31 +247,31 @@ describe.only("sqlite-ndarray", function() {
     data.push(
       {
         "timestamp": 0,
-        "data": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
       },
       {
         "timestamp": 1,
-        "data": nd(new Uint16Array(0), [0]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
       },
       {
         "timestamp": 2,
-        "data": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 3,
-        "data": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
       },
       {
         "timestamp": 4,
-        "data": nd(new Int16Array(1), [1]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       },
       {
         "timestamp": 5,
-        "data": nd(new Int32Array(123 * 567), [123, 567]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
       },
       {
         "timestamp": 6,
-        "data": nd(new Float64Array(2 * 3), [2, 3]),
+        "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       }
     );
     
@@ -284,12 +284,12 @@ describe.only("sqlite-ndarray", function() {
       })
       .then((readData) => {
         for (const row of newData) {
-          row["data"] = _.omit(row["data"], "p");
+          row["data"] = _.omit(row["data"], ["p", "data"]);
         }
     
         for (const row of readData) {
-          const meta = sqliteNdarray.ndarrayToNumpy(row["data"]);
-          row["data"] = _.omit(meta, "p");
+          const meta = sqliteNdarray.getNdarrayMeta(row["data"].data, row["data"].dtype, row["data"].shape, row["data"].major, row["data"].ftype);
+          row["data"] = _.omit(meta, ["p", "data"]);
         }
 
         return Promise.resolve(JSON.stringify(readData) === JSON.stringify(newData));
@@ -302,45 +302,45 @@ describe.only("sqlite-ndarray", function() {
     data.push(
       {
         "timestamp": 0,
-        "data1": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data2": nd(new Uint16Array(0), [0]),
-        "data3": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 1,
-        "data1": nd(new Uint16Array(0), [0]),
-        "data2": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
-        "data3": nd(new Uint32Array(23 * 56), [23, 56]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(0), "uint16", [0]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
       },
       {
         "timestamp": 2,
-        "data1": nd(new Uint32Array(23 * 56), [23, 56]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int16Array(1), [1]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(23 * 56), "uint32", [23, 56]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       },
       {
         "timestamp": 3,
-        "data1": nd(new Int8Array(4 * 5 * 6), [4, 5, 6], [1, 4, 20]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int32Array(123 * 567), [123, 567]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(4 * 5 * 6), "int8", [4, 5, 6], false),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
       },
       {
         "timestamp": 4,
-        "data1": nd(new Int16Array(1), [1]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Float32Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "float32", [1, 2, 3, 4]),
       },
       {
         "timestamp": 5,
-        "data1": nd(new Int32Array(123 * 567), [123, 567]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Float64Array(2 * 3), [2, 3]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(123 * 567), "int32", [123, 567]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       },
       {
         "timestamp": 6,
-        "data1": nd(new Float64Array(2 * 3), [2, 3]),
-        "data2": nd(new Uint8Array(1 * 2 * 3 * 4), [1, 2, 3, 4]),
-        "data3": nd(new Int16Array(1), [1]),
+        "data1": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
+        "data2": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1 * 2 * 3 * 4), "uint8", [1, 2, 3, 4]),
+        "data3": sqliteNdarray.getNdarrayMeta(Buffer.alloc(1), "int16", [1]),
       }
     );
 
@@ -354,13 +354,13 @@ describe.only("sqlite-ndarray", function() {
       .then((readData) => {
         for (const row of newData) {
           for (const key of dataKeys)
-            row[key] = _.omit(row[key], "p");
+            row[key] = _.omit(row[key], ["p", "data"]);
         }
     
         for (const row of readData) {
           for (const key of dataKeys) {
-            const meta = sqliteNdarray.ndarrayToNumpy(row[key]);
-            row[key] = _.omit(meta, "p");
+            const meta = sqliteNdarray.getNdarrayMeta(row[key].data, row[key].dtype, row[key].shape, row[key].major, row[key].ftype);
+            row[key] = _.omit(meta, ["p", "data"]);
           }
         }
         return Promise.resolve(JSON.stringify(readData) === JSON.stringify(newData));
@@ -368,7 +368,7 @@ describe.only("sqlite-ndarray", function() {
       .should.eventually.equal(true);
   });
 
-  it("should read the same elemenst as written in ndarray documents (one per document)", function() {
+  it.only("should read the same elemenst as written in ndarray documents (one per document)", function() {
     const data = [];
     let size = [];
     let length = 0;
