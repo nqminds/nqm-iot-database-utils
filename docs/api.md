@@ -162,6 +162,11 @@ manager.addData(db, [
  {lsoa: "E0000005", count: 4533},
 ]);
 ```
+**Example** *(add a 2D ndarray)*  
+```js
+buffer = Buffer.alloc(23*34);
+manager.addData(db, {id: 1, array: manager.getNdarrayMeta(buffer, "float64", [23, 34])});
+```
 <a name="module_sqlite-manager.getDatasetData"></a>
 
 ### ~~sqlite-manager.getDatasetData(db, [filter], [projection], [options]) ⇒ [<code>Promise.&lt;DatasetData&gt;</code>](#DatasetData)~~
@@ -352,10 +357,10 @@ A row of data, with `{columnname: rowvalue}`.
 | Name | Type | Description |
 | --- | --- | --- |
 | data | <code>Buffer</code> \| <code>Object</code> | The ndarray data Buffer or Stream. |
-| dtype | <code>NDARRAY_DTYPES</code> | The ndarray data type . |
+| dtype | <code>string</code> | The ndarray data type is of type `NDARRAY_DTYPES`. |
 | shape | <code>Array.&lt;number&gt;</code> | The ndarray shape. |
 | major | <code>boolean</code> | The ndarray major (`true` - row-major, `false` - column-major). |
-| ftype | <code>string</code> | The ndarray file type. |
+| ftype | <code>string</code> | The ndarray file type is of type `NDARRAY_FTYPES`. |
 
 <a name="CommandResult"></a>
 
