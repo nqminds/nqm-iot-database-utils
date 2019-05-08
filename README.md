@@ -118,7 +118,7 @@ sqliteUtils.openDatabase("", "memory", "w+")
     .then(() => {
       const array = new Float64Array(23 * 34);
       array.fill(-1.8934579345);
-      arrayData = sqliteUtils.getNdarrayMeta(Buffer.from(array.buffer), "float64", [23, 34]);
+      let arrayData = sqliteUtils.getNdarrayMeta(Buffer.from(array.buffer), "float64", [23, 34]);
       return sqliteUtils.addData(dbIter, {timestamp: 123456789, array: arrayData});
     })
     .then(() => {
