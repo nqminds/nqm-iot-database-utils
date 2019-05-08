@@ -377,4 +377,5 @@ An object that describes a Resource/Dataset
 | parents | <code>Array.&lt;string&gt;</code> |  |
 | schemaDefinition | <code>object</code> |  |
 | tags | <code>Array.&lt;string&gt;</code> |  |
+| meta | <code>object</code> |  |
 

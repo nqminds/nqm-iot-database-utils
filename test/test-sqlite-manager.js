@@ -799,7 +799,7 @@ describe("sqlite-manager", function() {
       chai.expect(data).to.have.property("metaData");
       const metaData = data.metaData;
       chai.expect(metaData).to.have.all.keys(
-        ["description", "id", "name", "parents", "schemaDefinition", "tags"]);
+        ["description", "id", "name", "parents", "schemaDefinition", "tags", "meta"]);
     });
   });
 
