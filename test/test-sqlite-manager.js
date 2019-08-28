@@ -87,7 +87,7 @@ describe("sqlite-manager", function() {
           const dbFile = path.basename(databasePath);
           const dbPath = path.dirname(databasePath);
           const dataPath = path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX);
-          
+
           return Promise.resolve(fs.existsSync(dataPath));
         })
         .should.eventually.equal(true);
@@ -98,12 +98,12 @@ describe("sqlite-manager", function() {
         .then(() => {
           const dataFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
           const dataFolderPath = path.join(tempDir, dataFolderName);
-          
+
           return Promise.resolve(fs.existsSync(dataFolderPath));
         })
         .should.eventually.equal(true);
     });
-    
+
     it("should create and then open a database", function() {
       let dbResult = {};
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
@@ -800,6 +800,33 @@ describe("sqlite-manager", function() {
       const metaData = data.metaData;
       chai.expect(metaData).to.have.all.keys(
         ["description", "id", "name", "parents", "schemaDefinition", "tags", "meta"]);
+    });
+
+    /**
+     * Fixes #32.
+     */
+    it("should work even when require cache is not used", async function() {
+      /**
+       * Loads a Node.js module without using the existing cached version.
+       * From luff at https://stackoverflow.com/a/16060619
+       */
+      function requireUncached(moduleName){
+        delete require.cache[require.resolve(moduleName)];
+        return require(moduleName);
+      }
+      const otherSqliteManager = requireUncached("../lib/sqlite-manager.js");
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[0];
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, entry);
+      const generalSchema = await sqLiteManager.getGeneralSchema(db);
+      chai.assert.deepEqual(
+        // load general schema using other sqlite manager
+        await otherSqliteManager.getGeneralSchema(db), generalSchema);
+
+      const testData = generateRandomData(generalSchema, 1);
+      await sqLiteManager.addData(db, testData);
+      const loadedData = (await otherSqliteManager.getData(db)).data;
+      chai.assert.sameDeepMembers(loadedData, testData);
     });
   });
 
