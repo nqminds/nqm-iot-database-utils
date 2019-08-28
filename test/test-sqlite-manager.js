@@ -143,38 +143,22 @@ describe("sqlite-manager", function() {
           return sqLiteManager.openDatabase(databasePath, "file", "r");
         })
         .then((db) => {
-          return Promise.resolve(sqLiteManager.getGeneralSchema(db));
+          return sqLiteManager.getGeneralSchema(db);
         })
         .should.eventually.deep.equal(tdxSchemaList.TDX_SCHEMA_LIST[0].generalSchema);
     });
   });
 
   describe("createDataset", function() {
-    before("Create the dataset object", function(done) {
-      sqLiteManager.openDatabase("", "memory", "w+")
-        .then((db) => {
-          dbMem = db;
-          done();
-        })
-        .catch((error) => {
-          done(error);
-        });
+    beforeEach("Create the dataset object", async () => {
+      dbMem = await sqLiteManager.openDatabase("", "memory", "w+");
     });
 
-    beforeEach("Delete the info and data tables", function(done) {
-      dbMem.runAsync(`DROP TABLE IF EXISTS ${sqliteConstants.DATABASE_INFO_TABLE_NAME};`, [])
-        .then(() => {
-          return dbMem.runAsync(`DROP TABLE IF EXISTS ${sqliteConstants.DATABASE_DATA_TABLE_NAME};`, []);
-        })
-        .then(() => {
-          return dbMem.runAsync(`DROP INDEX IF EXISTS ${sqliteConstants.DATABASE_TABLE_INDEX_NAME};`, []);
-        })
-        .then(() => {
-          done();
-        })
-        .catch((error) => {
-          done(error);
-        });
+    afterEach("Close the dataset object", async () => {
+      if (dbMem) {
+        await dbMem.close();
+        dbMem = null;
+      }
     });
 
     it("should succeed if database empty", function() {
@@ -279,43 +263,36 @@ describe("sqlite-manager", function() {
           dbFirst = db;
           return sqLiteManager.createDataset(dbFirst, entryFirst);
         })
-        .then(() => {
-          generalSchemaFirst = _.cloneDeep(sqLiteManager.getGeneralSchema(dbFirst));
+        .then(async () => {
+          generalSchemaFirst = _.cloneDeep(
+            await sqLiteManager.getGeneralSchema(dbFirst));
           return sqLiteManager.openDatabase("", "memory", "w+");
         })
         .then((db) => {
           return sqLiteManager.createDataset(db, entrySecond);
         })
-        .then(() => {
-          return Promise.resolve(_.isEqual(generalSchemaFirst, sqLiteManager.getGeneralSchema(dbFirst)));
+        .then(async () => {
+          return Promise.resolve(_.isEqual(generalSchemaFirst,
+            await sqLiteManager.getGeneralSchema(dbFirst)));
         })
         .should.eventually.equal(true);
     });
 
-    it("should close only one database when opening two and closing one", function() {
+    it("should close only one database when opening two and closing one", async () => {
       const entryFirst = tdxSchemaList.TDX_SCHEMA_LIST[0];
       const entrySecond = tdxSchemaList.TDX_SCHEMA_LIST[1];
-      let dbFirst;
-      let dbSecond;
-      return sqLiteManager.openDatabase("", "memory", "w+")
-        .then((db) => {
-          dbFirst = db;
-          return sqLiteManager.createDataset(dbFirst, entryFirst);
-        })
-        .then(() => {
-          return sqLiteManager.openDatabase("", "memory", "w+");
-        })
-        .then((db) => {
-          dbSecond = db;
-          return sqLiteManager.createDataset(db, entrySecond);
-        })
-        .then(() => {
-          return sqLiteManager.closeDatabase(dbSecond);
-        })
-        .then(() => {
-          return Promise.resolve(_.isEmpty(sqLiteManager.getGeneralSchema(dbSecond)) && !_.isEmpty(sqLiteManager.getGeneralSchema(dbFirst)));
-        })
-        .should.eventually.equal(true);
+      const dbFirst = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(dbFirst, entryFirst);
+      const dbSecond = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(dbSecond, entrySecond);
+
+      await sqLiteManager.closeDatabase(dbSecond);
+      // first db should still work now
+      const data = generateRandomData(
+        await sqLiteManager.getGeneralSchema(dbFirst), 10);
+      await sqLiteManager.addData(dbFirst, data);
+      const loadedData = (await sqLiteManager.getData(dbFirst)).data;
+      chai.assert.sameDeepMembers(data, loadedData);
     });
 
     it("should be rejected in invalid schema column names", function() {
@@ -338,12 +315,12 @@ describe("sqlite-manager", function() {
       return sqLiteManager.createDataset(dbMem, validSchema).should.be.rejected;
     });
 
-    it("should fail if data table already exists", function() {
-      return dbMem.runAsync(`CREATE TABLE ${sqliteConstants.DATABASE_DATA_TABLE_NAME}(a,b)`, [])
-        .then(() => {
-          return sqLiteManager.createDataset(dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0]);
-        })
-        .should.be.rejected;
+    it("should fail if data table already exists", async () => {
+      await dbMem.runAsync(
+        `CREATE TABLE ${sqliteConstants.DATABASE_DATA_TABLE_NAME}(a,b)`, []);
+      //console.log(await sqLiteManager.getGeneralSchema(dbMem));
+      return sqLiteManager.createDataset(
+        dbMem, tdxSchemaList.TDX_SCHEMA_LIST[0]).should.be.rejected;
     });
 
     it("should save the general schema", function() {
@@ -355,7 +332,7 @@ describe("sqlite-manager", function() {
             return sqLiteManager.createDataset(dbIter, entry);
           })
           .then(() => {
-            return Promise.resolve(sqLiteManager.getGeneralSchema(dbIter));
+            return sqLiteManager.getGeneralSchema(dbIter);
           })
           .should.eventually.deep.equal(entry.generalSchema);
       });
@@ -373,8 +350,8 @@ describe("sqlite-manager", function() {
             dbIter = db;
             return sqLiteManager.createDataset(dbIter, entry);
           })
-          .then(() => {
-            const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+          .then(async () => {
+            const generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
             const data = generateRandomData(generalSchema, 1000);
             dataSize = data.length;
             return sqLiteManager.addData(dbIter, data);
@@ -469,8 +446,8 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+        .then(async () => {
+          const generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, 1);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -506,8 +483,8 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+        .then(async () => {
+          const generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -533,8 +510,8 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+        .then(async () => {
+          const generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -561,8 +538,8 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+        .then(async () => {
+          const generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, dataSize);
 
           return sqLiteManager.addData(dbIter, testData);
@@ -638,8 +615,8 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+        .then(async () => {
+          generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
           testData = generateRandomData(generalSchema, 100);
           return sqLiteManager.addData(dbIter, testData);
         })
@@ -673,8 +650,9 @@ describe("sqlite-manager", function() {
           dbIter = db;
           return sqLiteManager.createDataset(dbIter, entry);
         })
-        .then(() => {
-          writeData = generateRandomData(sqLiteManager.getGeneralSchema(dbIter), 1);
+        .then(async () => {
+          writeData = generateRandomData(
+            await sqLiteManager.getGeneralSchema(dbIter), 1);
           return sqLiteManager.addData(dbIter, writeData);
         })
         .then(() => {
@@ -707,8 +685,8 @@ describe("sqlite-manager", function() {
             dbIter = db;
             return sqLiteManager.createDataset(dbIter, entry);
           })
-          .then(() => {
-            generalSchema = sqLiteManager.getGeneralSchema(dbIter);
+          .then(async () => {
+            generalSchema = await sqLiteManager.getGeneralSchema(dbIter);
             testData = generateRandomData(generalSchema, 100);
 
             return sqLiteManager.addData(dbIter, testData);
@@ -1143,7 +1121,7 @@ describe("sqlite-manager", function() {
       const db = await sqLiteManager.openDatabase("", "memory", "w+");
       await sqLiteManager.createDataset(db, schema);
       const randomData = generateRandomData(
-        sqLiteManager.getGeneralSchema(db), 10);
+        await sqLiteManager.getGeneralSchema(db), 10);
       testData = testData.concat(randomData);
       await sqLiteManager.addData(db, testData);
       await sqLiteManager.deleteData(db, []);
