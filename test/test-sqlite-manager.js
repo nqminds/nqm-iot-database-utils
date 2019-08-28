@@ -87,7 +87,7 @@ describe("sqlite-manager", function() {
           const dbFile = path.basename(databasePath);
           const dbPath = path.dirname(databasePath);
           const dataPath = path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX);
-          
+
           return Promise.resolve(fs.existsSync(dataPath));
         })
         .should.eventually.equal(true);
@@ -98,12 +98,12 @@ describe("sqlite-manager", function() {
         .then(() => {
           const dataFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
           const dataFolderPath = path.join(tempDir, dataFolderName);
-          
+
           return Promise.resolve(fs.existsSync(dataFolderPath));
         })
         .should.eventually.equal(true);
     });
-    
+
     it("should create and then open a database", function() {
       let dbResult = {};
       return sqLiteManager.openDatabase(databasePath, "file", "w+")
@@ -945,60 +945,60 @@ describe("sqlite-manager", function() {
             return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
           }).should.be.rejected;
       });
-      it("Adding invalid should fail but the next call should continue working",
-        () => {
-          let dbIter;
-          const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
-          const throws = true;
-          const upsert = true;
+    it("Adding invalid should fail but the next call should continue working",
+      () => {
+        let dbIter;
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+        const throws = true;
+        const upsert = true;
 
-          const data = [{prop1: 42, prop2: 42, prop3: 43}]
-          return sqLiteManager.openDatabase("", "memory", "w+")
-            .then((db) => {
-              dbIter = db;
-              return sqLiteManager.createDataset(dbIter, entry);
-            })
-            .then(() => {
-              return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
-            }).catch(() => {
-              // should have an error
-              return;
-            }).then(() => {
-              return sqLiteManager.updateData(
-                dbIter, data, upsert, throws);
-            }).then(() => {
-              return sqLiteManager.getData(dbIter);
-            }).should.eventually.deep.contain({data: data});
-        });
-  it("if upsert is true, adding new primary key data should be like an " +
-    "insert",
-    () => {
-      let dbIter;
-      const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
-      const throws = true;
-      const upsert = true;
+        const data = [{prop1: 42, prop2: 42, prop3: 43}]
+        return sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(() => {
+            return sqLiteManager.updateData(dbIter, [{}], upsert, throws);
+          }).catch(() => {
+            // should have an error
+            return;
+          }).then(() => {
+            return sqLiteManager.updateData(
+              dbIter, data, upsert, throws);
+          }).then(() => {
+            return sqLiteManager.getData(dbIter);
+          }).should.eventually.deep.contain({data: data});
+      });
+    it("if upsert is true, adding new primary key data should be like an " +
+      "insert",
+      () => {
+        let dbIter;
+        const entry = tdxSchemaList.TDX_SCHEMA_LIST[15];
+        const throws = true;
+        const upsert = true;
 
-      const testData = [];
+        const testData = [];
 
-      for (let idx = 0; idx < 10; idx++) {
-        testData.push({
-          prop1: idx,
-          prop2: 0,
-          prop3: 0,
-        });
-      }
+        for (let idx = 0; idx < 10; idx++) {
+          testData.push({
+            prop1: idx,
+            prop2: 0,
+            prop3: 0,
+          });
+        }
 
-      return sqLiteManager.openDatabase("", "memory", "w+")
-        .then((db) => {
-          dbIter = db;
-          return sqLiteManager.createDataset(dbIter, entry);
-        })
-        .then(() => {
-          return sqLiteManager.updateData(dbIter, testData, upsert, throws);
-        }).then(() => {
-          return sqLiteManager.getData(dbIter);
-        }).should.eventually.deep.contain({data: testData});
-    });
+        return sqLiteManager.openDatabase("", "memory", "w+")
+          .then((db) => {
+            dbIter = db;
+            return sqLiteManager.createDataset(dbIter, entry);
+          })
+          .then(() => {
+            return sqLiteManager.updateData(dbIter, testData, upsert, throws);
+          }).then(() => {
+            return sqLiteManager.getData(dbIter);
+          }).should.eventually.deep.contain({data: testData});
+      });
     it("if upsert is false, updating with new primary key data should do nothing",
     () => {
       let dbIter;
