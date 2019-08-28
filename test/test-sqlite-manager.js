@@ -521,31 +521,26 @@ describe("sqlite-manager", function() {
         .should.eventually.equal(limit);
     });
 
-    it("should return with no limit and skip", function() {
-      let dbIter;
-      let testData = [];
+    it("should return with no limit and skip", async function() {
       const entry = tdxSchemaList.TDX_SCHEMA_LIST[0];
       const dataSize = 100;
       const skip = 45;
 
-      return sqLiteManager.openDatabase("", "memory", "w+")
-        .then((db) => {
-          dbIter = db;
-          return sqLiteManager.createDataset(dbIter, entry);
-        })
-        .then(() => {
-          const generalSchema = sqLiteManager.getGeneralSchema(dbIter);
-          testData = generateRandomData(generalSchema, dataSize);
-
-          return sqLiteManager.addData(dbIter, testData);
-        })
-        .then(() => {
-          return sqLiteManager.getDatasetData(dbIter, null, null, {skip: skip});
-        })
-        .then((result) => {
-          return Promise.resolve(result.data.length);
-        })
-        .should.eventually.equal(dataSize - skip);
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, entry);
+      const testData = generateRandomData(
+        await sqLiteManager.getGeneralSchema(db),
+        dataSize
+      );
+      await sqLiteManager.addData(db, testData);
+      let data = (
+        await sqLiteManager.getData(db, null, null, {skip: skip})
+      ).data;
+      chai.assert.lengthOf(data, dataSize - skip);
+      data = (
+        await sqLiteManager.getData(db, null, null, {limit: 0, skip: skip})
+      ).data;
+      chai.assert.lengthOf(data, dataSize - skip);
     });
 
     it("should return with limit and skip", function() {
