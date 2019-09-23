@@ -13,7 +13,7 @@ and this project adheres to
 - Error when attempting to addData with columns not in schema.
   Now just raises a warning.
 
-## 0.7.0
+## [0.7.0] - 2019-08-29
 
 ### Changed
 
