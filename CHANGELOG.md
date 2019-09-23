@@ -8,7 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
-### MAJOR
+### Fixed
+
+- Error when attempting to addData with columns not in schema.
+  Now just raises a warning.
+
+## 0.7.0
+
+### Changed
 
 - Changes `getData()` to limit the `limit` field to 1000.
   Also, when `limit === 0`, the default `limit` of 1000 is used.
