@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "",
-    "test": "mocha",
+    "test": "mocha --no-warnings",
     "lint": "eslint client && echo \"eslint: no lint errors\"",
     "jsdocs": "jsdoc -c jsdoc-config.json",
     "docs": "npm run api-md && TZ=UTC npm run jsdocs",

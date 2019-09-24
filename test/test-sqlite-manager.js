@@ -434,6 +434,42 @@ describe("sqlite-manager", function() {
         })
         .should.eventually.be.fulfilled;
     });
+
+    const expectWarning = async(funcThatShouldWarn, regex = undefined) => {
+      this.timeout(100); // shorten timeout no warning == timeout
+      process.removeListener("warning", helper.onWarning);
+      let promiseResolver;
+      const warningPromise = new Promise((resolve) => {
+        promiseResolver = resolve;
+        process.on("warning", resolve);
+      });
+      await funcThatShouldWarn();
+      const warning = await warningPromise;
+      process.removeListener("warning", promiseResolver);
+      process.addListener("warning", helper.onWarning);
+      if (regex) {
+        chai.assert.match(warning, regex);
+      }
+    };
+
+    it("should warn when adding extra columns", async function() {
+      const entry = tdxSchemaList.TDX_SCHEMA_LIST[2];
+
+      const db = await sqLiteManager.openDatabase("", "memory", "w+");
+      await sqLiteManager.createDataset(db, entry);
+
+      const generalSchema = await sqLiteManager.getGeneralSchema(db);
+      const testData = generateRandomData(generalSchema, 1);
+
+      const extraColumns = testData.map((row) => {
+        return {...row, extraColumn: "extra data"};
+      });
+
+      expectWarning(
+        () => sqLiteManager.addData(db, extraColumns[0]),
+        /Ignoring extra fields in row that were not in schema/,
+      );
+    });
   });
 
   describe("getDatasetData", function() {
@@ -1547,6 +1583,12 @@ describe("sqlite-manager", function() {
     });
   });
 
+  /**
+   * @param {{[columnName: string]: string}} schema -
+   *   A map of column names to `sqliteConstants` column types.
+   * @param {number} size The number of rows to generate
+   * @returns {Object<string, any>[]} A list of rows to add to a database.
+   */
   function generateRandomData(schema, size) {
     const data = [];
 
