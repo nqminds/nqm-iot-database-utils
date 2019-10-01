@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/nqminds/nqm-iot-database-utils/",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   },
   "scripts": {
     "start": "",
