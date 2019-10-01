@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.7.1] - 2019-09-24
+
 ### Fixed
 
 - Error when attempting to addData with columns not in schema.
