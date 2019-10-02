@@ -8,6 +8,18 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Updated minimum version of Node to v10.0.0
+
+### Fixed
+
+- Prevent race condition when making dirs by replace
+  home-made `mkdirs` function with Node v10's
+  `mkdir(path, {recursive: true})` function.
+
+## [0.7.1] - 2019-09-24
+
 ### Fixed
 
 - Error when attempting to addData with columns not in schema.
