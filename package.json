@@ -19,7 +19,7 @@
   "scripts": {
     "start": "",
     "test": "mocha --no-warnings",
-    "lint": "eslint client && echo \"eslint: no lint errors\"",
+    "lint": "eslint lib/ && echo \"eslint: no lint errors\"",
     "jsdocs": "jsdoc -c jsdoc-config.json",
     "docs": "npm run api-md && TZ=UTC npm run jsdocs",
     "api-md": "jsdoc2md ./lib/sqlite-manager.js > ./docs/api.md"
@@ -59,12 +59,9 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.10",
-    "eslint": "^4.18.2",
-    "eslint-find-rules": "^1.14.3",
-    "eslint-plugin-babel": "^3.2.0",
-    "eslint-plugin-mocha": "^4.7.0",
-    "eslint-plugin-node": "^3.0.4",
-    "eslint-plugin-react": "^6.7.1",
+    "eslint": "^6.5.1",
+    "eslint-plugin-mocha": "^6.1.1",
+    "eslint-plugin-node": "^10.0.0",
     "jsdoc": "^3.6.3",
     "jsdoc-to-markdown": "^5.0.1",
     "mocha": "^5.2.0"
