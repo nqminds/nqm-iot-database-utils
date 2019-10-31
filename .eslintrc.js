@@ -64,6 +64,7 @@ module.exports = {
     "no-unused-expressions": "error",
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_"}],
     "no-var": "error",
+    "no-whitespace-before-property": "error",
     "one-var": ["error", "never"],
     "operator-linebreak": ["error", "after"],
     "padded-blocks": ["error", "never"],
