@@ -38,13 +38,13 @@
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.7.1",
     "del": "^3.0.0",
     "lodash": "^4.17.15",
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
     "semver": "^6.3.0",
-    "shortid": "^2.2.8",
+    "shortid": "^2.2.15",
     "sqlite3": "^4.0.4",
     "temp-dir": "^1.0.0"
   },
@@ -60,11 +60,11 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.10",
-    "eslint": "^6.5.1",
-    "eslint-plugin-mocha": "^6.1.1",
+    "eslint": "^6.6.0",
+    "eslint-plugin-mocha": "^6.2.1",
     "eslint-plugin-node": "^10.0.0",
     "jsdoc": "^3.6.3",
-    "jsdoc-to-markdown": "^5.0.1",
+    "jsdoc-to-markdown": "^5.0.2",
     "mocha": "^5.2.0"
   }
 }
