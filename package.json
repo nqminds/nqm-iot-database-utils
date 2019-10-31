@@ -14,12 +14,12 @@
   },
   "homepage": "https://github.com/nqminds/nqm-iot-database-utils/",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=10.12.0"
   },
   "scripts": {
     "start": "",
     "test": "mocha --no-warnings",
-    "lint": "eslint client && echo \"eslint: no lint errors\"",
+    "lint": "eslint lib/ && echo \"eslint: no lint errors\"",
     "jsdocs": "jsdoc -c jsdoc-config.json",
     "docs": "npm run api-md && TZ=UTC npm run jsdocs",
     "api-md": "jsdoc2md ./lib/sqlite-manager.js > ./docs/api.md"
@@ -38,12 +38,13 @@
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.7.1",
     "del": "^3.0.0",
     "lodash": "^4.17.15",
     "mongo-sql": "^5.0.4",
     "path": "^0.12.7",
-    "shortid": "^2.2.8",
+    "semver": "^6.3.0",
+    "shortid": "^2.2.15",
     "sqlite3": "^4.0.4",
     "temp-dir": "^1.0.0"
   },
@@ -59,14 +60,11 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.10",
-    "eslint": "^4.18.2",
-    "eslint-find-rules": "^1.14.3",
-    "eslint-plugin-babel": "^3.2.0",
-    "eslint-plugin-mocha": "^4.7.0",
-    "eslint-plugin-node": "^3.0.4",
-    "eslint-plugin-react": "^6.7.1",
+    "eslint": "^6.6.0",
+    "eslint-plugin-mocha": "^6.2.1",
+    "eslint-plugin-node": "^10.0.0",
     "jsdoc": "^3.6.3",
-    "jsdoc-to-markdown": "^5.0.0",
+    "jsdoc-to-markdown": "^5.0.2",
     "mocha": "^5.2.0"
   }
 }

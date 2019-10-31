@@ -10,6 +10,13 @@ and this project adheres to
 
 ### Changed
 
+- Updated minimum version of Node to v10.12.0,
+  for `fs.mkdir`'s `recursive: true` option.
+
+## [0.7.2] - 2019-10-02
+
+### Changed
+
 - Updated minimum version of Node to v10.0.0
 
 ### Fixed
