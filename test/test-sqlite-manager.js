@@ -3,6 +3,8 @@
 
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
+
 const _ = require("lodash");
 const del = require("del");
 const Promise = require("bluebird");
@@ -10,10 +12,10 @@ const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const shortid = require("shortid");
-const tempDir = require("temp-dir");
 const sqLiteManager = require("../lib/sqlite-manager.js");
 const sqliteInfoTable = require("../lib/sqlite-info-table.js");
 const sqliteNdarray = require("../lib/sqlite-ndarray.js");
+
 // @ts-ignore
 const packageJson = require("../package.json");
 const helper = require("./helper.js");
@@ -23,6 +25,7 @@ const tdxSchemaList = require("./tdx-schema-list.js");
 const testTimeout = 20000;
 
 let dbMem;
+const tempDir = fs.realpathSync(os.tmpdir());
 
 let databasePath = process.argv[1];
 const projectNameIdx = databasePath.indexOf(packageJson.name);

@@ -13,6 +13,10 @@ and this project adheres to
 - Updated minimum version of Node to v10.12.0,
   for `fs.mkdir`'s `recursive: true` option.
 
+### Fixed
+- Removed dependency on
+  [`temp-dir`](https://www.npmjs.com/package/temp-dir) (#39).
+
 ## [0.7.2] - 2019-10-02
 
 ### Changed
