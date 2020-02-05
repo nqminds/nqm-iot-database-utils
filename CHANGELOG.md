@@ -17,6 +17,11 @@ and this project adheres to
 - Removed dependency on
   [`temp-dir`](https://www.npmjs.com/package/temp-dir) (#39).
 
+### Security
+
+- Updated `devDependecy` on `jsdoc-to-markdown` to `^5.0.3` due to
+  securtiy issues in `dmd` > `handlebars`.
+
 ## [0.7.2] - 2019-10-02
 
 ### Changed
