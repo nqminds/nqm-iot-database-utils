@@ -13,6 +13,11 @@ and this project adheres to
 - Updated minimum version of Node to v10.12.0,
   for `fs.mkdir`'s `recursive: true` option.
 
+## Security
+
+- Updated `devDependecy` on `jsdoc-to-markdown` to `^5.0.3` due to
+  securtiy issues in `dmd` > `handlebars`.
+
 ## [0.7.2] - 2019-10-02
 
 ### Changed
