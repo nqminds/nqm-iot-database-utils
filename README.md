@@ -1,6 +1,24 @@
-# nqm-iot-database-utils [![npm version](https://badge.fury.io/js/nqm-iot-database-utils.svg)](https://badge.fury.io/js/nqm-iot-database-utils)[![Build Status](https://travis-ci.org/nqminds/nqm-iot-database-utils.svg?branch=master)](https://travis-ci.org/nqminds/nqm-iot-database-utils)
+# nqm-iot-database-utils
 
-nquiringminds IoT Database utilities (sqlite implementation for now)
+<p align="center" id="badges">
+  <a href="https://github.com/nqminds/nqm-iot-database-utils/actions?query=workflow%3ATest">
+    <img alt="Test" src="https://github.com/nqminds/nqm-iot-database-utils/workflows/Test/badge.svg">
+  </a>
+  <a href="https://www.npmjs.com/package/nqm-iot-database-utils">
+    <img alt="npm" src="https://img.shields.io/npm/v/nqm-iot-database-utils">
+  </a>
+  <a href="https://www.npmjs.com/package/nqm-iot-database-utils">
+    <img alt="node" src="https://img.shields.io/node/v/nqm-iot-database-utils">
+  </a>
+  <a href="https://nqminds.github.io/nqm-iot-database-utils/">
+    <img alt="Website" src="https://img.shields.io/website/https/nqminds.github.io/nqm-iot-database-utils.svg">
+  </a>
+  <a href="https://github.com/nqminds/nqm-iot-database-utils/issues">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/nqminds/nqm-iot-database-utils">
+  </a>
+</p>
+
+**nquiring**minds IoT Database utilities (sqlite implementation for now)
 
 ## Install
 ```cmd
