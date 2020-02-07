@@ -32,7 +32,7 @@ describe("sqlite-ndarray", function() {
 
   beforeEach(function() {
     del.sync(databaseFolder);
-    fs.mkdirSync(databaseFolder);
+    fs.mkdirSync(databaseFolder, {recursive: true});
   });
 
   it("should return a meta object for a ndarray object (row - order, 2D, Float64)", function() {
@@ -159,7 +159,7 @@ describe("sqlite-ndarray", function() {
         const sizeData = [];
         for (const row of data)
           sizeData.push(row.data.data.length);
-        
+
         return Promise.resolve(JSON.stringify(sizeData) === JSON.stringify(readData));
       })
       .should.eventually.equal(true);
@@ -274,7 +274,7 @@ describe("sqlite-ndarray", function() {
         "data": sqliteNdarray.getNdarrayMeta(Buffer.alloc(2 * 3), "float64", [2, 3]),
       }
     );
-    
+
     let newData = [];
 
     sqliteNdarray.writeNdarrayMany({"dataFolder": databaseFolder}, data, "data")
@@ -286,7 +286,7 @@ describe("sqlite-ndarray", function() {
         for (const row of newData) {
           row["data"] = _.omit(row["data"], ["p", "data"]);
         }
-    
+
         for (const row of readData) {
           const meta = sqliteNdarray.getNdarrayMeta(row["data"].data, row["data"].dtype, row["data"].shape, row["data"].major, row["data"].ftype);
           row["data"] = _.omit(meta, ["p", "data"]);
@@ -356,7 +356,7 @@ describe("sqlite-ndarray", function() {
           for (const key of dataKeys)
             row[key] = _.omit(row[key], ["p", "data"]);
         }
-    
+
         for (const row of readData) {
           for (const key of dataKeys) {
             const meta = sqliteNdarray.getNdarrayMeta(row[key].data, row[key].dtype, row[key].shape, row[key].major, row[key].ftype);

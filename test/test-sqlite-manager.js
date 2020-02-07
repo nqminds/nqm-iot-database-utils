@@ -41,7 +41,7 @@ describe("sqlite-manager", function() {
   before(function() {
     const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
     del.sync(path.join(tempDir, tmpFolderName), {force: true});
-    fs.mkdirSync(databaseFolder);
+    fs.mkdirSync(databaseFolder, {recursive: true});
   });
 
   after(function() {
