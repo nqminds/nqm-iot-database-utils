@@ -14,6 +14,7 @@ and this project adheres to
   for `fs.mkdir`'s `recursive: true` option.
 
 ### Fixed
+
 - Removed dependency on
   [`temp-dir`](https://www.npmjs.com/package/temp-dir) (#39).
 
@@ -21,6 +22,7 @@ and this project adheres to
 
 - Updated `devDependecy` on `jsdoc-to-markdown` to `^5.0.3` due to
   securtiy issues in `dmd` > `handlebars`.
+- Removed pointless dependency on [`path`](https://www.npmjs.com/package/path).
 
 ## [0.7.2] - 2019-10-02
 
