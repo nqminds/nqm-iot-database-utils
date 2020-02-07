@@ -27,11 +27,11 @@ chai.should();
 describe("sqlite-ndarray", function() {
   this.timeout(testTimeout);
   after(function() {
-    del.sync(databaseFolder);
+    del.sync(databaseFolder, {force: true});
   });
 
   beforeEach(function() {
-    del.sync(databaseFolder);
+    del.sync(databaseFolder, {force: true});
     fs.mkdirSync(databaseFolder, {recursive: true});
   });
 

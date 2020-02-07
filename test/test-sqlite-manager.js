@@ -48,9 +48,9 @@ describe("sqlite-manager", function() {
     const dbFile = path.basename(databasePath);
     const dbPath = path.dirname(databasePath);
     const tmpFolderName = sqliteConstants.DATABASE_DATA_TMP_NAME + sqliteConstants.DATABASE_FOLDER_SUFFIX;
-    del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
+    del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX), {force: true});
     helper.deleteFile(databasePath);
-    del.sync(databaseFolder);
+    del.sync(databaseFolder, {force: true});
     del.sync(path.join(tempDir, tmpFolderName), {force: true});
   });
 
@@ -58,7 +58,7 @@ describe("sqlite-manager", function() {
     beforeEach(function() {
       const dbFile = path.basename(databasePath);
       const dbPath = path.dirname(databasePath);
-      del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX));
+      del.sync(path.join(dbPath, dbFile + sqliteConstants.DATABASE_FOLDER_SUFFIX), {force: true});
       helper.deleteFile(databasePath);
     });
 
