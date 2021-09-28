@@ -18,6 +18,8 @@
   </a>
 </p>
 
+_Notice: **Currently unmaintained**. This GitHub repo may be un-archived at a later date, should we use this library in the future._
+
 **nquiring**minds IoT Database utilities (sqlite implementation for now)
 
 ## Install
